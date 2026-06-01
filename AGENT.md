@@ -2,7 +2,7 @@
 
 Authoritative guide for any AI agent working inside this repository. Read this before touching any file.
 
-This file is the generic, agent-facing counterpart to `CLAUDE.md`. If protocol, workflow, roster, or validation rules change, keep both files aligned.
+This file is the generic, agent-facing counterpart to the platform-specific operating manuals (`CLAUDE.md`, `GEMINI.md`, and `CODEX.md`). If protocol, workflow, roster, or validation rules change, keep all files aligned.
 
 # sovereign-conclave / workflow
 
@@ -31,6 +31,8 @@ This repository contains:
 ```text
 AGENT.md                         # Generic agent-facing operating manual for this repo
 CLAUDE.md                        # Claude-specific operating manual; keep aligned with AGENT.md
+GEMINI.md                        # Gemini/Antigravity-specific operating manual; keep aligned with AGENT.md
+CODEX.md                         # Codex-specific operating manual; keep aligned with AGENT.md
 SKILL.md                         # /conclave protocol - assistant-facing command definition
 directives.md                    # Standing rules D-1 through D-6 - enforced by Marshall
 roster.md                        # GENERATED - do not edit by hand; regenerate via generate_roster.py
@@ -448,7 +450,7 @@ Common failure modes in this repository:
 4. Read `docs/CONCEPTS.md` and `docs/GOOD_VS_BAD_VERDICTS.md` to calibrate quality.
 5. Inspect `configs/conclave-roster.json` before touching `roster.md`.
 6. Use `scripts/validate_repo.py` and the full validation stack to confirm changes.
-7. Keep `AGENT.md` and `CLAUDE.md` aligned when the repo's operating rules change.
+7. Keep `AGENT.md`, `CLAUDE.md`, `GEMINI.md`, and `CODEX.md` aligned when the repo's operating rules change.
 
 ## Bottom Line
 

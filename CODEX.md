@@ -1,6 +1,6 @@
-# CLAUDE.md — Sovereign Conclave
+# CODEX.md — Sovereign Conclave (Codex Edition)
 
-Authoritative guide for any AI assistant working inside this repository. Read this before touching any file.
+Authoritative guide for any Codex-based AI assistant or runtime working inside this repository. Read this before touching any file.
 
 ---
 
@@ -26,10 +26,6 @@ This repository contains:
 ## Repository Map
 
 ```
-AGENT.md                         # Generic agent-facing operating manual for this repo
-CLAUDE.md                        # Claude-specific operating manual; keep aligned with AGENT.md
-GEMINI.md                        # Gemini/Antigravity-specific operating manual; keep aligned with AGENT.md
-CODEX.md                         # Codex-specific operating manual; keep aligned with AGENT.md
 SKILL.md                         # /conclave protocol — the assistant-facing command definition
 directives.md                    # Standing rules D-1 through D-6 — enforced by Marshall
 roster.md                        # GENERATED — do not edit by hand; regenerate via generate_roster.py
@@ -96,8 +92,6 @@ Marshall is not optional. It is a structural guardrail — not an advocate, not 
 
 ## Development Commands
 
-Keep `AGENT.md`, `CLAUDE.md`, `GEMINI.md`, and `CODEX.md` aligned when the repo's operating rules change.
-
 ### Validate the repo before any commit or PR
 
 ```bash
@@ -149,19 +143,17 @@ bin/conclave --profile risk \
   --stdout "Can this release go out?"
 ```
 
-The runner is **deterministic and offline by default**. It does not call any model provider. It reads `configs/conclave-roster.json`, selects seats, seeds the Evidence Ledger from flags, and writes a verdict scaffold that Claude Code (or any configured tool) fills out. Provider-backed execution is opt-in via `--provider-run` — off by default, credentials from environment only.
+The runner is **deterministic and offline by default**. It does not call any model provider. It reads `configs/conclave-roster.json`, selects seats, seeds the Evidence Ledger from flags, and writes a verdict scaffold that Codex (or any configured tool) fills out. Provider-backed execution is opt-in via `--provider-run` — off by default, credentials from environment only.
 
-### Install the skill
+### Install the skill for Codex
 
 ```bash
-./install.sh                          # Claude Code (default)
-./install.sh --target codex
-./install.sh --target antigravity
+./install.sh --target codex           # Codex environment
 ./install.sh --target all --dry-run   # Preview without writing
-./install.sh --uninstall --target all # Remove from every target
+./install.sh --uninstall --target codex # Remove from Codex target
 ```
 
-Restart the target tool after installation.
+Restart the target tool or reload your agent context after installation.
 
 ### Run the tests
 
@@ -359,93 +351,7 @@ Never commit private evidence, confidential data, or API keys.
 
 ## Configs: `configs/conclave-roster.json`
 
-This is the single source of truth for everything the runner and `generate_roster.py` read. Schema:
-
-```json
-{
-  "quorum": {
-    "min_seats": 6,
-    "max_seats": 33
-  },
-  "default_profile": "architecture",
-  "seats": [
-    {
-      "id": "conclave-<slug>",
-      "display_name": "<Full Name>",
-      "tier": "<Tier>",
-      "lens": "<one-line lens>",
-      "model": "sonnet | opus",
-      "polarity_partner": "conclave-<slug> | null"
-    }
-  ],
-  "polarity_pairs": [
-    { "a": "conclave-<slug>", "b": "conclave-<slug>", "axis": "<tension description>" }
-  ],
-  "profiles": [
-    {
-      "id": "<profile-name>",
-      "description": "<one line>",
-      "members": ["conclave-<slug>", ...]
-    }
-  ]
-}
-```
-
-**Key constraints:**
-
-- `min_seats` is 6. No profile should have fewer than 6 member seats (Marshall is always added automatically).
-- `max_seats` is 33. `full-conclave` approaches this.
-- `display_name` must use the full proper name (e.g., "Võ Nguyên Giáp", not "Giap").
-- `polarity_partner` must reference a valid `id` in the `seats` array, or be `null`.
-- After any edit, run `validate_repo.py` and `generate_roster.py --check`.
-
-### The 24 profiles
-
-| Profile ID | Domain |
-| --- | --- |
-| `architecture` | Technical design, irreversible capability |
-| `strategy` | Competitive timing, commitment decisions |
-| `risk` | Downside, safety, security, rights review |
-| `institutional` | Governance, legitimacy, operating models |
-| `policy` | Rules, access, administration, value constraints |
-| `liberation` | Self-determination, imposed-order, rights-heavy |
-| `war-game` | Adversarial stress-test |
-| `war-cabinet` | Crisis command: military + executive + legal |
-| `economic-thinktank` | Policy, growth vs. equity, sustainable governance |
-| `geopolitics` | International relations, great-power, diplomacy |
-| `space-exploration` | Frontier technology ethics, access equity |
-| `formal-science` | Maths, cryptography, formal verification, dual-use |
-| `globalisation` | Cross-border governance, inequality, cultural self-determination |
-| `leadership` | Succession, institutional character, adversity |
-| `esiasa-civic-stress` | County/civic intelligence, resilience |
-| `continuity` | Continuity of government, succession, crisis |
-| `pandemic-preparedness` | Public-health readiness, access, civic trust |
-| `intelligence-oversight` | Surveillance, civil liberties, lawful process |
-| `environmental-governance` | Land, ecology, stewardship |
-| `oppression-audit` | Coercion detection, dignity failure |
-| `decolonization` | Land, dispossession, restitution, repair |
-| `emergency-powers` | Crisis authority, lawful limits, sunset discipline |
-| `half-conclave` | Cross-domain, ~17 seats |
-| `full-conclave` | Civilizational-scale, all 33 |
-
----
-
-## The 22 Polarity Pairs
-
-Polarity pairs are the engine of genuine disagreement. When selecting seats without a profile, find the pair whose axis spans the primary tension in the problem. Use `roster.md` for the full list.
-
-Key pairs:
-
-| Pair | Axis |
-| --- | --- |
-| Zhukov ↔ Washington | Audacity vs. endurance |
-| Cheney ↔ Addington | Emergency executive power vs. lawful accountability |
-| Giáp ↔ Pershing | Asymmetric protraction vs. organized committed mass |
-| Toussaint ↔ Augustus | Liberation from below vs. institutional consolidation from above |
-| Feynman ↔ Oppenheimer | First-principles rebuilding vs. capability-and-consequence reckoning |
-| Mandela ↔ Mau Mau | Reconciliation inside the settlement vs. resistance outside it |
-| Authoritarian ↔ Lady Hale | Coercive control vs. rights and proportionality |
-| Colonial Administrator ↔ Maathai | Extractive order vs. grassroots ecological stewardship |
+This is the single source of truth for everything the runner and `generate_roster.py` read. Refer to `configs/conclave-roster.json` and schema files for structural validation rules.
 
 ---
 
@@ -490,8 +396,6 @@ Small, descriptive commits. One logical change per commit. Roster regeneration a
 
 ## Anti-Patterns to Avoid
 
-These are the most common failure modes in multi-persona deliberation. Avoid them.
-
 **Capability claims.** A seat named "Feynman" does not make the model a physicist. Any output beginning "As a physicist, I can calculate…" is off-format. Discard it.
 
 **Convergence theater.** If all seats agree before cross-examination, the diversity you convened them for has collapsed. Marshall triggers D-3. Do not skip the counterfactual pass because the answer seems obvious.
@@ -507,15 +411,3 @@ These are the most common failure modes in multi-persona deliberation. Avoid the
 **Editing `roster.md` directly.** It is generated. Your edits will be overwritten. Edit `configs/conclave-roster.json` and run `generate_roster.py --write`.
 
 **Running with a thin ledger.** Fewer than 3 atomic ledger items means the seats will argue from assumptions. Do not proceed past Round 0. Tell the user what decisive claim lacks support and what artifact would settle it.
-
----
-
-## Quick Orientation for a New Contributor
-
-1. Read `SKILL.md` — that is the protocol. Do not modify it without a very strong reason and a full test pass.
-2. Read `directives.md` — those are the standing rules. D-4 is absolute.
-3. Read `agents/_TEMPLATE.md` and two or three existing seat files to calibrate tone and length.
-4. Read `docs/CONCEPTS.md` — especially the "Bad seat" list and the Danger Lenses section.
-5. Read `docs/GOOD_VS_BAD_VERDICTS.md` — understand what a grounded verdict looks like vs. a fluent ungrounded one.
-6. Run `python3 scripts/validate_repo.py` and `python3 -m unittest discover -s tests` to confirm the repo is clean.
-7. Make your change, run validation again, regenerate `roster.md` if needed, and commit.

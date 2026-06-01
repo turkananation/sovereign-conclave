@@ -1,81 +1,288 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1400" height="460" viewBox="0 0 1400 460" role="img" aria-labelledby="title desc">
-  <title id="title">Sovereign Conclave banner</title>
-  <desc id="desc">A dark strategic table with opposed seats, an evidence ledger, and a verified verdict.</desc>
+  <title id="title">Sovereign Conclave Banner</title>
+  <desc id="desc">A premium holographic strategic blueprint of the Sovereign Conclave, featuring the 33 seats, polarity axes, and Marshall verifier.</desc>
   <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#101827"/>
-      <stop offset="0.52" stop-color="#172033"/>
-      <stop offset="1" stop-color="#0d111a"/>
+    <!-- Background Gradient -->
+    <linearGradient id="bg-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#040814"/>
+      <stop offset="50%" stop-color="#0b132b"/>
+      <stop offset="100%" stop-color="#050811"/>
     </linearGradient>
-    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#f5d37a"/>
-      <stop offset="1" stop-color="#b8822d"/>
+
+    <!-- Metallic Gold Gradient -->
+    <linearGradient id="gold-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFE082"/>
+      <stop offset="50%" stop-color="#F5D37A"/>
+      <stop offset="100%" stop-color="#B8822D"/>
     </linearGradient>
-    <linearGradient id="ledger" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#f7f3e8"/>
-      <stop offset="1" stop-color="#d7c9a8"/>
+
+    <!-- Glowing Electric Cyan -->
+    <linearGradient id="cyan-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#00F2FE"/>
+      <stop offset="100%" stop-color="#4FACFE"/>
     </linearGradient>
-    <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
-      <feDropShadow dx="0" dy="14" stdDeviation="18" flood-color="#000000" flood-opacity="0.35"/>
+
+    <!-- Holographic Light Purple -->
+    <linearGradient id="purple-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#D946EF"/>
+      <stop offset="100%" stop-color="#8B5CF6"/>
+    </linearGradient>
+
+    <!-- Glowing Crimson -->
+    <linearGradient id="crimson-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F43F5E"/>
+      <stop offset="100%" stop-color="#BE123C"/>
+    </linearGradient>
+
+    <!-- Verification Green -->
+    <linearGradient id="green-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#34D399"/>
+      <stop offset="100%" stop-color="#059669"/>
+    </linearGradient>
+
+    <!-- Glassmorphism Card Gradient -->
+    <linearGradient id="card-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1E293B" stop-opacity="0.65"/>
+      <stop offset="100%" stop-color="#0F172A" stop-opacity="0.85"/>
+    </linearGradient>
+
+    <!-- Filters for Glow Effects -->
+    <filter id="glow-cyan" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+
+    <filter id="glow-gold" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="10" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+
+    <filter id="glow-green" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="12" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+
+    <filter id="soft-shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000" flood-opacity="0.5"/>
     </filter>
   </defs>
 
-  <rect width="1400" height="460" fill="url(#bg)"/>
-  <path d="M0 384 C220 326 374 432 588 370 C799 309 905 241 1118 278 C1242 300 1325 346 1400 314 L1400 460 L0 460 Z" fill="#0a0f18" opacity="0.88"/>
-  <circle cx="705" cy="231" r="146" fill="none" stroke="#31415f" stroke-width="2"/>
-  <circle cx="705" cy="231" r="98" fill="none" stroke="#28364f" stroke-width="2" stroke-dasharray="8 10"/>
+  <!-- Typography and styles -->
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap');
+    .text-title { font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-weight: 800; }
+    .text-body { font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    .grid-line { stroke: #1E293B; stroke-width: 1; opacity: 0.25; }
+    .pulsing-node { animation: pulse 4s infinite alternate; }
+    @keyframes pulse {
+      0% { opacity: 0.6; }
+      100% { opacity: 1; }
+    }
+  </style>
 
-  <g filter="url(#softShadow)">
-    <ellipse cx="705" cy="234" rx="244" ry="112" fill="#1f2a3d" stroke="#5c6f91" stroke-width="2"/>
-    <ellipse cx="705" cy="234" rx="184" ry="78" fill="#131b2a" stroke="#34435f" stroke-width="2"/>
-    <rect x="610" y="184" width="190" height="104" rx="8" fill="url(#ledger)" stroke="#fff8df" stroke-width="2"/>
-    <line x1="632" y1="210" x2="779" y2="210" stroke="#73664b" stroke-width="3"/>
-    <line x1="632" y1="236" x2="766" y2="236" stroke="#73664b" stroke-width="3"/>
-    <line x1="632" y1="262" x2="748" y2="262" stroke="#73664b" stroke-width="3"/>
-    <text x="705" y="173" text-anchor="middle" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="18" fill="#f5d37a" font-weight="700">EVIDENCE LEDGER</text>
+  <!-- Main Background -->
+  <rect width="1400" height="460" fill="url(#bg-gradient)"/>
+
+  <!-- Schematic Grid Overlay -->
+  <g opacity="0.4">
+    <path d="M 0,50 L 1400,50" class="grid-line"/>
+    <path d="M 0,110 L 1400,110" class="grid-line"/>
+    <path d="M 0,170 L 1400,170" class="grid-line"/>
+    <path d="M 0,230 L 1400,230" class="grid-line"/>
+    <path d="M 0,290 L 1400,290" class="grid-line"/>
+    <path d="M 0,350 L 1400,350" class="grid-line"/>
+    <path d="M 0,410 L 1400,410" class="grid-line"/>
+    
+    <path d="M 100,0 L 100,460" class="grid-line"/>
+    <path d="M 250,0 L 250,460" class="grid-line"/>
+    <path d="M 400,0 L 400,460" class="grid-line"/>
+    <path d="M 550,0 L 550,460" class="grid-line"/>
+    <path d="M 700,0 L 700,460" class="grid-line"/>
+    <path d="M 850,0 L 850,460" class="grid-line"/>
+    <path d="M 1000,0 L 1000,460" class="grid-line"/>
+    <path d="M 1150,0 L 1150,460" class="grid-line"/>
+    <path d="M 1300,0 L 1300,460" class="grid-line"/>
   </g>
 
-  <g fill="url(#gold)" stroke="#ffe8a4" stroke-width="2">
-    <circle cx="487" cy="151" r="22"/>
-    <circle cx="572" cy="105" r="22"/>
-    <circle cx="705" cy="83" r="22"/>
-    <circle cx="838" cy="105" r="22"/>
-    <circle cx="923" cy="151" r="22"/>
-    <circle cx="487" cy="319" r="22"/>
-    <circle cx="572" cy="365" r="22"/>
-    <circle cx="705" cy="386" r="22"/>
-    <circle cx="838" cy="365" r="22"/>
-    <circle cx="923" cy="319" r="22"/>
+  <!-- Left Side: Title & Description -->
+  <g transform="translate(80, 75)" filter="url(#soft-shadow)">
+    <!-- Tiny tag -->
+    <rect x="0" y="0" width="168" height="26" rx="13" fill="#1E293B" stroke="#334155" stroke-width="1"/>
+    <text x="14" y="17" fill="#38BDF8" font-size="11" font-weight="700" letter-spacing="1.5" class="text-title">AI GOVERNANCE SKILL</text>
+
+    <!-- Main Title -->
+    <text x="0" y="80" fill="#FFFFFF" font-size="64" font-weight="800" class="text-title" letter-spacing="-1">Sovereign</text>
+    <text x="0" y="145" fill="url(#gold-gradient)" font-size="64" font-weight="800" class="text-title" letter-spacing="-1">Conclave</text>
+
+    <!-- Divider Line -->
+    <line x1="0" y1="175" x2="360" y2="175" stroke="url(#cyan-gradient)" stroke-width="2" opacity="0.8"/>
+
+    <!-- Descriptions -->
+    <text x="0" y="212" fill="#E2E8F0" font-size="20" font-weight="600" class="text-body">Evidence-grounded deliberation</text>
+    <text x="0" y="238" fill="#94A3B8" font-size="16" class="text-body">Parallel blind analysis. Multi-perspective dissent.</text>
+    <text x="0" y="262" fill="#94A3B8" font-size="16" class="text-body">Verified factual claims. Advice-only output.</text>
+
+    <!-- Quick Features -->
+    <g transform="translate(0, 295)">
+      <!-- Feature 1 -->
+      <circle cx="8" cy="8" r="4" fill="#38BDF8"/>
+      <text x="22" y="12" fill="#E2E8F0" font-size="13" font-weight="600" class="text-body">D-1: Frozen Evidence Ledger</text>
+      <!-- Feature 2 -->
+      <circle cx="8" cy="32" r="4" fill="#34D399"/>
+      <text x="22" y="36" fill="#E2E8F0" font-size="13" font-weight="600" class="text-body">D-4: Action Authorization Guard</text>
+    </g>
   </g>
 
-  <g stroke="#7d8fac" stroke-width="2" opacity="0.72">
-    <line x1="509" y1="151" x2="610" y2="206"/>
-    <line x1="594" y1="105" x2="654" y2="184"/>
-    <line x1="705" y1="105" x2="705" y2="184"/>
-    <line x1="816" y1="105" x2="756" y2="184"/>
-    <line x1="901" y1="151" x2="800" y2="206"/>
-    <line x1="509" y1="319" x2="610" y2="266"/>
-    <line x1="594" y1="365" x2="654" y2="288"/>
-    <line x1="705" y1="364" x2="705" y2="288"/>
-    <line x1="816" y1="365" x2="756" y2="288"/>
-    <line x1="901" y1="319" x2="800" y2="266"/>
+  <!-- Center-Right: Deliberation Chamber Blueprint (Geometric Visualizer) -->
+  <!-- Center is at X=730, Y=230 -->
+  <g transform="translate(40, 0)">
+    <!-- Ambient backglow for Chamber -->
+    <circle cx="730" cy="230" r="180" fill="#0B132B" opacity="0.3" filter="url(#glow-cyan)"/>
+
+    <!-- Concentric Orbit Rings (Seat Tiers) -->
+    <!-- Outer Orbit (General Tier) -->
+    <circle cx="730" cy="230" r="160" fill="none" stroke="#1E293B" stroke-dasharray="6 8" stroke-width="1.5" opacity="0.6"/>
+    <!-- Middle Orbit (Sovereign Tier) -->
+    <circle cx="730" cy="230" r="115" fill="none" stroke="#1E293B" stroke-dasharray="4 6" stroke-width="1.5" opacity="0.6"/>
+    <!-- Inner Orbit (Inner Sanctum Tier) -->
+    <circle cx="730" cy="230" r="70" fill="none" stroke="#1E293B" stroke-dasharray="3 4" stroke-width="1.5" opacity="0.6"/>
+
+    <!-- Polarity Pair Tension Axes (Connecting opposing seats through center verifier) -->
+    <!-- Axis 1 (Washington/Zhukov) -->
+    <line x1="570" y1="230" x2="890" y2="230" stroke="#F53F5E" stroke-width="1" stroke-dasharray="2 4" opacity="0.4"/>
+    <!-- Axis 2 (Cheney/Addington) -->
+    <line x1="617" y1="117" x2="843" y2="343" stroke="#F5D37A" stroke-width="1" stroke-dasharray="2 4" opacity="0.4"/>
+    <!-- Axis 3 (Toussaint/Augustus) -->
+    <line x1="617" y1="343" x2="843" y2="117" stroke="#38BDF8" stroke-width="1" stroke-dasharray="2 4" opacity="0.4"/>
+
+    <!-- Glowing Seat Nodes (Precalculated polar coordinates for clean visual distribution) -->
+    <g class="pulsing-node">
+      <!-- Outer nodes (Generals, etc. - Crimson/Red Theme) -->
+      <circle cx="570" cy="230" r="8" fill="url(#crimson-gradient)" stroke="#FF8A9A" stroke-width="1.5" filter="url(#glow-cyan)"/>
+      <circle cx="890" cy="230" r="8" fill="url(#crimson-gradient)" stroke="#FF8A9A" stroke-width="1.5" filter="url(#glow-cyan)"/>
+      <circle cx="610" cy="120" r="8" fill="url(#crimson-gradient)" stroke="#FF8A9A" stroke-width="1.5"/>
+      <circle cx="850" cy="340" r="8" fill="url(#crimson-gradient)" stroke="#FF8A9A" stroke-width="1.5"/>
+      <circle cx="610" cy="340" r="8" fill="url(#crimson-gradient)" stroke="#FF8A9A" stroke-width="1.5"/>
+      <circle cx="850" cy="120" r="8" fill="url(#crimson-gradient)" stroke="#FF8A9A" stroke-width="1.5"/>
+      <circle cx="730" cy="70" r="8" fill="url(#crimson-gradient)" stroke="#FF8A9A" stroke-width="1.5"/>
+      <circle cx="730" cy="390" r="8" fill="url(#crimson-gradient)" stroke="#FF8A9A" stroke-width="1.5"/>
+
+      <!-- Middle nodes (Sovereign Tier - Gold Theme) -->
+      <circle cx="630" cy="172" r="7" fill="url(#gold-gradient)" stroke="#FFE8A4" stroke-width="1.5"/>
+      <circle cx="830" cy="288" r="7" fill="url(#gold-gradient)" stroke="#FFE8A4" stroke-width="1.5"/>
+      <circle cx="630" cy="288" r="7" fill="url(#gold-gradient)" stroke="#FFE8A4" stroke-width="1.5"/>
+      <circle cx="830" cy="172" r="7" fill="url(#gold-gradient)" stroke="#FFE8A4" stroke-width="1.5"/>
+      <circle cx="680" cy="130" r="7" fill="url(#gold-gradient)" stroke="#FFE8A4" stroke-width="1.5"/>
+      <circle cx="780" cy="330" r="7" fill="url(#gold-gradient)" stroke="#FFE8A4" stroke-width="1.5"/>
+      <circle cx="680" cy="330" r="7" fill="url(#gold-gradient)" stroke="#FFE8A4" stroke-width="1.5"/>
+      <circle cx="780" cy="130" r="7" fill="url(#gold-gradient)" stroke="#FFE8A4" stroke-width="1.5"/>
+
+      <!-- Inner nodes (Inner Sanctum, Law, Justice - Purple & Cyan Theme) -->
+      <circle cx="680" cy="180" r="6" fill="url(#purple-gradient)" stroke="#F472B6" stroke-width="1"/>
+      <circle cx="780" cy="280" r="6" fill="url(#purple-gradient)" stroke="#F472B6" stroke-width="1"/>
+      <circle cx="680" cy="280" r="6" fill="url(#cyan-gradient)" stroke="#7DD3FC" stroke-width="1"/>
+      <circle cx="780" cy="180" r="6" fill="url(#cyan-gradient)" stroke="#7DD3FC" stroke-width="1"/>
+      <circle cx="730" cy="160" r="6" fill="url(#cyan-gradient)" stroke="#7DD3FC" stroke-width="1"/>
+      <circle cx="730" cy="300" r="6" fill="url(#purple-gradient)" stroke="#F472B6" stroke-width="1"/>
+    </g>
+
+    <!-- Glowing Central Marshall Verifier Core -->
+    <!-- Outer Shield Orbit -->
+    <circle cx="730" cy="230" r="36" fill="#0B132B" stroke="#059669" stroke-width="2" filter="url(#glow-green)" opacity="0.8"/>
+    <!-- Central Verification Shield Emblem -->
+    <g transform="translate(717, 217)">
+      <!-- Shield Path -->
+      <path d="M13 2 L2 6 V13 C2 19 6.7 23.4 13 25 C19.3 23.4 24 19 24 13 V6 L13 2 Z" fill="url(#green-gradient)" stroke="#A7F3D0" stroke-width="1"/>
+      <!-- Checkmark in shield -->
+      <path d="M8 13 L11.5 16.5 L18 10" fill="none" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+
+    <!-- Floating Holographic Evidence Ledger Pad -->
+    <g transform="translate(560, 48)" filter="url(#soft-shadow)">
+      <rect x="0" y="0" width="65" height="38" rx="4" fill="#0F172A" fill-opacity="0.8" stroke="#38BDF8" stroke-width="1"/>
+      <line x1="10" y1="10" x2="55" y2="10" stroke="#E2E8F0" stroke-width="2" opacity="0.7"/>
+      <line x1="10" y1="18" x2="45" y2="18" stroke="#E2E8F0" stroke-width="2" opacity="0.7"/>
+      <line x1="10" y1="26" x2="35" y2="26" stroke="#00F2FE" stroke-width="2"/>
+      <text x="32.5" y="-6" text-anchor="middle" fill="#38BDF8" font-size="9" font-weight="600" class="text-body" opacity="0.9">EVIDENCE</text>
+    </g>
+
+    <!-- Floating Holographic Verdict Document -->
+    <g transform="translate(835, 48)" filter="url(#soft-shadow)">
+      <rect x="0" y="0" width="65" height="38" rx="4" fill="#0F172A" fill-opacity="0.8" stroke="#F5D37A" stroke-width="1"/>
+      <line x1="10" y1="10" x2="55" y2="10" stroke="#F5D37A" stroke-width="2" opacity="0.9"/>
+      <line x1="10" y1="18" x2="55" y2="18" stroke="#E2E8F0" stroke-width="2" opacity="0.7"/>
+      <line x1="10" y1="26" x2="40" y2="26" stroke="#E2E8F0" stroke-width="2" opacity="0.7"/>
+      <text x="32.5" y="-6" text-anchor="middle" fill="#F5D37A" font-size="9" font-weight="600" class="text-body" opacity="0.9">VERDICT</text>
+    </g>
   </g>
 
-  <g font-family="Inter, Segoe UI, Arial, sans-serif">
-    <text x="90" y="130" font-size="58" font-weight="800" fill="#f7f1df">Sovereign</text>
-    <text x="90" y="190" font-size="58" font-weight="800" fill="#f5d37a">Conclave</text>
-    <text x="92" y="238" font-size="22" fill="#cbd5e1">Evidence-grounded deliberation for hard decisions.</text>
-    <text x="92" y="276" font-size="18" fill="#8fa3bf">Blind analysis. Real dissent. Verified claims. Advice only.</text>
+  <!-- Right Side: Sleek Glassmorphism Specifications Card -->
+  <g transform="translate(1010, 60)" filter="url(#soft-shadow)">
+    <!-- Glass Background -->
+    <rect width="310" height="340" rx="16" fill="url(#card-gradient)" stroke="#334155" stroke-width="1.5"/>
 
-    <rect x="1040" y="104" width="260" height="48" rx="6" fill="#17253a" stroke="#3c5477"/>
-    <text x="1170" y="135" text-anchor="middle" font-size="18" fill="#f7f1df">33 seats</text>
-    <rect x="1040" y="172" width="260" height="48" rx="6" fill="#17253a" stroke="#3c5477"/>
-    <text x="1170" y="203" text-anchor="middle" font-size="18" fill="#f7f1df">12 profiles</text>
-    <rect x="1040" y="240" width="260" height="48" rx="6" fill="#17253a" stroke="#3c5477"/>
-    <text x="1170" y="271" text-anchor="middle" font-size="18" fill="#f7f1df">Marshall verifies</text>
-    <rect x="1040" y="308" width="260" height="48" rx="6" fill="#17253a" stroke="#3c5477"/>
-    <text x="1170" y="339" text-anchor="middle" font-size="18" fill="#f7f1df">Human decides</text>
+    <!-- Inner Highlight border -->
+    <rect x="1" y="1" width="308" height="338" rx="15" fill="none" stroke="#FFFFFF" stroke-opacity="0.05" stroke-width="1"/>
+
+    <!-- Title -->
+    <text x="24" y="38" fill="#FFFFFF" font-size="18" font-weight="700" class="text-title" letter-spacing="0.5">TECHNICAL SPECIFICATIONS</text>
+    <line x1="24" y1="52" x2="286" y2="52" stroke="#334155" stroke-width="1"/>
+
+    <!-- Spec items -->
+    <!-- Item 1: 33 Seats -->
+    <g transform="translate(24, 75)">
+      <!-- Circle Icon -->
+      <rect width="28" height="28" rx="6" fill="#1E293B" stroke="#38BDF8" stroke-width="1"/>
+      <circle cx="14" cy="14" r="5" fill="#38BDF8" filter="url(#glow-cyan)"/>
+      <text x="42" y="19" fill="#F8FAFC" font-size="14" font-weight="700" class="text-body">33 Deliberation Seats</text>
+    </g>
+
+    <!-- Item 2: 24 Profiles -->
+    <g transform="translate(24, 115)">
+      <!-- Folder Icon -->
+      <rect width="28" height="28" rx="6" fill="#1E293B" stroke="#F5D37A" stroke-width="1"/>
+      <path d="M8 8h4l2 2h6v10H8V8z" fill="none" stroke="#F5D37A" stroke-width="1.5" stroke-linejoin="round"/>
+      <text x="42" y="19" fill="#F8FAFC" font-size="14" font-weight="700" class="text-body">24 Convening Profiles</text>
+    </g>
+
+    <!-- Item 3: 22 Polarity Pairs -->
+    <g transform="translate(24, 155)">
+      <!-- Axis Icon -->
+      <rect width="28" height="28" rx="6" fill="#1E293B" stroke="#F43F5E" stroke-width="1"/>
+      <line x1="7" y1="14" x2="21" y2="14" stroke="#F43F5E" stroke-width="1.5"/>
+      <circle cx="7" cy="14" r="2.5" fill="#F43F5E"/>
+      <circle cx="21" cy="14" r="2.5" fill="#F43F5E"/>
+      <text x="42" y="19" fill="#F8FAFC" font-size="14" font-weight="700" class="text-body">22 Polarity Tension Pairs</text>
+    </g>
+
+    <!-- Item 4: Marshall Verifier -->
+    <g transform="translate(24, 195)">
+      <!-- Shield Icon -->
+      <rect width="28" height="28" rx="6" fill="#1E293B" stroke="#34D399" stroke-width="1"/>
+      <path d="M14 8 L8 10 V15 C8 18 10.5 20.5 14 21 C17.5 20.5 20 18 20 15 V10 L14 8 Z" fill="none" stroke="#34D399" stroke-width="1.5"/>
+      <text x="42" y="19" fill="#F8FAFC" font-size="14" font-weight="700" class="text-body">Marshall Verifier</text>
+    </g>
+
+    <!-- Item 5: Human Decides -->
+    <g transform="translate(24, 235)">
+      <!-- Key/Auth Icon -->
+      <rect width="28" height="28" rx="6" fill="#1E293B" stroke="#8B5CF6" stroke-width="1"/>
+      <circle cx="12" cy="12" r="3.5" fill="none" stroke="#8B5CF6" stroke-width="1.5"/>
+      <path d="M15 15 L20 20 M17 17 L19 15" stroke="#8B5CF6" stroke-width="1.5" stroke-linecap="round"/>
+      <text x="42" y="19" fill="#F8FAFC" font-size="14" font-weight="700" class="text-body">Advice Only (Human Decides)</text>
+    </g>
+
+    <!-- Horizontal line -->
+    <line x1="24" y1="280" x2="286" y2="280" stroke="#334155" stroke-width="1"/>
+
+    <!-- Bottom verification status badge -->
+    <g transform="translate(24, 296)">
+      <rect width="262" height="28" rx="14" fill="#064E3B" fill-opacity="0.6" stroke="#047857" stroke-width="1"/>
+      <circle cx="15" cy="14" r="5.5" fill="#34D399" filter="url(#glow-green)"/>
+      <text x="32" y="18" fill="#D1FAE5" font-size="11" font-weight="700" letter-spacing="0.5" class="text-title">ENFORCING PROTOCOL RULES D-1 TO D-6</text>
+    </g>
   </g>
 
-  <rect x="44" y="40" width="1312" height="380" rx="18" fill="none" stroke="#2b3b56" stroke-width="2"/>
+  <!-- External Border Highlight -->
+  <rect x="25" y="25" width="1350" height="410" rx="20" fill="none" stroke="#334155" stroke-opacity="0.3" stroke-width="1"/>
 </svg>
