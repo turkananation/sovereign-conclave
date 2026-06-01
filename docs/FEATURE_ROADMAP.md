@@ -24,7 +24,7 @@ Effort scale:
 | Installer dry-run tests | Done | S | CI and local checks verify Claude, Codex, and Antigravity targets without touching home directories. |
 | CI workflow | Done | M | `.github/workflows/ci.yml` runs shell syntax, repo validation, install dry-run, and runner smoke tests. |
 
-## 0.2.x - Make the Output Irresistible
+## 0.1.x - Make the Output Irresistible
 
 | Feature | Status | Effort | Notes |
 | --- | --- | --- | --- |
@@ -39,7 +39,7 @@ Effort scale:
 | Machine-readable Evidence Ledger schema | Done | M | `schemas/evidence-ledger.schema.json` defines the model-native JSON form. |
 | Ledger import/export runner flags | Done | M | `bin/conclave` supports `--ledger-file` imports, `--validate-ledger` checks, and `--write-ledger` exports. |
 
-## 0.3.x - Make It Portable
+## 0.1.x - Make It Portable
 
 | Feature | Status | Effort | Notes |
 | --- | --- | --- | --- |
@@ -52,7 +52,7 @@ Effort scale:
 | Install and uninstall commands | Done | M | `install.sh --uninstall` removes the skill and conclave agents per target. |
 | Opt-in provider-backed runner | Done | L | `--provider-run` runs real deliberation from env-only keys (default off), with slot routing and transcript capture. |
 
-## 0.4.x - Make It Collaborative
+## 0.1.x - Make It Collaborative
 
 | Feature | Status | Effort | Notes |
 | --- | --- | --- | --- |
