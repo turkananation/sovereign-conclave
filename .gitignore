@@ -1,0 +1,21 @@
+# Generated verdicts may contain sensitive user evidence.
+verdicts/*
+!verdicts/.gitkeep
+
+# Local environment and secrets.
+.env
+.env.*
+*.pem
+*.key
+*.token
+
+# Editor and OS noise.
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Logs and temporary files.
+*.log
+tmp/
+.tmp/
