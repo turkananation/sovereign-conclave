@@ -7,20 +7,25 @@ Your own Claude Code skill: a chosen council of personas that argue a hard decis
 ## What's in the box
 
 - `SKILL.md` — the `/conclave` command and the deliberation protocol.
-- `agents/conclave-*.md` — the active seats: four advocates + Marshall, the verifier.
-- `agents/_TEMPLATE.md` — how to add a seat from your bench.
-- `roster.md` — the full library, the bench (your pantheon), and the convening profiles.
+- `agents/conclave-*.md` — 21 active seats: advocates plus structural Justice checks.
+- `agents/_TEMPLATE.md` — how to add a future seat.
+- `roster.md` — the full written library, polarity pairs, and convening profiles.
 - `directives.md` — the standing rules Marshall enforces (including "advise, never act").
 - `demos/verdict-template.md` — the decision-record format the council writes to.
-- `install.sh` — drops the skill + subagents into `~/.claude`.
+- `configs/provider-model-slots.example.yaml` — optional cross-model slot mapping example.
+- `verdicts/` — the default output directory for generated verdict files.
+- `install.sh` — installs the skill for Claude Code, Codex, or Antigravity.
 
 ## Install
 
 ```bash
-./install.sh            # or:  ./install.sh --dry-run   to preview
+./install.sh                         # Claude Code, default target
+./install.sh --target codex          # Codex
+./install.sh --target antigravity    # Antigravity
+./install.sh --target all --dry-run  # preview every target
 ```
 
-Restart Claude Code; `/conclave` becomes available.
+Restart the target tool after installation so it can discover the skill. Use `/conclave` where slash commands are supported; otherwise ask the tool to use the Sovereign Conclave skill.
 
 ## Use
 
@@ -40,7 +45,7 @@ Paste or attach the real artifacts — code, numbers, the doc. They become the *
 
 ## Growing the roster
 
-Convene small — three to eight seats plus Marshall. The library in `roster.md` can be as large as you like; the meeting stays small. Add a seat only when it argues a stance no current seat covers: copy `_TEMPLATE.md`, write the lens, done. A seat that agrees with one you already have is just cost — and a persona is a *lens*, never a claim that the model gained a skill it lacked.
+Convene small — three to eight seats plus Marshall. The named pantheon in `roster.md` is fully written. Add another seat only when it argues a stance or structural check no current seat covers: copy `_TEMPLATE.md`, write the lens, done. A seat that agrees with one you already have is just cost — and a persona is a *lens*, never a claim that the model gained a skill it lacked.
 
 ## License
 

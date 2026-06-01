@@ -1,0 +1,46 @@
+# Example provider/model slot mapping for optional cross-model routing.
+# API keys load from environment variables per Directive D-5 and are NEVER committed.
+# Replace placeholder providers and model families with the local routing names your tool supports.
+
+defaults:
+  fallback_slot: balanced
+  key_source: environment
+
+slots:
+  fast:
+    provider: provider-alpha
+    model_family: fast-general
+  balanced:
+    provider: provider-beta
+    model_family: balanced-reasoning
+  deep:
+    provider: provider-gamma
+    model_family: deep-reasoning
+  verifier:
+    provider: provider-delta
+    model_family: verification-reasoning
+
+seat_slots:
+  # Spread polarity partners across providers/model families where possible.
+  conclave-zhukov: fast
+  conclave-aurelius: deep
+  conclave-washington: balanced
+  conclave-giap: fast
+  conclave-pershing: balanced
+  conclave-suleiman: fast
+  conclave-elizabeth: deep
+  conclave-mandela: deep
+  conclave-lee-kuan-yew: balanced
+  conclave-augustus: deep
+  conclave-toussaint: fast
+  conclave-sejong: balanced
+  conclave-von-neumann: deep
+  conclave-feynman: balanced
+  conclave-oppenheimer: deep
+  conclave-sun-tzu: deep
+
+  # Structural checks should not share every blind spot with the advocates.
+  conclave-marshall: verifier
+  conclave-lady-hale: verifier
+  conclave-bhagwati: verifier
+  conclave-chaskalson: verifier
