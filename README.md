@@ -257,8 +257,15 @@ Curated examples live under [demos/verdicts/](demos/verdicts/):
 - [war-game-launch-plan.md](demos/verdicts/war-game-launch-plan.md)
 - [esiasa-civic-stress-route-backed-dossier.md](demos/verdicts/esiasa-civic-stress-route-backed-dossier.md)
 - [pandemic-preparedness-county-response.md](demos/verdicts/pandemic-preparedness-county-response.md)
+- [self-war-game-repo-readiness.md](demos/verdicts/self-war-game-repo-readiness.md)
 
 They show the expected standard: clear decision framing, frozen evidence, real disagreement, Marshall verification, confidence, unresolved dissent, and advice-only recommendation language. [docs/GOOD_VS_BAD_VERDICTS.md](docs/GOOD_VS_BAD_VERDICTS.md) contrasts a grounded verdict with a fluent, ungrounded one on the same decision.
+
+The self-war-game example is intentionally historical: it captures the repo inspecting its own pre-hardening state, surfacing a stale provider-backed transcript test expectation and generated-roster drift before those issues were fixed. The full public example set for that run is:
+
+- [demos/prompts/self-war-game-repo-readiness.md](demos/prompts/self-war-game-repo-readiness.md)
+- [demos/evidence-ledgers/self-war-game-repo-readiness.json](demos/evidence-ledgers/self-war-game-repo-readiness.json)
+- [demos/verdicts/self-war-game-repo-readiness.md](demos/verdicts/self-war-game-repo-readiness.md)
 
 ## Repository Map
 
@@ -280,6 +287,7 @@ They show the expected standard: clear decision framing, frozen evidence, real d
 | [demos/verdict-template.md](demos/verdict-template.md) | Blank verdict format |
 | [demos/evidence-ledger-template.md](demos/evidence-ledger-template.md) | Standalone Evidence Ledger preparation template |
 | [demos/evidence-ledgers/](demos/evidence-ledgers/) | Public machine-readable demo ledgers |
+| [demos/prompts/](demos/prompts/) | Public prompt examples used to generate tracked demos |
 | [demos/verdicts/](demos/verdicts/) | Curated example verdicts |
 | [ledgers/](ledgers/) | Private machine-readable ledgers, git-ignored except `.gitkeep` |
 | [docs/](docs/) | Quickstart, concepts, runner docs, roadmap, progress tracker |

@@ -7,6 +7,7 @@
   citation rules, source quality, redactions, and runner usage.
 - [GOOD_VS_BAD_VERDICTS.md](GOOD_VS_BAD_VERDICTS.md) - grounded vs. ungrounded
   verdicts on the same decision, and the ten-second test to tell them apart.
+- [../demos/prompts/](../demos/prompts/) - public prompt examples used to create tracked demo verdicts and ledgers.
 - [../schemas/evidence-ledger.schema.json](../schemas/evidence-ledger.schema.json) -
   machine-readable Evidence Ledger schema.
 - [RUNNER.md](RUNNER.md) - local runner commands and current limitations.

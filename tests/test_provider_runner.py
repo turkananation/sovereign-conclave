@@ -89,8 +89,8 @@ class ProviderRunIntegrationTests(unittest.TestCase):
             self.assertEqual(len(transcripts), 1)
             data = json.loads(transcripts[0].read_text())
             self.assertEqual(data["errors"], 0)
-            # 3 advocates + 1 justice + 1 verifier + 1 synthesis for the risk profile.
-            self.assertEqual(len(data["calls"]), 6)
+            # 4 advocates + 2 justices + 1 verifier + 1 synthesis for the risk profile.
+            self.assertEqual(len(data["calls"]), 8)
 
     def test_falls_back_without_a_client(self):
         env = {k: v for k, v in os.environ.items() if k not in ("CONCLAVE_PROVIDER_CMD", "ANTHROPIC_API_KEY")}

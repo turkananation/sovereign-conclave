@@ -1,0 +1,149 @@
+{
+    "schema_version": "1.0.0",
+    "ledger_id": "demo-self-war-game-repo-readiness-20260601",
+    "decision": "Should Sovereign Conclave be treated as broadly release-ready now, held for hardening first, or limited to caveated beta/internal use?",
+    "prepared_by": "Sovereign Conclave demo",
+    "freeze_time_utc": "2026-06-01T13:36:55Z",
+    "ledger_status": "frozen",
+    "sensitivity": "public",
+    "entries": [
+        {
+            "id": "E1",
+            "item": "README presents Sovereign Conclave as an evidence-grounded deliberation protocol package with 33 active seats, 24 profiles, installer, local runner, and curated demos.",
+            "source_type": "repository_file",
+            "source": "README.md",
+            "provenance": "Public repo file observed in the self-war-game run on 2026-06-01.",
+            "handling": "Public project claim; use as release-facing representation.",
+            "sensitivity": "public"
+        },
+        {
+            "id": "E2",
+            "item": "The standing directives require evidence before opinion, forced dissent, advice-only output, env-only provider routing, and frozen-ledger discipline.",
+            "source_type": "policy",
+            "source": "directives.md",
+            "provenance": "Public repo policy file observed in the self-war-game run on 2026-06-01.",
+            "handling": "Authoritative project governance rule.",
+            "sensitivity": "public"
+        },
+        {
+            "id": "E3",
+            "item": "`scripts/validate_repo.py` enforces frontmatter, path, model, footer, profile, provider-config, demo verdict, and demo ledger invariants.",
+            "source_type": "repository_file",
+            "source": "scripts/validate_repo.py",
+            "provenance": "Public repo code observed in the self-war-game run on 2026-06-01.",
+            "handling": "Repository code; authoritative on structural validation scope.",
+            "sensitivity": "public"
+        },
+        {
+            "id": "E4",
+            "item": "`scripts/provider_runner.py` makes provider mode opt-in and env-only, and records advocate Round 1 calls, Justice checks, Marshall verification, and synthesis in the transcript.",
+            "source_type": "repository_file",
+            "source": "scripts/provider_runner.py",
+            "provenance": "Public repo code observed in the self-war-game run on 2026-06-01.",
+            "handling": "Repository code; authoritative on provider-backed runner behavior.",
+            "sensitivity": "public"
+        },
+        {
+            "id": "E5",
+            "item": "`configs/conclave-roster.json` declares 33 seats, 24 profiles, 22 polarity pairs, and `full-conclave` as 32 listed seats plus Marshall.",
+            "source_type": "repository_file",
+            "source": "configs/conclave-roster.json",
+            "provenance": "Public repo config observed in the self-war-game run on 2026-06-01.",
+            "handling": "Machine-readable source of truth for roster/profile makeup.",
+            "sensitivity": "public"
+        },
+        {
+            "id": "E6",
+            "item": "Running `python3 scripts/validate_repo.py` passed with `Validation passed` and `seats=33 profiles=24 polarity_pairs=22 demo_ledgers=3 schema_enforced=False`.",
+            "source_type": "command_output",
+            "source": "python3 scripts/validate_repo.py",
+            "provenance": "Observed terminal output during the self-war-game run on 2026-06-01.",
+            "handling": "Historical command output; applies to the repo state at the time of the run.",
+            "sensitivity": "public",
+            "observed_at_utc": "2026-06-01T13:20:00Z"
+        },
+        {
+            "id": "E7",
+            "item": "Running `python3 -m unittest discover -s tests` failed 1 of 26 tests: `test_transcript_is_captured` expected `len(data[\"calls\"]) == 6` but actual was 8.",
+            "source_type": "command_output",
+            "source": "python3 -m unittest discover -s tests",
+            "provenance": "Observed terminal output during the self-war-game run on 2026-06-01.",
+            "handling": "Historical command output; captures the pre-hardening failing state.",
+            "sensitivity": "public",
+            "observed_at_utc": "2026-06-01T13:20:00Z"
+        },
+        {
+            "id": "E8",
+            "item": "`tests/test_provider_runner.py` hardcoded the old expectation with the comment `3 advocates + 1 justice + 1 verifier + 1 synthesis for the risk profile.`",
+            "source_type": "repository_file",
+            "source": "tests/test_provider_runner.py",
+            "provenance": "Public repo test file observed in the self-war-game run on 2026-06-01.",
+            "handling": "Repository test file; direct evidence of the stale expectation present at that time.",
+            "sensitivity": "public"
+        },
+        {
+            "id": "E9",
+            "item": "The current `risk` profile contained 4 advocates and 2 justices, and `provider_runner.py` looped separately over advocates, justices, verifier, and synthesis, implying 8 transcript calls.",
+            "source_type": "repository_file",
+            "source": "configs/conclave-roster.json + scripts/provider_runner.py",
+            "provenance": "Public repo config/code correlation observed in the self-war-game run on 2026-06-01.",
+            "handling": "Mechanistic inference from source code and config.",
+            "sensitivity": "public"
+        },
+        {
+            "id": "E10",
+            "item": "Running `python3 scripts/generate_roster.py --check` reported `roster.md is out of sync with configs/conclave-roster.json`, including divergent quorum wording and profile table content.",
+            "source_type": "command_output",
+            "source": "python3 scripts/generate_roster.py --check",
+            "provenance": "Observed terminal output during the self-war-game run on 2026-06-01.",
+            "handling": "Historical command output; captures the generated-file drift present at that time.",
+            "sensitivity": "public",
+            "observed_at_utc": "2026-06-01T13:20:00Z"
+        },
+        {
+            "id": "E11",
+            "item": "`bash -n install.sh` passed and `./install.sh --target all --dry-run` showed copy-only writes for agents, docs, configs, schemas, demos, and skill files into Claude, Codex, and Antigravity directories.",
+            "source_type": "command_output",
+            "source": "bash -n install.sh && ./install.sh --target all --dry-run",
+            "provenance": "Observed terminal output during the self-war-game run on 2026-06-01.",
+            "handling": "Historical command output; evidence about installer behavior on that repo state.",
+            "sensitivity": "public",
+            "observed_at_utc": "2026-06-01T13:20:00Z"
+        },
+        {
+            "id": "E12",
+            "item": "SECURITY.md names secret disclosure, unsafe installer behavior, misleading unsupported claims, and provider-routing misuse as the main repo risks; provider mode is off by default and env-only.",
+            "source_type": "policy",
+            "source": "SECURITY.md",
+            "provenance": "Public repo policy file observed in the self-war-game run on 2026-06-01.",
+            "handling": "Authoritative public risk model.",
+            "sensitivity": "public"
+        },
+        {
+            "id": "E13",
+            "item": "SKILL.md requires blind Round 1, a convergence check, Round 2 cross-examination, a counterfactual pass on premature convergence, and writing a verdict file before chat output.",
+            "source_type": "repository_file",
+            "source": "SKILL.md",
+            "provenance": "Public repo protocol file observed in the self-war-game run on 2026-06-01.",
+            "handling": "Authoritative protocol contract for the full `/conclave` skill.",
+            "sensitivity": "public"
+        },
+        {
+            "id": "E14",
+            "item": "docs/RUNNER.md says provider mode runs blind Round 1, Justice checks, Marshall verification, and neutral synthesis; it does not claim the full SKILL.md cross-examination flow.",
+            "source_type": "repository_file",
+            "source": "docs/RUNNER.md",
+            "provenance": "Public repo documentation observed in the self-war-game run on 2026-06-01.",
+            "handling": "Public documentation; explicit scope statement for the runner implementation.",
+            "sensitivity": "public"
+        }
+    ],
+    "open_evidence_gaps": [
+        {
+            "claim": "A caveated beta/internal release posture was already sufficiently justified on the historical ledger despite the failing provider-backed transcript test and roster drift.",
+            "would_be_settled_by": "Release-facing beta-only caveats and acceptance criteria, written at the time of the run, explicitly narrowing claims and tolerating the known defects."
+        }
+    ],
+    "redactions": [],
+    "notes": "Public historical self-war-game ledger. This captures repo state before the same-day hardening pass fixed the stale provider-backed transcript test expectation and regenerated roster.md."
+}
