@@ -57,6 +57,41 @@ def provider_slot_ids() -> set[str]:
     return ids
 
 
+def citation_ids(text: str) -> set[str]:
+    ids: set[str] = set()
+    for bracket in re.findall(r"\[([^\]]*E\d+[^\]]*)\]", text):
+        for start, end in re.findall(r"E(\d+)(?:\s*-\s*E?(\d+))?", bracket):
+            if end:
+                for value in range(int(start), int(end) + 1):
+                    ids.add(f"E{value}")
+            else:
+                ids.add(f"E{int(start)}")
+    return ids
+
+
+def validate_demo_verdicts(failures: list[str]) -> None:
+    verdict_dir = ROOT / "demos" / "verdicts"
+    for path in sorted(verdict_dir.glob("*.md")):
+        text = read_text(path)
+        rel = path.relative_to(ROOT)
+        if "## 2. Evidence Ledger" not in text:
+            fail(f"{rel}: missing Evidence Ledger section", failures)
+            continue
+        if "| ID | Item | Source / provenance | Handling |" not in text:
+            fail(f"{rel}: Evidence Ledger must use the four-column standard", failures)
+
+        ledger_section = text.split("## 2. Evidence Ledger", 1)[1].split("\n## ", 1)[0]
+        ledger_ids = set(re.findall(r"^\| (E\d+) \|", ledger_section, flags=re.MULTILINE))
+        if not ledger_ids:
+            fail(f"{rel}: Evidence Ledger has no E# rows", failures)
+            continue
+
+        used_ids = citation_ids(text)
+        unknown = sorted(used_ids - ledger_ids, key=lambda item: int(item[1:]))
+        if unknown:
+            fail(f"{rel}: cites unknown ledger IDs {unknown}", failures)
+
+
 def validate_agent(seat: dict[str, object], failures: list[str]) -> None:
     seat_id = str(seat["id"])
     seat_type = str(seat["type"])
@@ -151,6 +186,7 @@ def main() -> int:
 
     for seat in seats:
         validate_agent(seat, failures)
+    validate_demo_verdicts(failures)
 
     profile_ids = [profile["id"] for profile in profiles]
     if len(profile_ids) != len(set(profile_ids)):
@@ -186,7 +222,9 @@ def main() -> int:
         "docs/PROGRESS_TRACKER.md",
         "docs/QUICKSTART.md",
         "docs/CONCEPTS.md",
+        "docs/EVIDENCE_LEDGER.md",
         "docs/SEAT_EXPANSION_RATIONALE.md",
+        "demos/evidence-ledger-template.md",
     ]
     for doc in required_docs:
         if not (ROOT / doc).exists():

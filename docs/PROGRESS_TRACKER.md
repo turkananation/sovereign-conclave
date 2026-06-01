@@ -20,7 +20,8 @@ Last updated: 2026-06-01
 | Validation and CI | Complete after 0.1.0 | `scripts/validate_repo.py` and `.github/workflows/ci.yml` exist. |
 | Local runner scaffold | Complete after 0.1.0 | `bin/conclave` creates verdict scaffolds from the machine-readable roster. |
 | Demo verdicts | Complete after 0.1.0 | `demos/verdicts/` includes eSiasa civic-stress and pandemic-preparedness examples. |
-| User docs | Complete after 0.1.0 | `docs/README.md`, `docs/QUICKSTART.md`, `docs/CONCEPTS.md`, and `docs/RUNNER.md` exist. |
+| Evidence Ledger | Complete after 0.1.0 | `docs/EVIDENCE_LEDGER.md`, `demos/evidence-ledger-template.md`, runner evidence flags, and demo ledger validation define and seed frozen ledgers. |
+| User docs | Complete after 0.1.0 | `docs/README.md`, `docs/QUICKSTART.md`, `docs/CONCEPTS.md`, `docs/EVIDENCE_LEDGER.md`, and `docs/RUNNER.md` exist. |
 
 ## 0.1.0 Completed
 
@@ -39,6 +40,7 @@ Last updated: 2026-06-01
 - Added Jackson and Sachs as Justice checks for emergency powers and repair/transitional legitimacy.
 - Added `oppression-audit`, `decolonization`, and `emergency-powers` convening profiles.
 - Documented the expansion standard and counterweights in `docs/SEAT_EXPANSION_RATIONALE.md`.
+- Built out the Evidence Ledger as a documented contract, reusable template, richer verdict table, and runner-seeded input path.
 
 ## Next Milestones
 
@@ -47,6 +49,7 @@ Last updated: 2026-06-01
 | 0.1.1 | Validation scripts | Done | Validate agent files, roster alignment, provider slots, docs, and installer dry-run output. |
 | 0.1.2 | CI bootstrap | Done | Run shell syntax, validation scripts, installer dry-run, and local runner smoke tests. |
 | 0.1.3 | 33-seat balance pass | Done | Finalize original 33-seat target with documented eligibility, counterweights, and danger-lens boundaries. |
+| 0.1.4 | Evidence Ledger buildout | Done | Add guide, template, source-quality rules, redaction handling, and runner evidence flags. |
 | 0.2.0 | Demo verdict pack | In progress | eSiasa civic-stress and pandemic-preparedness demos are in; architecture and war-game remain. |
 | 0.3.0 | Portable runner | In progress | Deterministic scaffold runner exists; provider-backed execution remains future work. |
 

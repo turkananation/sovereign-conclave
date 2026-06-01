@@ -21,14 +21,14 @@ Optimize for early containment, public trust, rights-respecting compliance, and 
 
 This is a public demo ledger, not a live county file.
 
-| ID | Item | Source / provenance |
-| --- | --- | --- |
-| E1 | Draft plan names one incident commander but no first, second, or ward-level deputies. | Sample county readiness packet. |
-| E2 | Communications draft proposes daily SMS and radio updates but has no approved uncertainty language or rumor-response protocol. | Sample county readiness packet. |
-| E3 | Logistics inventory lists three days of PPE for the county referral hospital and no ward-level stock ledger. | Sample county readiness packet. |
-| E4 | Legal memo authorizes temporary gathering limits but does not define sunset criteria or review cadence. | Sample county readiness packet. |
-| E5 | Clinic access map identifies remote wards with low phone access and community health volunteer coverage gaps. | Sample county readiness packet. |
-| E6 | Priority-service list covers health workers, elderly residents, and immunocompromised residents, but not transport workers or market vendors. | Sample county readiness packet. |
+| ID | Item | Source / provenance | Handling |
+| --- | --- | --- | --- |
+| E1 | Draft plan names one incident commander but no first, second, or ward-level deputies. | Sample county readiness packet. | Public demo input; proves only the sample plan state. |
+| E2 | Communications draft proposes daily SMS and radio updates but has no approved uncertainty language or rumor-response protocol. | Sample county readiness packet. | Public demo input; communication gap is directly stated. |
+| E3 | Logistics inventory lists three days of PPE for the county referral hospital and no ward-level stock ledger. | Sample county readiness packet. | Public demo input; stock depth beyond the packet is unknown. |
+| E4 | Legal memo authorizes temporary gathering limits but does not define sunset criteria or review cadence. | Sample county readiness packet. | Public demo input; rights analysis is limited to the draft memo. |
+| E5 | Clinic access map identifies remote wards with low phone access and community health volunteer coverage gaps. | Sample county readiness packet. | Public demo input; map accuracy is assumed for the demo. |
+| E6 | Priority-service list covers health workers, elderly residents, and immunocompromised residents, but not transport workers or market vendors. | Sample county readiness packet. | Public demo input; absence from the list is treated as unresolved coverage. |
 
 > Every claim below references the frozen ledger.
 

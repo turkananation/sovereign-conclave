@@ -33,7 +33,9 @@ Effort scale:
 | eSiasa civic-stress demo verdict | Done | M | Shows route-backed county dossier reasoning with evidence citations. |
 | Pandemic-preparedness demo verdict | Done | M | Demonstrates continuity, public trust, access, and rights checks. |
 | Good vs. bad verdict examples | Planned | M | Teach why evidence grounding beats fluent guessing. |
-| Evidence-ledger examples | Planned | M | Help users provide useful inputs before the Conclave speaks. |
+| Evidence Ledger guide and template | Done | M | `docs/EVIDENCE_LEDGER.md` and `demos/evidence-ledger-template.md` define the ledger contract, citation rules, source quality, redactions, and freeze behavior. |
+| Evidence-seeded runner scaffolds | Done | M | `bin/conclave` supports repeated `--evidence-file` and `--evidence-note` inputs. |
+| Demo ledger validation | Done | S | `scripts/validate_repo.py` checks demo verdict ledger shape and unknown `E#` citations. |
 
 ## 0.3.x - Make It Portable
 

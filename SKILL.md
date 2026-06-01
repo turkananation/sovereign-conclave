@@ -23,7 +23,7 @@ Convene a small conclave of deliberately opposed personas to deliberate a hard d
 ## Protocol
 
 ### Round 0 — Evidence Ledger (always first)
-Before any seat speaks, assemble the **Evidence Ledger**: the concrete artifacts the decision rests on — pasted code, numbers, files, retrieved sources, quotes. Give each a stable ID (`E1`, `E2`, …) and record its provenance. **Freeze it.** From here, every factual claim must cite a ledger ID; anything else is opinion, and Marshall will flag it. If the ledger is thin, say so plainly — a conclave deliberating without evidence produces confident guesses, not judgment.
+Before any seat speaks, assemble the **Evidence Ledger**: the concrete artifacts the decision rests on — pasted code, numbers, files, retrieved sources, quotes, command output, screenshots, or explicit user assertions. Give each atomic item a stable ID (`E1`, `E2`, …), record its provenance, and state how it should be handled: primary source, local file, user assertion, redacted source, stale source, contested source, etc. Use `docs/EVIDENCE_LEDGER.md` and `demos/evidence-ledger-template.md` as the standard. **Freeze it.** From here, every factual claim must cite a ledger ID; anything else is opinion, and Marshall will flag it. If the ledger is thin, say so plainly — a conclave deliberating without evidence produces confident guesses, not judgment.
 
 ### Round 0.5 — Frame
 State the actual decision in one sentence, list the options (always include the null "do nothing" option), and name what is being optimized. Surface the load-bearing assumptions (D-2). Bad deliberation is usually the wrong question — fix the frame before anyone argues.

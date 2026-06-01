@@ -44,6 +44,11 @@ load-bearing factual claim gets an `E#` citation.
 If there is no evidence, the Conclave can still reason, but the verdict must say
 that confidence is low and Marshall must flag unsupported decisive claims.
 
+The full ledger standard is documented in
+[EVIDENCE_LEDGER.md](EVIDENCE_LEDGER.md). The short rule: each row must be
+atomic, provenance-bearing, and stable after Round 1 starts. New evidence is
+appended and marked post-freeze instead of silently changing old rows.
+
 ## Marshall
 
 Marshall is always convened. Marshall does not pick the winning option. Marshall

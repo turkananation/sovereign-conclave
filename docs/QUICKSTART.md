@@ -42,7 +42,9 @@ Use `/conclave` where slash commands are available:
 ```
 
 Paste or attach the real artifacts before Round 1. Those artifacts become the
-Evidence Ledger.
+[Evidence Ledger](EVIDENCE_LEDGER.md). Keep ledger rows atomic and provenance-bearing:
+one concrete fact, file, quote, metric, command output, or user assertion per
+`E#`.
 
 ## 4. Use the local runner scaffold
 
@@ -54,15 +56,19 @@ runner.
 bin/conclave --list-profiles
 bin/conclave --profile pandemic-preparedness --dry-run "County outbreak readiness plan"
 bin/conclave --profile architecture --stdout "Move notifications off Cloud Run?"
+bin/conclave --profile risk --evidence-file README.md --evidence-note "Rollback plan is pending owner approval." --stdout "Can this release go out?"
 ```
 
 By default, generated scaffolds are written to `verdicts/`, which is ignored
 except for `.gitkeep` because verdicts may contain sensitive evidence.
 
+Use [demos/evidence-ledger-template.md](../demos/evidence-ledger-template.md)
+when preparing evidence outside the runner.
+
 ## 5. Read the examples
 
-- `demos/verdicts/esiasa-civic-stress-route-backed-dossier.md`
-- `demos/verdicts/pandemic-preparedness-county-response.md`
+- [demos/verdicts/esiasa-civic-stress-route-backed-dossier.md](../demos/verdicts/esiasa-civic-stress-route-backed-dossier.md)
+- [demos/verdicts/pandemic-preparedness-county-response.md](../demos/verdicts/pandemic-preparedness-county-response.md)
 
 They show the intended output standard: clear decision, frozen evidence, real
 disagreement, Marshall verification, and advice rather than action.

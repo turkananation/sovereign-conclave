@@ -1,6 +1,6 @@
 # Conclave Directives
 
-Standing rules. **Marshall** (the verifier seat) enforces D-1 through D-3 in every deliberation; D-4 and D-5 are operational invariants of the skill.
+Standing rules. **Marshall** (the verifier seat) enforces D-1 through D-3 and D-6 in every deliberation; D-4 and D-5 are operational invariants of the skill.
 
 - **D-1 — Evidence before opinion.** No recommendation may rest on a claim absent from the Evidence Ledger. Unsupported decisive claims are flagged and demoted.
 
@@ -11,6 +11,8 @@ Standing rules. **Marshall** (the verifier seat) enforces D-1 through D-3 in eve
 - **D-4 — Advise, never act.** The Conclave issues recommendations to a human. No seat may authorize an irreversible action (deploy, push, spend, send). Synthesis is phrased as advice pending the human's decision.
 
 - **D-5 — Local-first, zero-key default.** The skill runs on whatever model Claude Code is configured with. Optional cross-model routing (to reduce monoculture) is supplied via config/environment, never as hardcoded secrets.
+
+- **D-6 — Frozen ledger.** Evidence rows are atomic, stable, and provenance-bearing before Round 1. New evidence after freeze is appended, marked post-freeze, and called out in the verdict instead of silently rewriting the record.
 
 ---
 

@@ -18,14 +18,14 @@ Optimize for mobile reliability, operator trust, auditability, and civic-stress 
 
 ## 2. Evidence Ledger (frozen before Round 1)
 
-| ID | Item | Source / provenance |
-| --- | --- | --- |
-| E1 | The Civic Stress compact county dossier was converted from inline/dialog detail to a dedicated route-backed mobile flow. | Prior eSiasa rollout summary. |
-| E2 | Compact/mobile county taps now push `/civic-stress/counties/:countyId`; non-compact layouts preserve richer desktop/tablet behavior. | Prior eSiasa rollout summary. |
-| E3 | `CivicStressCountyDossierScreen` renders the route-backed compact dossier with page header, back action, refresh action, and county detail. | Prior eSiasa rollout summary. |
-| E4 | `AdminCountyIntelligenceContentView` accepts `dossierCountyId`; when present it loads dossier detail directly. | Prior eSiasa rollout summary. |
-| E5 | A compact county brief chip overflow was fixed by constraining label and value with `Flexible`. | Prior eSiasa rollout summary. |
-| E6 | Validation passed with focused mobile navigation/router tests, full `esiasa_admin` verification, and `git diff --check`. | Prior eSiasa rollout summary. |
+| ID | Item | Source / provenance | Handling |
+| --- | --- | --- | --- |
+| E1 | The Civic Stress compact county dossier was converted from inline/dialog detail to a dedicated route-backed mobile flow. | Prior eSiasa rollout summary. | Demo uses prior rollout evidence; live code should be rechecked before a real decision. |
+| E2 | Compact/mobile county taps now push `/civic-stress/counties/:countyId`; non-compact layouts preserve richer desktop/tablet behavior. | Prior eSiasa rollout summary. | Demo uses prior rollout evidence; routing state may drift. |
+| E3 | `CivicStressCountyDossierScreen` renders the route-backed compact dossier with page header, back action, refresh action, and county detail. | Prior eSiasa rollout summary. | Demo uses prior rollout evidence; UI details should be verified in current code. |
+| E4 | `AdminCountyIntelligenceContentView` accepts `dossierCountyId`; when present it loads dossier detail directly. | Prior eSiasa rollout summary. | Demo uses prior rollout evidence; direct loading behavior should be tested live. |
+| E5 | A compact county brief chip overflow was fixed by constraining label and value with `Flexible`. | Prior eSiasa rollout summary. | Demo uses prior rollout evidence; screen-size coverage is bounded by the cited tests. |
+| E6 | Validation passed with focused mobile navigation/router tests, full `esiasa_admin` verification, and `git diff --check`. | Prior eSiasa rollout summary. | Demo uses prior rollout evidence; test results may be stale. |
 
 > Every claim below references the frozen ledger.
 

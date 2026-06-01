@@ -26,6 +26,12 @@ ISO format.
   standard, counterweights, and danger-lens boundaries.
 - `oppression-audit`, `decolonization`, and `emergency-powers` convening
   profiles.
+- `docs/EVIDENCE_LEDGER.md` and `demos/evidence-ledger-template.md` for the
+  Evidence Ledger contract, citation rules, source quality, redactions, and
+  freeze procedure.
+- Evidence-seeded runner scaffolds via repeated `--evidence-file` and
+  `--evidence-note` flags.
+- Demo verdict validation for four-column ledgers and unknown `E#` citations.
 
 ### Planned
 

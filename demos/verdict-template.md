@@ -10,10 +10,13 @@
 
 ## 2. Evidence Ledger (frozen before Round 1)
 
-| ID | Item | Source / provenance |
-| --- | --- | --- |
-| E1 | <fact / number / file / quote> | <where it came from> |
-| E2 | … | … |
+**Freeze time:** <UTC timestamp>
+**Ledger status:** Frozen before Round 1.
+
+| ID | Item | Source / provenance | Handling |
+| --- | --- | --- | --- |
+| E1 | <fact / number / file / quote> | <where it came from> | <quoted fact / local file / user assertion / public source / redacted source> |
+| E2 | ... | ... | ... |
 
 > Every claim below must reference a ledger ID, or be flagged by Marshall.
 

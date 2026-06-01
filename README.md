@@ -2,7 +2,7 @@
 
 ![Sovereign Conclave banner](docs/assets/sovereign-conclave-banner.svg)
 
-**Sovereign Conclave is an evidence-grounded deliberation protocol for hard decisions.** It convenes a small set of deliberately opposed seats, forces every factual claim back to a frozen Evidence Ledger, preserves dissent, and writes a decision record that advises the human without authorizing action.
+**Sovereign Conclave is an evidence-grounded deliberation protocol for hard decisions.** It convenes a small set of deliberately opposed seats, forces every factual claim back to a frozen [Evidence Ledger](docs/EVIDENCE_LEDGER.md), preserves dissent, and writes a decision record that advises the human without authorizing action.
 
 It is built for decisions where a fluent single answer is not enough: architecture calls, institutional strategy, civic-risk review, emergency preparedness, red-team war-gaming, governance tradeoffs, and high-consequence product or policy choices.
 
@@ -12,7 +12,7 @@ Sovereign Conclave is a portable skill package for Claude Code, Codex, and Antig
 
 At its core, it gives an assistant a repeatable protocol:
 
-1. Freeze the Evidence Ledger.
+1. Freeze the [Evidence Ledger](docs/EVIDENCE_LEDGER.md).
 2. Frame the actual decision and options.
 3. Convene a small quorum from a larger seat library.
 4. Run blind first-round analysis to prevent herding.
@@ -96,7 +96,7 @@ Use `/conclave` where slash commands are supported:
 /conclave --members feynman,lee-kuan-yew,aurelius Is the caching design sound?
 ```
 
-Paste or attach the real artifacts before Round 1. They become the Evidence Ledger, and Marshall flags claims that are unsupported by it.
+Paste or attach the real artifacts before Round 1. They become the [Evidence Ledger](docs/EVIDENCE_LEDGER.md), and Marshall flags claims that are unsupported by it.
 
 ## Local Runner
 
@@ -106,6 +106,7 @@ The local runner is deterministic. It selects seats from `configs/conclave-roste
 bin/conclave --list-profiles
 bin/conclave --profile pandemic-preparedness --dry-run "County outbreak readiness plan"
 bin/conclave --profile architecture --stdout "Move notifications off Cloud Run?"
+bin/conclave --profile risk --evidence-file README.md --evidence-note "Rollback plan is pending owner approval." --stdout "Can this release go out?"
 ```
 
 Generated local verdicts go to `verdicts/`, which is ignored by git except for `.gitkeep` because verdicts may contain sensitive evidence.
@@ -155,6 +156,7 @@ They show the expected standard: clear decision framing, frozen evidence, real d
 | [scripts/validate_repo.py](scripts/validate_repo.py) | Repository invariant validator |
 | [bin/conclave](bin/conclave) | Local verdict-scaffold runner |
 | [demos/verdict-template.md](demos/verdict-template.md) | Blank verdict format |
+| [demos/evidence-ledger-template.md](demos/evidence-ledger-template.md) | Standalone Evidence Ledger preparation template |
 | [demos/verdicts/](demos/verdicts/) | Curated example verdicts |
 | [docs/](docs/) | Quickstart, concepts, runner docs, roadmap, progress tracker |
 | [.github/workflows/ci.yml](.github/workflows/ci.yml) | CI validation workflow |
@@ -164,6 +166,7 @@ They show the expected standard: clear decision framing, frozen evidence, real d
 - [docs/README.md](docs/README.md) - documentation index.
 - [docs/QUICKSTART.md](docs/QUICKSTART.md) - shortest path to install and run.
 - [docs/CONCEPTS.md](docs/CONCEPTS.md) - seats, Evidence Ledger, Marshall, Justices, profiles, runner.
+- [docs/EVIDENCE_LEDGER.md](docs/EVIDENCE_LEDGER.md) - the Evidence Ledger contract, table shape, citation rules, source quality, redaction guidance, and runner usage.
 - [docs/RUNNER.md](docs/RUNNER.md) - local runner behavior and limitations.
 - [docs/SEAT_EXPANSION_RATIONALE.md](docs/SEAT_EXPANSION_RATIONALE.md) - why the library expands to 33 seats and how the added danger, grievance, and Justice lenses are bounded.
 - [docs/FEATURE_ROADMAP.md](docs/FEATURE_ROADMAP.md) - planned work and effort.
