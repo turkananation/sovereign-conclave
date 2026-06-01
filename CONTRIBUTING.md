@@ -41,6 +41,7 @@ Every Justice seat must include:
 Before opening a pull request, run:
 
 ```bash
+python3 scripts/validate_repo.py
 bash -n install.sh
 git diff --check
 ./install.sh --target all --dry-run

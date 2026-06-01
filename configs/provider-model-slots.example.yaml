@@ -27,6 +27,7 @@ seat_slots:
   conclave-washington: balanced
   conclave-giap: fast
   conclave-pershing: balanced
+  conclave-yi-sun-shin: balanced
   conclave-suleiman: fast
   conclave-elizabeth: deep
   conclave-mandela: deep
@@ -40,14 +41,19 @@ seat_slots:
   conclave-sun-tzu: deep
   conclave-mcchrystal: fast
   conclave-hayden: deep
+  conclave-authoritarian: deep
   conclave-obama: deep
   conclave-bush: deep
   conclave-atkinson: verifier
   conclave-cheney: deep
   conclave-maathai: balanced
+  conclave-colonial-administrator: deep
+  conclave-mau-mau: balanced
 
   # Structural checks should not share every blind spot with the advocates.
   conclave-marshall: verifier
   conclave-lady-hale: verifier
   conclave-bhagwati: verifier
   conclave-chaskalson: verifier
+  conclave-jackson: verifier
+  conclave-sachs: verifier

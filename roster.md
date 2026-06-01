@@ -25,12 +25,17 @@ Marshall is convened in every deliberation. The other Justices are optional stru
 | `conclave-bush` | Sovereign | Continuity, biodefense readiness, hardened crisis governance | opus |
 | `conclave-cheney` | Emergency Executive | Concentrated command authority under worst-case threat | opus |
 | `conclave-hayden` | Intelligence | Hidden threats, collection discipline, secrecy with oversight debt | opus |
+| `conclave-authoritarian` | Danger Lens | Coercive control, fear, surveillance, patronage, and false stability | opus |
 | `conclave-atkinson` | Law | Legal process, accountability channels, protected records | opus |
 | `conclave-maathai` | Civic Ecology | Grassroots stewardship, land, community legitimacy | sonnet |
+| `conclave-colonial-administrator` | Danger Lens | Extractive administration, indirect rule, classification, and order without belonging | opus |
+| `conclave-mau-mau` | Liberation | Land, dignity, dispossession, closed lawful channels, and resistance pressure | sonnet |
 | `conclave-marshall` | Justice (always) | Evidence-grounding and directive check | opus |
 | `conclave-lady-hale` | Justice | Proportionality and rights check | opus |
 | `conclave-bhagwati` | Justice | Access, standing, and missing-stakeholder check | opus |
 | `conclave-chaskalson` | Justice | Constitutional values and dignity check | opus |
+| `conclave-jackson` | Justice | Emergency authority, institutional role, oversight, and sunset check | opus |
+| `conclave-sachs` | Justice | Repair, memory, remedy, restoration, and transitional legitimacy check | opus |
 | `conclave-feynman` | Inner Sanctum | First principles, refuses unexplained complexity | sonnet |
 | `conclave-aurelius` | Inner Sanctum | Downside containment, restraint, moral clarity | opus |
 | `conclave-von-neumann` | Inner Sanctum | Formal modeling, game theory, expected value | opus |
@@ -39,7 +44,7 @@ Marshall is convened in every deliberation. The other Justices are optional stru
 
 ## Library status
 
-The core pantheon and the eSiasa-oriented extension seats are written. Add a new seat the same way only when it brings a stance or structural check no existing seat covers:
+The 33-seat library is written. It includes the core pantheon, eSiasa-oriented extension seats, danger lenses for ugly governance logics, and additional Justice checks. Add a new seat the same way only when it brings a stance or structural check no existing seat covers:
 
 1. Copy `agents/_TEMPLATE.md`.
 2. Give the seat one clear lens, an owned bias, a "You are NOT" boundary, and a polarity partner.
@@ -69,6 +74,11 @@ These are the canonical contrasts. Use them to build small quorums with real dis
 | Obama ⟷ Bush | Public-trust preparedness vs. hardened continuity |
 | Atkinson ⟷ Cheney | Lawful accountability channels vs. emergency executive power |
 | Maathai ⟷ Lee Kuan Yew | Grassroots ecological legitimacy vs. technocratic developmental efficiency |
+| Authoritarian Control ⟷ Chaskalson | Coercive control vs. constitutional values and dignity |
+| Colonial Administrator ⟷ Mau Mau | Extractive indirect order vs. anti-colonial land and dignity grievance |
+| Jackson ⟷ Cheney | Emergency authority limits vs. emergency executive concentration |
+| Sachs ⟷ Authoritarian Control | Repair and transitional legitimacy vs. coercive control |
+| Colonial Administrator ⟷ Maathai | Extractive administration vs. ecological civic stewardship |
 
 ## Convening profiles
 
@@ -88,6 +98,9 @@ Marshall is always in. Pick one profile, or name members directly with `--member
 | `pandemic-preparedness` | Obama + Bush + Sejong + Bhagwati + Lady Hale | Public-health readiness, civic compliance, access, rights, and whole-of-government response |
 | `intelligence-oversight` | Hayden + Atkinson + Lady Hale + Chaskalson + Obama | Intelligence products, surveillance, lawful process, civil liberties, and trust |
 | `environmental-governance` | Maathai + Sejong + Mandela + Lee Kuan Yew + Lady Hale | Land, environment, county resilience, public participation, and implementable stewardship |
+| `oppression-audit` | Authoritarian Control + Hayden + Cheney + Jackson + Lady Hale + Chaskalson | Detecting coercion, surveillance, emergency drift, rights violations, and dignity failure |
+| `decolonization` | Colonial Administrator + Mau Mau + Toussaint + Maathai + Bhagwati + Sachs | Land, dispossession, colonial patterns, restitution, self-determination, and repair |
+| `emergency-powers` | Cheney + Bush + Jackson + Lady Hale + Atkinson + Chaskalson | Crisis authority, continuity, lawful limits, oversight, records, and sunset discipline |
 
 ### `war-game` cells
 

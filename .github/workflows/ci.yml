@@ -1,0 +1,32 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Validate shell scripts
+        run: bash -n install.sh
+
+      - name: Validate repository invariants
+        run: python3 scripts/validate_repo.py
+
+      - name: Verify installer dry run
+        run: ./install.sh --target all --dry-run
+
+      - name: Smoke test local runner
+        run: |
+          bin/conclave --list-profiles
+          bin/conclave --profile architecture --dry-run "Should we split the analytics service?"
+          bin/conclave --profile pandemic-preparedness --stdout "County outbreak readiness plan" >/tmp/conclave-verdict.md

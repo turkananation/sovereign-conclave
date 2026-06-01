@@ -7,14 +7,29 @@ ISO format.
 
 ## [Unreleased]
 
+### Added
+
+- CI workflow for shell syntax, repository validation, installer dry-run, and
+  local runner smoke tests.
+- `scripts/validate_repo.py` for agent, roster, profile, provider-slot, and doc
+  invariant checks.
+- `configs/conclave-roster.json` as the machine-readable roster/profile source.
+- `bin/conclave` and `scripts/conclave_runner.py` for deterministic local
+  verdict scaffold generation.
+- Quickstart, concepts, and runner documentation under `docs/`.
+- Curated demo verdicts for eSiasa civic-stress and pandemic-preparedness
+  profiles.
+- Expanded the active library from 28 to the original 33-seat target with
+  authoritarian-control, colonial-administration, Mau Mau, Jackson, and Sachs
+  seats.
+- `docs/SEAT_EXPANSION_RATIONALE.md` documenting the 33-seat eligibility
+  standard, counterweights, and danger-lens boundaries.
+- `oppression-audit`, `decolonization`, and `emergency-powers` convening
+  profiles.
+
 ### Planned
 
-- Add automated validation for agent frontmatter, footer invariants, and roster
-  alignment.
-- Add CI for shell syntax, markdown hygiene, dry-run installation, and agent
-  validation.
-- Add richer demo verdicts for architecture, war-game, civic-stress, and
-  pandemic-preparedness profiles.
+- Add richer demo verdicts for architecture and war-game profiles.
 
 ## [0.1.0] - 2026-06-01
 

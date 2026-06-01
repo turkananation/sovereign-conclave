@@ -14,4 +14,4 @@ Standing rules. **Marshall** (the verifier seat) enforces D-1 through D-3 in eve
 
 ---
 
-*These descend from the original Turkana Protocols: the Ouster Clause (no unilateral kinetic action) becomes D-4; the First-Principles Filter becomes D-2; Plug-and-Play Zero-Keys becomes D-5. Trimmed to what a verifier can actually enforce.*
+*These descend from the original Turkana Nation Protocols: the Ouster Clause (no unilateral kinetic action) becomes D-4; the First-Principles Filter becomes D-2; Plug-and-Play Zero-Keys becomes D-5. Trimmed to what a verifier can actually enforce.*

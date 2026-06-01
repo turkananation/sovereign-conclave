@@ -17,10 +17,12 @@ Effort scale:
 | --- | --- | --- | --- |
 | BSD 3-Clause license | Done | S | Public reuse is unblocked. |
 | Changelog, progress tracker, security policy | Done | S | Release discipline starts at 0.1.0. |
-| Agent validation script | Planned | M | Check frontmatter, model values, footer, stance sections, and no capability claims. |
-| Roster alignment validation | Planned | S | Confirm every `agents/conclave-*.md` appears in `roster.md` and vice versa. |
-| Installer dry-run tests | Planned | S | Verify Claude, Codex, and Antigravity targets without touching home directories. |
-| CI workflow | Planned | M | Run shell syntax, markdown checks, and repo validators on pull requests. |
+| Agent validation script | Done | M | `scripts/validate_repo.py` checks frontmatter, model values, footer, stance sections, and no capability claims. |
+| Roster alignment validation | Done | S | Validator confirms every `agents/conclave-*.md` appears in config and `roster.md`. |
+| 33-seat balance expansion | Done | M | Added two danger lenses, one anti-colonial grievance lens, and two Justice checks with explicit counterweights. |
+| Seat expansion rationale | Done | S | `docs/SEAT_EXPANSION_RATIONALE.md` records eligibility, balance, and why these seats are bounded. |
+| Installer dry-run tests | Done | S | CI and local checks verify Claude, Codex, and Antigravity targets without touching home directories. |
+| CI workflow | Done | M | `.github/workflows/ci.yml` runs shell syntax, repo validation, install dry-run, and runner smoke tests. |
 
 ## 0.2.x - Make the Output Irresistible
 
@@ -28,8 +30,8 @@ Effort scale:
 | --- | --- | --- | --- |
 | Architecture demo verdict | Planned | M | Show a realistic technical decision grounded in supplied artifacts. |
 | War-game demo verdict | Planned | M | Show blue/red/white cell behavior clearly. |
-| eSiasa civic-stress demo verdict | Planned | M | Best showcase for the repo's distinctive governance use case. |
-| Pandemic-preparedness demo verdict | Planned | M | Demonstrates continuity, public trust, access, and rights checks. |
+| eSiasa civic-stress demo verdict | Done | M | Shows route-backed county dossier reasoning with evidence citations. |
+| Pandemic-preparedness demo verdict | Done | M | Demonstrates continuity, public trust, access, and rights checks. |
 | Good vs. bad verdict examples | Planned | M | Teach why evidence grounding beats fluent guessing. |
 | Evidence-ledger examples | Planned | M | Help users provide useful inputs before the Conclave speaks. |
 
@@ -37,9 +39,9 @@ Effort scale:
 
 | Feature | Status | Effort | Notes |
 | --- | --- | --- | --- |
-| Local `conclave` runner | Planned | L | Run the protocol outside a specific assistant UI. |
-| Machine-readable roster | Planned | L | Add `roster.yaml` or equivalent and generate docs from it. |
-| Machine-readable profile definitions | Planned | L | Make profile selection testable and tool-friendly. |
+| Local `conclave` runner | Done | M | `bin/conclave` creates deterministic verdict scaffolds from config. |
+| Machine-readable roster | Done | L | `configs/conclave-roster.json` lists seats, models, tiers, and paths. |
+| Machine-readable profile definitions | Done | L | `configs/conclave-roster.json` lists profiles, seats, polarity pairs, and quorum rules. |
 | Provider config schema | Planned | M | Validate `configs/provider-model-slots*.yaml`. |
 | Install and uninstall commands | Planned | M | Make adoption and rollback predictable. |
 

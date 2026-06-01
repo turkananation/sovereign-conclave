@@ -5,6 +5,7 @@ What changed?
 ## Checklist
 
 - [ ] I ran `bash -n install.sh`.
+- [ ] I ran `python3 scripts/validate_repo.py`.
 - [ ] I ran `git diff --check`.
 - [ ] I ran `./install.sh --target all --dry-run`.
 - [ ] I did not commit secrets, credentials, private evidence ledgers, or private verdicts.
