@@ -1,7 +1,7 @@
 # TASK: Extend the Sovereign Conclave to its full roster
 
 You are working inside the `sovereign-conclave/` repository — a Claude Code skill for
-grounded, multi-perspective deliberation. Your job is to build out the complete council
+grounded, multi-perspective deliberation. Your job is to build out the complete conclave
 of seats with rich, genuinely differentiated descriptions, without changing the
 architecture that already exists.
 

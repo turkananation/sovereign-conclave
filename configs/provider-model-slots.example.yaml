@@ -38,6 +38,13 @@ seat_slots:
   conclave-feynman: balanced
   conclave-oppenheimer: deep
   conclave-sun-tzu: deep
+  conclave-mcchrystal: fast
+  conclave-hayden: deep
+  conclave-obama: deep
+  conclave-bush: deep
+  conclave-atkinson: verifier
+  conclave-cheney: deep
+  conclave-maathai: balanced
 
   # Structural checks should not share every blind spot with the advocates.
   conclave-marshall: verifier

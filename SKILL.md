@@ -1,11 +1,11 @@
 ---
 name: sovereign-conclave
-description: Convene a chosen council of personas for grounded, multi-perspective deliberation on a hard decision — code/architecture calls, strategic or institutional direction, red-team war-gaming, or risk review. Use whenever the user runs /conclave, asks to "war-game", "deliberate", "stress-test", "red-team", or "get the council on" a decision, or wants several opposed expert viewpoints to argue a problem before a recommendation. Produces a written verdict grounded in supplied evidence; advises only — the human decides.
+description: Convene a chosen conclave of personas for grounded, multi-perspective deliberation on a hard decision — code/architecture calls, strategic or institutional direction, red-team war-gaming, or risk review. Use whenever the user runs /conclave, asks to "war-game", "deliberate", "stress-test", "red-team", or "get the conclave on" a decision, or wants several opposed expert viewpoints to argue a problem before a recommendation. Produces a written verdict grounded in supplied evidence; advises only — the human decides.
 ---
 
 # Sovereign Conclave
 
-Convene a small council of deliberately opposed personas to deliberate a hard decision, ground their reasoning in evidence you supply, and produce a written verdict. **The Conclave advises; the human decides.** It never authorizes an irreversible action (see `directives.md`, D-4).
+Convene a small conclave of deliberately opposed personas to deliberate a hard decision, ground their reasoning in evidence you supply, and produce a written verdict. **The Conclave advises; the human decides.** It never authorizes an irreversible action (see `directives.md`, D-4).
 
 ## Command
 
@@ -23,7 +23,7 @@ Convene a small council of deliberately opposed personas to deliberate a hard de
 ## Protocol
 
 ### Round 0 — Evidence Ledger (always first)
-Before any seat speaks, assemble the **Evidence Ledger**: the concrete artifacts the decision rests on — pasted code, numbers, files, retrieved sources, quotes. Give each a stable ID (`E1`, `E2`, …) and record its provenance. **Freeze it.** From here, every factual claim must cite a ledger ID; anything else is opinion, and Marshall will flag it. If the ledger is thin, say so plainly — a council deliberating without evidence produces confident guesses, not judgment.
+Before any seat speaks, assemble the **Evidence Ledger**: the concrete artifacts the decision rests on — pasted code, numbers, files, retrieved sources, quotes. Give each a stable ID (`E1`, `E2`, …) and record its provenance. **Freeze it.** From here, every factual claim must cite a ledger ID; anything else is opinion, and Marshall will flag it. If the ledger is thin, say so plainly — a conclave deliberating without evidence produces confident guesses, not judgment.
 
 ### Round 0.5 — Frame
 State the actual decision in one sentence, list the options (always include the null "do nothing" option), and name what is being optimized. Surface the load-bearing assumptions (D-2). Bad deliberation is usually the wrong question — fix the frame before anyone argues.
@@ -39,7 +39,7 @@ If Round 1 showed early consensus (D-3), run one **counterfactual pass**: assign
 ### Round 3 — Synthesis → verdict file
 A synthesizer **separate from every advocate** (you, the main agent, acting neutrally — not Zhukov, not Lee Kuan Yew) writes the verdict using `demos/verdict-template.md`: the decision, the ledger, the positions, the real disagreements, Marshall's verification, a recommendation phrased as **advice to the human**, an explicit confidence, what would change it, and any unresolved dissent (preserved, not averaged away).
 
-Write it to `verdicts/verdict-<UTC-timestamp>.md`. A recommendation resting on `[UNSUPPORTED]` decisive claims is downgraded or sent back for evidence — never presented as the council's call.
+Write it to `verdicts/verdict-<UTC-timestamp>.md`. A recommendation resting on `[UNSUPPORTED]` decisive claims is downgraded or sent back for evidence — never presented as the conclave's call.
 
 ## Guardrails (enforced)
 - **Anti-herding:** Round 1 is blind. No exceptions.
@@ -49,4 +49,4 @@ Write it to `verdicts/verdict-<UTC-timestamp>.md`. A recommendation resting on `
 - **Advice only:** output recommends; the human decides (D-4).
 
 ## Cross-model diversity (optional)
-A council of one base model shares one set of blind spots — thirty seats on the same model is the appearance of independent judgment over a single mind. With `--models <config>`, route different seats to different providers/families so disagreement is real, not stylistic. Spread polarity partners across providers where possible. Secrets come from the environment, never the repo (D-5).
+A conclave of one base model shares one set of blind spots — thirty seats on the same model is the appearance of independent judgment over a single mind. With `--models <config>`, route different seats to different providers/families so disagreement is real, not stylistic. Spread polarity partners across providers where possible. Secrets come from the environment, never the repo (D-5).

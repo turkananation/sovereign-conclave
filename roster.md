@@ -13,6 +13,7 @@ Marshall is convened in every deliberation. The other Justices are optional stru
 | `conclave-pershing` | General | Organized capability, logistics, training, unity of command | sonnet |
 | `conclave-giap` | General | Asymmetric protraction; terrain, will, political clock | sonnet |
 | `conclave-yi-sun-shin` | General | Prepared defense, discipline, favorable terrain | sonnet |
+| `conclave-mcchrystal` | General | Networked mission command and decentralized execution | sonnet |
 | `conclave-lee-kuan-yew` | Sovereign | What works at scale, resource discipline | sonnet |
 | `conclave-augustus` | Sovereign | Durable institutions, legitimacy, consolidation | opus |
 | `conclave-suleiman` | Sovereign | Codified law, uniform administration, cohesion | sonnet |
@@ -20,6 +21,12 @@ Marshall is convened in every deliberation. The other Justices are optional stru
 | `conclave-sejong` | Sovereign | Capability of the governed; accessible systems | sonnet |
 | `conclave-mandela` | Sovereign | Reconciliation, legitimacy, durable peace | opus |
 | `conclave-toussaint` | Sovereign | Liberation, self-determination, sovereignty from below | sonnet |
+| `conclave-obama` | Sovereign | Public-trust preparedness and coalition governance | opus |
+| `conclave-bush` | Sovereign | Continuity, biodefense readiness, hardened crisis governance | opus |
+| `conclave-cheney` | Emergency Executive | Concentrated command authority under worst-case threat | opus |
+| `conclave-hayden` | Intelligence | Hidden threats, collection discipline, secrecy with oversight debt | opus |
+| `conclave-atkinson` | Law | Legal process, accountability channels, protected records | opus |
+| `conclave-maathai` | Civic Ecology | Grassroots stewardship, land, community legitimacy | sonnet |
 | `conclave-marshall` | Justice (always) | Evidence-grounding and directive check | opus |
 | `conclave-lady-hale` | Justice | Proportionality and rights check | opus |
 | `conclave-bhagwati` | Justice | Access, standing, and missing-stakeholder check | opus |
@@ -32,7 +39,7 @@ Marshall is convened in every deliberation. The other Justices are optional stru
 
 ## Library status
 
-The named pantheon is fully written. Add a new seat the same way only when it brings a stance or structural check no existing seat covers:
+The core pantheon and the eSiasa-oriented extension seats are written. Add a new seat the same way only when it brings a stance or structural check no existing seat covers:
 
 1. Copy `agents/_TEMPLATE.md`.
 2. Give the seat one clear lens, an owned bias, a "You are NOT" boundary, and a polarity partner.
@@ -57,6 +64,11 @@ These are the canonical contrasts. Use them to build small quorums with real dis
 | Oppenheimer ⟷ Zhukov | Reckon with consequence vs. deploy capability |
 | Sun Tzu ⟷ Aurelius | External advantage vs. internal character |
 | Lee Kuan Yew ⟷ Feynman | What works in practice vs. what is explainable in principle |
+| McChrystal ⟷ Pershing | Networked mission command vs. formal mass and readiness |
+| Hayden ⟷ Lady Hale | Security secrecy vs. proportionality and rights |
+| Obama ⟷ Bush | Public-trust preparedness vs. hardened continuity |
+| Atkinson ⟷ Cheney | Lawful accountability channels vs. emergency executive power |
+| Maathai ⟷ Lee Kuan Yew | Grassroots ecological legitimacy vs. technocratic developmental efficiency |
 
 ## Convening profiles
 
@@ -71,6 +83,11 @@ Marshall is always in. Pick one profile, or name members directly with `--member
 | `policy` | Suleiman + Elizabeth + Sejong + Chaskalson | Rules, access, administration, public-facing systems, and value constraints |
 | `liberation` | Toussaint + Augustus + Mandela + Lady Hale | Imposed-order, self-determination, independence, and rights-heavy decisions |
 | `war-game` | Blue cell + Sun Tzu + Giáp + one Justice | Adversarial stress-test where the adversary is free to win |
+| `esiasa-civic-stress` | McChrystal + Hayden + Maathai + Atkinson + Bhagwati | County/civic-stress, admin intelligence, route-backed dossiers, and legitimacy-heavy resilience work |
+| `continuity` | Bush + Cheney + Obama + Hayden + Chaskalson | Continuity of government, emergency authority, succession, and crisis governance |
+| `pandemic-preparedness` | Obama + Bush + Sejong + Bhagwati + Lady Hale | Public-health readiness, civic compliance, access, rights, and whole-of-government response |
+| `intelligence-oversight` | Hayden + Atkinson + Lady Hale + Chaskalson + Obama | Intelligence products, surveillance, lawful process, civil liberties, and trust |
+| `environmental-governance` | Maathai + Sejong + Mandela + Lee Kuan Yew + Lady Hale | Land, environment, county resilience, public participation, and implementable stewardship |
 
 ### `war-game` cells
 

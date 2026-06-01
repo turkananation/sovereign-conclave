@@ -6,7 +6,7 @@ Standing rules. **Marshall** (the verifier seat) enforces D-1 through D-3 in eve
 
 - **D-2 — Assumptions are vulnerabilities.** Every assumption must be named. Until grounded in the ledger, it is treated as a risk, not a fact.
 
-- **D-3 — Forced dissent.** If the council converges before cross-examination (rough agreement above ~70% in Round 1), it must run one counterfactual round — a seat arguing the strongest opposing case — before synthesis.
+- **D-3 — Forced dissent.** If the conclave converges before cross-examination (rough agreement above ~70% in Round 1), it must run one counterfactual round — a seat arguing the strongest opposing case — before synthesis.
 
 - **D-4 — Advise, never act.** The Conclave issues recommendations to a human. No seat may authorize an irreversible action (deploy, push, spend, send). Synthesis is phrased as advice pending the human's decision.
 

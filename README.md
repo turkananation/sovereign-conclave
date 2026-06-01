@@ -1,17 +1,17 @@
 # Sovereign Conclave
 
-Your own Claude Code skill: a chosen council of personas that argue a hard decision from deliberately opposed stances, ground their claims in evidence you supply, and hand you a written verdict. It advises; you decide.
+Your own Claude Code skill: a chosen conclave of personas that argue a hard decision from deliberately opposed stances, ground their claims in evidence you supply, and hand you a written verdict. It advises; you decide.
 
-**This is an independent project — not a fork.** The convening pattern (multi-perspective deliberation) is a common one; the design here is yours — your roster, your directives, your verdict format. There is a conceptual nod to the public-domain "council" pattern that's been circulating, but no code is shared with it and nothing depends on anyone merging anything.
+**This is an independent project — not a fork.** The convening pattern (multi-perspective deliberation) is a common one; the design here is yours — your roster, your directives, your verdict format. There is a conceptual nod to the public-domain "conclave" pattern that's been circulating, but no code is shared with it and nothing depends on anyone merging anything.
 
 ## What's in the box
 
 - `SKILL.md` — the `/conclave` command and the deliberation protocol.
-- `agents/conclave-*.md` — 21 active seats: advocates plus structural Justice checks.
+- `agents/conclave-*.md` — 28 active seats: advocates plus structural Justice checks.
 - `agents/_TEMPLATE.md` — how to add a future seat.
 - `roster.md` — the full written library, polarity pairs, and convening profiles.
 - `directives.md` — the standing rules Marshall enforces (including "advise, never act").
-- `demos/verdict-template.md` — the decision-record format the council writes to.
+- `demos/verdict-template.md` — the decision-record format the conclave writes to.
 - `configs/provider-model-slots.example.yaml` — optional cross-model slot mapping example.
 - `verdicts/` — the default output directory for generated verdict files.
 - `install.sh` — installs the skill for Claude Code, Codex, or Antigravity.
@@ -33,6 +33,8 @@ Restart the target tool after installation so it can discover the skill. Use `/c
 /conclave Should we move the notifications service off Cloud Run?
 /conclave --profile architecture Monorepo or polyrepo for the new modules?
 /conclave --profile war-game Pressure-test our launch plan for next quarter.
+/conclave --profile pandemic-preparedness County outbreak readiness and communications plan?
+/conclave --profile esiasa-civic-stress Stress-test the new county intelligence dossier flow.
 /conclave --members feynman,lee-kuan-yew,marshall Is the caching design sound?
 ```
 

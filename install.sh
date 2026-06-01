@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Sovereign Conclave installer for Claude Code, Codex, and Antigravity.
-# Independent project. Design-inspired by the public-domain "council" pattern; shares no code with it.
+# Independent project. Design-inspired by the public-domain "conclave" pattern; shares no code with it.
 set -euo pipefail
 
 CLAUDE_DIR="${HOME}/.claude"
