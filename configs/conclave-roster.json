@@ -3,14 +3,15 @@
   "marshall": "conclave-marshall",
   "default_profile": "architecture",
   "quorum": {
-    "min_seats": 3,
-    "max_seats": 8,
-    "marshall_always": true
+    "min_seats": 6,
+    "max_seats": 33,
+    "marshall_always": true,
+    "note": "Default deliberation: 6 seats + Marshall. Half-conclave: ~16 seats. Full conclave: all 33. Override with --members or a named profile."
   },
   "seats": [
     {
       "id": "conclave-zhukov",
-      "display_name": "Zhukov",
+      "display_name": "Georgy Zhukov",
       "tier": "General",
       "type": "advocate",
       "lens": "Decisive force, initiative, operational reach",
@@ -19,7 +20,7 @@
     },
     {
       "id": "conclave-washington",
-      "display_name": "Washington",
+      "display_name": "George Washington",
       "tier": "General",
       "type": "advocate",
       "lens": "Strategic endurance; preserve the force and legitimacy",
@@ -28,7 +29,7 @@
     },
     {
       "id": "conclave-pershing",
-      "display_name": "Pershing",
+      "display_name": "John J. Pershing",
       "tier": "General",
       "type": "advocate",
       "lens": "Organized capability, logistics, training, unity of command",
@@ -37,7 +38,7 @@
     },
     {
       "id": "conclave-giap",
-      "display_name": "Giáp",
+      "display_name": "Võ Nguyên Giáp",
       "tier": "General",
       "type": "advocate",
       "lens": "Asymmetric protraction; terrain, will, political clock",
@@ -46,7 +47,7 @@
     },
     {
       "id": "conclave-yi-sun-shin",
-      "display_name": "Yi Sun-shin",
+      "display_name": "Yi Sun-sin",
       "tier": "General",
       "type": "advocate",
       "lens": "Prepared defense, discipline, favorable terrain",
@@ -55,7 +56,7 @@
     },
     {
       "id": "conclave-mcchrystal",
-      "display_name": "McChrystal",
+      "display_name": "Stanley McChrystal",
       "tier": "General",
       "type": "advocate",
       "lens": "Networked mission command and decentralized execution",
@@ -73,7 +74,7 @@
     },
     {
       "id": "conclave-augustus",
-      "display_name": "Augustus",
+      "display_name": "Augustus Caesar",
       "tier": "Sovereign",
       "type": "advocate",
       "lens": "Durable institutions, legitimacy, consolidation",
@@ -82,7 +83,7 @@
     },
     {
       "id": "conclave-suleiman",
-      "display_name": "Suleiman",
+      "display_name": "Suleiman the Magnificent",
       "tier": "Sovereign",
       "type": "advocate",
       "lens": "Codified law, uniform administration, cohesion",
@@ -91,7 +92,7 @@
     },
     {
       "id": "conclave-elizabeth",
-      "display_name": "Elizabeth",
+      "display_name": "Queen Elizabeth I",
       "tier": "Sovereign",
       "type": "advocate",
       "lens": "Optionality, ambiguity, parsimony, balancing rivals",
@@ -100,7 +101,7 @@
     },
     {
       "id": "conclave-sejong",
-      "display_name": "Sejong",
+      "display_name": "Sejong the Great",
       "tier": "Sovereign",
       "type": "advocate",
       "lens": "Capability of the governed; accessible systems",
@@ -109,7 +110,7 @@
     },
     {
       "id": "conclave-mandela",
-      "display_name": "Mandela",
+      "display_name": "Nelson Mandela",
       "tier": "Sovereign",
       "type": "advocate",
       "lens": "Reconciliation, legitimacy, durable peace",
@@ -118,7 +119,7 @@
     },
     {
       "id": "conclave-toussaint",
-      "display_name": "Toussaint",
+      "display_name": "Toussaint Louverture",
       "tier": "Sovereign",
       "type": "advocate",
       "lens": "Liberation, self-determination, sovereignty from below",
@@ -127,7 +128,7 @@
     },
     {
       "id": "conclave-obama",
-      "display_name": "Obama",
+      "display_name": "Barack Obama",
       "tier": "Sovereign",
       "type": "advocate",
       "lens": "Public-trust preparedness and coalition governance",
@@ -136,7 +137,7 @@
     },
     {
       "id": "conclave-bush",
-      "display_name": "Bush",
+      "display_name": "George W. Bush",
       "tier": "Sovereign",
       "type": "advocate",
       "lens": "Continuity, biodefense readiness, hardened crisis governance",
@@ -145,7 +146,7 @@
     },
     {
       "id": "conclave-cheney",
-      "display_name": "Cheney",
+      "display_name": "Dick Cheney",
       "tier": "Emergency Executive",
       "type": "advocate",
       "lens": "Concentrated command authority under worst-case threat",
@@ -154,7 +155,7 @@
     },
     {
       "id": "conclave-hayden",
-      "display_name": "Hayden",
+      "display_name": "Michael Hayden",
       "tier": "Intelligence",
       "type": "advocate",
       "lens": "Hidden threats, collection discipline, secrecy with oversight debt",
@@ -181,7 +182,7 @@
     },
     {
       "id": "conclave-maathai",
-      "display_name": "Maathai",
+      "display_name": "Wangari Maathai",
       "tier": "Civic Ecology",
       "type": "advocate",
       "lens": "Grassroots stewardship, land, community legitimacy",
@@ -208,7 +209,7 @@
     },
     {
       "id": "conclave-marshall",
-      "display_name": "Marshall",
+      "display_name": "Marshall (Verifier)",
       "tier": "Justice",
       "type": "verifier",
       "lens": "Evidence-grounding and directive check",
@@ -217,7 +218,7 @@
     },
     {
       "id": "conclave-lady-hale",
-      "display_name": "Lady Hale",
+      "display_name": "Baroness Brenda Hale",
       "tier": "Justice",
       "type": "justice",
       "lens": "Proportionality and rights check",
@@ -226,7 +227,7 @@
     },
     {
       "id": "conclave-bhagwati",
-      "display_name": "Bhagwati",
+      "display_name": "Justice P.N. Bhagwati",
       "tier": "Justice",
       "type": "justice",
       "lens": "Access, standing, and missing-stakeholder check",
@@ -235,7 +236,7 @@
     },
     {
       "id": "conclave-chaskalson",
-      "display_name": "Chaskalson",
+      "display_name": "Arthur Chaskalson",
       "tier": "Justice",
       "type": "justice",
       "lens": "Constitutional values and dignity check",
@@ -244,7 +245,7 @@
     },
     {
       "id": "conclave-jackson",
-      "display_name": "Jackson",
+      "display_name": "Justice Robert Jackson",
       "tier": "Justice",
       "type": "justice",
       "lens": "Emergency authority, institutional role, oversight, and sunset check",
@@ -253,7 +254,7 @@
     },
     {
       "id": "conclave-sachs",
-      "display_name": "Sachs",
+      "display_name": "Justice Albie Sachs",
       "tier": "Justice",
       "type": "justice",
       "lens": "Repair, memory, remedy, restoration, and transitional legitimacy check",
@@ -262,7 +263,7 @@
     },
     {
       "id": "conclave-feynman",
-      "display_name": "Feynman",
+      "display_name": "Richard Feynman",
       "tier": "Inner Sanctum",
       "type": "advocate",
       "lens": "First principles, refuses unexplained complexity",
@@ -271,7 +272,7 @@
     },
     {
       "id": "conclave-aurelius",
-      "display_name": "Aurelius",
+      "display_name": "Marcus Aurelius",
       "tier": "Inner Sanctum",
       "type": "advocate",
       "lens": "Downside containment, restraint, moral clarity",
@@ -280,7 +281,7 @@
     },
     {
       "id": "conclave-von-neumann",
-      "display_name": "von Neumann",
+      "display_name": "John von Neumann",
       "tier": "Inner Sanctum",
       "type": "advocate",
       "lens": "Formal modeling, game theory, expected value",
@@ -289,7 +290,7 @@
     },
     {
       "id": "conclave-oppenheimer",
-      "display_name": "Oppenheimer",
+      "display_name": "J. Robert Oppenheimer",
       "tier": "Inner Sanctum",
       "type": "advocate",
       "lens": "Capability, consequence, dual-use control",
@@ -298,7 +299,7 @@
     },
     {
       "id": "conclave-sun-tzu",
-      "display_name": "Sun Tzu",
+      "display_name": "Sun Tzu (孫子)",
       "tier": "Inner Sanctum",
       "type": "advocate",
       "lens": "Win before fighting; positioning and deception",
@@ -425,7 +426,9 @@
         "conclave-feynman",
         "conclave-lee-kuan-yew",
         "conclave-von-neumann",
-        "conclave-oppenheimer"
+        "conclave-oppenheimer",
+        "conclave-aurelius",
+        "conclave-addington"
       ],
       "use_for": "Code, system design, platform, or irreversible technical capability calls"
     },
@@ -435,7 +438,9 @@
         "conclave-zhukov",
         "conclave-washington",
         "conclave-sun-tzu",
-        "conclave-aurelius"
+        "conclave-aurelius",
+        "conclave-elizabeth",
+        "conclave-von-neumann"
       ],
       "use_for": "Competitive, directional, timing, and commitment decisions"
     },
@@ -445,7 +450,9 @@
         "conclave-aurelius",
         "conclave-yi-sun-shin",
         "conclave-oppenheimer",
-        "conclave-lady-hale"
+        "conclave-lady-hale",
+        "conclave-feynman",
+        "conclave-chaskalson"
       ],
       "use_for": "Downside, safety, security, rights, and failure-mode review"
     },
@@ -455,7 +462,9 @@
         "conclave-augustus",
         "conclave-mandela",
         "conclave-lee-kuan-yew",
-        "conclave-bhagwati"
+        "conclave-bhagwati",
+        "conclave-sejong",
+        "conclave-chaskalson"
       ],
       "use_for": "Governance, legitimacy, operating model, and stakeholder decisions"
     },
@@ -465,7 +474,9 @@
         "conclave-suleiman",
         "conclave-elizabeth",
         "conclave-sejong",
-        "conclave-chaskalson"
+        "conclave-chaskalson",
+        "conclave-bhagwati",
+        "conclave-addington"
       ],
       "use_for": "Rules, access, administration, public-facing systems, and value constraints"
     },
@@ -475,7 +486,9 @@
         "conclave-toussaint",
         "conclave-augustus",
         "conclave-mandela",
-        "conclave-lady-hale"
+        "conclave-lady-hale",
+        "conclave-mau-mau",
+        "conclave-sachs"
       ],
       "use_for": "Imposed-order, self-determination, independence, and rights-heavy decisions"
     },
@@ -485,7 +498,9 @@
         "conclave-sun-tzu",
         "conclave-giap",
         "conclave-zhukov",
-        "conclave-lady-hale"
+        "conclave-lady-hale",
+        "conclave-mcchrystal",
+        "conclave-washington"
       ],
       "use_for": "Adversarial stress-test where the adversary is free to win",
       "cells": {
@@ -509,7 +524,8 @@
         "conclave-hayden",
         "conclave-maathai",
         "conclave-addington",
-        "conclave-bhagwati"
+        "conclave-bhagwati",
+        "conclave-sejong"
       ],
       "use_for": "County/civic-stress, admin intelligence, route-backed dossiers, and legitimacy-heavy resilience work"
     },
@@ -520,7 +536,8 @@
         "conclave-cheney",
         "conclave-obama",
         "conclave-hayden",
-        "conclave-chaskalson"
+        "conclave-chaskalson",
+        "conclave-jackson"
       ],
       "use_for": "Continuity of government, emergency authority, succession, and crisis governance"
     },
@@ -531,7 +548,8 @@
         "conclave-bush",
         "conclave-sejong",
         "conclave-bhagwati",
-        "conclave-lady-hale"
+        "conclave-lady-hale",
+        "conclave-maathai"
       ],
       "use_for": "Public-health readiness, civic compliance, access, rights, and whole-of-government response"
     },
@@ -542,7 +560,8 @@
         "conclave-addington",
         "conclave-lady-hale",
         "conclave-chaskalson",
-        "conclave-obama"
+        "conclave-obama",
+        "conclave-jackson"
       ],
       "use_for": "Intelligence products, surveillance, lawful process, civil liberties, and trust"
     },
@@ -553,7 +572,8 @@
         "conclave-sejong",
         "conclave-mandela",
         "conclave-lee-kuan-yew",
-        "conclave-lady-hale"
+        "conclave-lady-hale",
+        "conclave-sachs"
       ],
       "use_for": "Land, environment, county resilience, public participation, and implementable stewardship"
     },
@@ -592,6 +612,155 @@
         "conclave-chaskalson"
       ],
       "use_for": "Crisis authority, continuity, lawful limits, oversight, records, and sunset discipline"
+    },
+    {
+      "id": "war-cabinet",
+      "seats": [
+        "conclave-zhukov",
+        "conclave-mcchrystal",
+        "conclave-cheney",
+        "conclave-bush",
+        "conclave-hayden",
+        "conclave-jackson",
+        "conclave-addington"
+      ],
+      "use_for": "Crisis command and control: military options, executive authority, intelligence, and lawful limits under time pressure"
+    },
+    {
+      "id": "economic-thinktank",
+      "seats": [
+        "conclave-lee-kuan-yew",
+        "conclave-sejong",
+        "conclave-von-neumann",
+        "conclave-mandela",
+        "conclave-bhagwati",
+        "conclave-maathai"
+      ],
+      "use_for": "Economic policy, development economics, trade-offs between growth and equity, and sustainable economic governance"
+    },
+    {
+      "id": "geopolitics",
+      "seats": [
+        "conclave-sun-tzu",
+        "conclave-augustus",
+        "conclave-elizabeth",
+        "conclave-suleiman",
+        "conclave-giap",
+        "conclave-washington",
+        "conclave-bhagwati"
+      ],
+      "use_for": "International relations, great-power competition, alliance strategy, diplomacy, and global power distribution"
+    },
+    {
+      "id": "space-exploration",
+      "seats": [
+        "conclave-oppenheimer",
+        "conclave-feynman",
+        "conclave-von-neumann",
+        "conclave-aurelius",
+        "conclave-bhagwati",
+        "conclave-chaskalson",
+        "conclave-sejong"
+      ],
+      "use_for": "Space policy, frontier technology ethics, resource extraction in space, access equity, and dual-use capability governance"
+    },
+    {
+      "id": "formal-science",
+      "seats": [
+        "conclave-feynman",
+        "conclave-von-neumann",
+        "conclave-oppenheimer",
+        "conclave-aurelius",
+        "conclave-lady-hale",
+        "conclave-addington"
+      ],
+      "use_for": "Mathematics, cryptography, formal verification, algorithm design, and dual-use scientific capability decisions"
+    },
+    {
+      "id": "globalisation",
+      "seats": [
+        "conclave-lee-kuan-yew",
+        "conclave-augustus",
+        "conclave-mandela",
+        "conclave-toussaint",
+        "conclave-sejong",
+        "conclave-maathai",
+        "conclave-bhagwati"
+      ],
+      "use_for": "Globalisation tradeoffs, international trade, cross-border governance, development, inequality, and cultural self-determination"
+    },
+    {
+      "id": "leadership",
+      "seats": [
+        "conclave-washington",
+        "conclave-mandela",
+        "conclave-sejong",
+        "conclave-mcchrystal",
+        "conclave-aurelius",
+        "conclave-bhagwati"
+      ],
+      "use_for": "Leadership development, organisational culture, succession, institutional character, and leading through adversity"
+    },
+    {
+      "id": "half-conclave",
+      "seats": [
+        "conclave-zhukov",
+        "conclave-washington",
+        "conclave-mcchrystal",
+        "conclave-lee-kuan-yew",
+        "conclave-mandela",
+        "conclave-obama",
+        "conclave-feynman",
+        "conclave-von-neumann",
+        "conclave-oppenheimer",
+        "conclave-aurelius",
+        "conclave-sun-tzu",
+        "conclave-hayden",
+        "conclave-cheney",
+        "conclave-maathai",
+        "conclave-toussaint",
+        "conclave-lady-hale",
+        "conclave-bhagwati"
+      ],
+      "use_for": "Broad multi-lens deliberation covering all major tiers without the full 33-seat conclave; suited to complex cross-domain decisions"
+    },
+    {
+      "id": "full-conclave",
+      "seats": [
+        "conclave-zhukov",
+        "conclave-washington",
+        "conclave-pershing",
+        "conclave-giap",
+        "conclave-yi-sun-shin",
+        "conclave-mcchrystal",
+        "conclave-lee-kuan-yew",
+        "conclave-augustus",
+        "conclave-suleiman",
+        "conclave-elizabeth",
+        "conclave-sejong",
+        "conclave-mandela",
+        "conclave-toussaint",
+        "conclave-obama",
+        "conclave-bush",
+        "conclave-cheney",
+        "conclave-hayden",
+        "conclave-authoritarian",
+        "conclave-addington",
+        "conclave-maathai",
+        "conclave-colonial-administrator",
+        "conclave-mau-mau",
+        "conclave-lady-hale",
+        "conclave-bhagwati",
+        "conclave-chaskalson",
+        "conclave-jackson",
+        "conclave-sachs",
+        "conclave-feynman",
+        "conclave-aurelius",
+        "conclave-von-neumann",
+        "conclave-oppenheimer",
+        "conclave-sun-tzu"
+      ],
+      "use_for": "Maximum-breadth deliberation: all 32 advocate seats + Marshall on civilizational-scale, irreversible, or multi-domain decisions"
     }
   ]
 }

@@ -14,11 +14,14 @@ Convene a small conclave of deliberately opposed personas to deliberate a hard d
 /conclave --profile <name> [problem]
 /conclave --members a,b,c [problem]
 /conclave --models <config> [problem]    # optional cross-model routing
+/conclave --profile half-conclave [problem]   # ~17 seats, broad cross-domain
+/conclave --profile full-conclave [problem]   # all 33 seats, civilizational scale
 ```
 
 - Profiles and the seat library are defined in `roster.md`.
 - **Marshall (the verifier) is convened in every deliberation**, even when not named.
 - With no profile or members given, apply the seat selection heuristic below.
+- **Default quorum: 6 seats + Marshall.** `--profile half-conclave` convenes ~17 seats. `--profile full-conclave` convenes all 33. Override at any time with `--members`.
 
 ## Seat Selection
 
@@ -30,9 +33,13 @@ When no profile or `--members` is given:
    - Capability vs. consequence (deploy, exploit ↔ reckon, contain)
    - Formal process vs. adaptive improvisation (rule of law ↔ mission command)
    - Institutional consolidation vs. liberation / self-determination
+   - Growth vs. equity (development efficiency ↔ access, dignity, sustainability)
+   - Known vs. unknown (formal model ↔ first principles from scratch)
 2. Find the **polarity pair** in `roster.md` that spans that axis. Pick one seat from each pole.
-3. Add a **third seat** on a different axis — a Justice if legal/rights/structural issues are present, a danger lens if the problem could hide an ugly governance logic.
-4. Add **Marshall**. The quorum is now 4.
+3. Add **four more seats** on different axes — at least one Justice if legal/rights/structural issues are present, at least one danger lens if the problem could hide ugly governance logic, and one Inner Sanctum seat if the problem involves formal reasoning or irreversible capability.
+4. Add **Marshall**. The default quorum is now **6 advocates + Marshall**.
+
+> For problems spanning multiple domains (geopolitics + technology + rights, for example), consider `--profile half-conclave` (17 seats) or name a custom `--members` list. Reserve `--profile full-conclave` for civilizational-scale or genuinely irreversible decisions.
 
 > Prefer pairs with genuinely different priors, not different rhetoric. If three seats converge on "do it right," step back — that is one seat and overhead.
 

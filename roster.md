@@ -1,8 +1,10 @@
 # The Sovereign Conclave Roster
 
-The Sovereign Conclave is a **library** of seats, not a standing assembly. You convene a small **quorum** per decision: 3-8 seats plus Marshall. The library can be large; the meeting stays small. A seat earns inclusion only by arguing a stance no current seat covers, or by enforcing a structural check no other Justice owns.
+The Sovereign Conclave is a **library** of seats, not a standing assembly. You convene a **quorum** per decision. **Default: 6 seats + Marshall.** Half-conclave: ~17 seats. Full conclave: all 33. The library can be large; the meeting stays small. A seat earns inclusion only by arguing a stance no current seat covers, or by enforcing a structural check no other Justice owns.
 
 Marshall is convened in every deliberation. The other Justices are optional structural checks: they hold no opinion on which option should win.
+
+**Quorum sizes:** `--profile architecture` (and most named profiles) = 6 seats + Marshall. `--profile half-conclave` = 17 seats + Marshall. `--profile full-conclave` = all 33 seats + Marshall.
 
 ## Active seats (agent files written)
 
@@ -83,25 +85,34 @@ These are the canonical contrasts. Use them to build small quorums with real dis
 
 ## Convening profiles
 
-Marshall is always in. Pick one profile, or name members directly with `--members`. Keep quorums to 3-8 seats plus Marshall.
+Marshall is always in. Pick one profile, or name members directly with `--members`. Default quorum is **6 seats + Marshall**.
 
 | Profile | Seats besides Marshall | Use for |
 | --- | --- | --- |
-| `architecture` | Feynman + Lee Kuan Yew + von Neumann + Oppenheimer | Code, system design, platform, or irreversible technical capability calls |
-| `strategy` | Zhukov + Washington + Sun Tzu + Aurelius | Competitive, directional, timing, and commitment decisions |
-| `risk` | Aurelius + Yi Sun-shin + Oppenheimer + Lady Hale | Downside, safety, security, rights, and failure-mode review |
-| `institutional` | Augustus + Mandela + Lee Kuan Yew + Bhagwati | Governance, legitimacy, operating model, and stakeholder decisions |
-| `policy` | Suleiman + Elizabeth + Sejong + Chaskalson | Rules, access, administration, public-facing systems, and value constraints |
-| `liberation` | Toussaint + Augustus + Mandela + Lady Hale | Imposed-order, self-determination, independence, and rights-heavy decisions |
-| `war-game` | Blue cell + Sun Tzu + Giáp + one Justice | Adversarial stress-test where the adversary is free to win |
-| `esiasa-civic-stress` | McChrystal + Hayden + Maathai + Addington + Bhagwati | County/civic-stress, admin intelligence, route-backed dossiers, and legitimacy-heavy resilience work |
-| `continuity` | Bush + Cheney + Obama + Hayden + Chaskalson | Continuity of government, emergency authority, succession, and crisis governance |
-| `pandemic-preparedness` | Obama + Bush + Sejong + Bhagwati + Lady Hale | Public-health readiness, civic compliance, access, rights, and whole-of-government response |
-| `intelligence-oversight` | Hayden + Addington + Lady Hale + Chaskalson + Obama | Intelligence products, surveillance, lawful process, civil liberties, and trust |
-| `environmental-governance` | Maathai + Sejong + Mandela + Lee Kuan Yew + Lady Hale | Land, environment, county resilience, public participation, and implementable stewardship |
+| `architecture` | Feynman + Lee Kuan Yew + von Neumann + Oppenheimer + Aurelius + Addington | Code, system design, platform, or irreversible technical capability calls |
+| `strategy` | Zhukov + Washington + Sun Tzu + Aurelius + Elizabeth + von Neumann | Competitive, directional, timing, and commitment decisions |
+| `risk` | Aurelius + Yi Sun-sin + Oppenheimer + Lady Hale + Feynman + Chaskalson | Downside, safety, security, rights, and failure-mode review |
+| `institutional` | Augustus + Mandela + Lee Kuan Yew + Bhagwati + Sejong + Chaskalson | Governance, legitimacy, operating model, and stakeholder decisions |
+| `policy` | Suleiman + Elizabeth + Sejong + Chaskalson + Bhagwati + Addington | Rules, access, administration, public-facing systems, and value constraints |
+| `liberation` | Toussaint + Augustus + Mandela + Lady Hale + Mau Mau + Sachs | Imposed-order, self-determination, independence, and rights-heavy decisions |
+| `war-game` | Blue cell + Sun Tzu + Giáp + McChrystal + Washington + one Justice | Adversarial stress-test where the adversary is free to win |
+| `war-cabinet` | Zhukov + McChrystal + Cheney + Bush + Hayden + Jackson + Addington | Crisis command and control: military options, executive authority, intelligence, and lawful limits |
+| `economic-thinktank` | Lee Kuan Yew + Sejong + von Neumann + Mandela + Bhagwati + Maathai | Economic policy, growth vs. equity, trade-offs, and sustainable governance |
+| `geopolitics` | Sun Tzu + Augustus + Elizabeth + Suleiman + Giáp + Washington + Bhagwati | International relations, great-power competition, alliance strategy, and diplomacy |
+| `space-exploration` | Oppenheimer + Feynman + von Neumann + Aurelius + Bhagwati + Chaskalson + Sejong | Space policy, frontier technology ethics, resource extraction, access equity |
+| `formal-science` | Feynman + von Neumann + Oppenheimer + Aurelius + Lady Hale + Addington | Mathematics, cryptography, formal verification, algorithm design, dual-use science |
+| `globalisation` | Lee Kuan Yew + Augustus + Mandela + Toussaint + Sejong + Maathai + Bhagwati | Globalisation tradeoffs, cross-border governance, development, inequality, cultural self-determination |
+| `leadership` | Washington + Mandela + Sejong + McChrystal + Aurelius + Bhagwati | Leadership development, succession, institutional character, leading through adversity |
+| `esiasa-civic-stress` | McChrystal + Hayden + Maathai + Addington + Bhagwati + Sejong | County/civic-stress, admin intelligence, route-backed dossiers, and legitimacy-heavy resilience work |
+| `continuity` | Bush + Cheney + Obama + Hayden + Chaskalson + Jackson | Continuity of government, emergency authority, succession, and crisis governance |
+| `pandemic-preparedness` | Obama + Bush + Sejong + Bhagwati + Lady Hale + Maathai | Public-health readiness, civic compliance, access, rights, and whole-of-government response |
+| `intelligence-oversight` | Hayden + Addington + Lady Hale + Chaskalson + Obama + Jackson | Intelligence products, surveillance, lawful process, civil liberties, and trust |
+| `environmental-governance` | Maathai + Sejong + Mandela + Lee Kuan Yew + Lady Hale + Sachs | Land, environment, county resilience, public participation, and implementable stewardship |
 | `oppression-audit` | Authoritarian Control + Hayden + Cheney + Jackson + Lady Hale + Chaskalson | Detecting coercion, surveillance, emergency drift, rights violations, and dignity failure |
 | `decolonization` | Colonial Administrator + Mau Mau + Toussaint + Maathai + Bhagwati + Sachs | Land, dispossession, colonial patterns, restitution, self-determination, and repair |
 | `emergency-powers` | Cheney + Bush + Jackson + Lady Hale + Addington + Chaskalson | Crisis authority, continuity, lawful limits, oversight, records, and sunset discipline |
+| `half-conclave` | 17-seat balanced cross-domain selection (see JSON) | Complex cross-domain decisions needing broad coverage without the full 33 |
+| `full-conclave` | All 32 advocate seats | Civilizational-scale, genuinely irreversible, or maximum-breadth decisions |
 
 ### `war-game` cells
 
