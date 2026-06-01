@@ -1,0 +1,172 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:sovereign-conclave:evidence-ledger.schema.json",
+  "title": "Sovereign Conclave Evidence Ledger",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "ledger_id",
+    "decision",
+    "prepared_by",
+    "freeze_time_utc",
+    "ledger_status",
+    "sensitivity",
+    "entries",
+    "open_evidence_gaps",
+    "redactions"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "ledger_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Stable ledger identifier. Prefer a slug or run-scoped ID."
+    },
+    "decision": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The decision question this ledger supports."
+    },
+    "prepared_by": {
+      "type": "string",
+      "minLength": 1
+    },
+    "freeze_time_utc": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"
+    },
+    "ledger_status": {
+      "type": "string",
+      "enum": ["draft", "frozen", "post_freeze_appended"]
+    },
+    "sensitivity": {
+      "type": "string",
+      "enum": ["public", "internal", "confidential", "secret-derived-not-quoted"]
+    },
+    "entries": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/entry"
+      }
+    },
+    "open_evidence_gaps": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/open_evidence_gap"
+      }
+    },
+    "redactions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/redaction"
+      }
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "$defs": {
+    "entry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "item", "source_type", "source", "provenance", "handling"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^E[1-9][0-9]*$"
+        },
+        "item": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_type": {
+          "type": "string",
+          "enum": [
+            "repository_file",
+            "local_file",
+            "user_assertion",
+            "public_url",
+            "metric",
+            "command_output",
+            "screenshot",
+            "meeting_note",
+            "policy",
+            "redacted_source",
+            "other"
+          ]
+        },
+        "source": {
+          "type": "string",
+          "minLength": 1
+        },
+        "provenance": {
+          "type": "string",
+          "minLength": 1
+        },
+        "handling": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sensitivity": {
+          "type": "string",
+          "enum": ["public", "internal", "confidential", "secret-derived-not-quoted"]
+        },
+        "uri": {
+          "type": "string"
+        },
+        "path": {
+          "type": "string"
+        },
+        "content_hash": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-fA-F]{16,64}$"
+        },
+        "observed_at_utc": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"
+        },
+        "post_freeze": {
+          "type": "boolean"
+        }
+      }
+    },
+    "open_evidence_gap": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["claim", "would_be_settled_by"],
+      "properties": {
+        "claim": {
+          "type": "string",
+          "minLength": 1
+        },
+        "would_be_settled_by": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "redaction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["description", "reason", "confidence_impact"],
+      "properties": {
+        "description": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1
+        },
+        "confidence_impact": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  }
+}

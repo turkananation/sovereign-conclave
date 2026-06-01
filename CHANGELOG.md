@@ -32,6 +32,13 @@ ISO format.
 - Evidence-seeded runner scaffolds via repeated `--evidence-file` and
   `--evidence-note` flags.
 - Demo verdict validation for four-column ledgers and unknown `E#` citations.
+- `schemas/evidence-ledger.schema.json` for the model-native Evidence Ledger
+  JSON format.
+- `ledgers/` as the private git-ignored storage location for machine-readable
+  ledgers.
+- Public demo JSON ledger under `demos/evidence-ledgers/`.
+- `--ledger-file`, `--validate-ledger`, and `--write-ledger` runner flags for
+  validating, importing, and exporting machine-readable ledgers.
 
 ### Planned
 

@@ -31,3 +31,6 @@ jobs:
           bin/conclave --profile architecture --dry-run "Should we split the analytics service?"
           bin/conclave --profile pandemic-preparedness --stdout "County outbreak readiness plan" >/tmp/conclave-verdict.md
           bin/conclave --profile risk --evidence-file README.md --evidence-note "Rollback plan is pending owner approval." --stdout "Can this release go out?" >/tmp/conclave-evidence-verdict.md
+          bin/conclave --profile pandemic-preparedness --ledger-file demos/evidence-ledgers/pandemic-preparedness-county-response.json --stdout "Approve the county outbreak-response plan?" >/tmp/conclave-ledger-import.md
+          bin/conclave --validate-ledger demos/evidence-ledgers/pandemic-preparedness-county-response.json
+          bin/conclave --profile risk --evidence-file README.md --write-ledger /tmp/conclave-ledger-export.json --stdout "Can this release go out?" >/tmp/conclave-ledger-export.md

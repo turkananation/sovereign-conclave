@@ -2,6 +2,10 @@
 verdicts/*
 !verdicts/.gitkeep
 
+# Private machine-readable ledgers may contain sensitive user evidence.
+ledgers/*
+!ledgers/.gitkeep
+
 # Local environment and secrets.
 .env
 .env.*
@@ -17,5 +21,7 @@ Thumbs.db
 
 # Logs and temporary files.
 *.log
+*.pyc
+__pycache__/
 tmp/
 .tmp/

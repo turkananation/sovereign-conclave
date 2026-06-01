@@ -10,8 +10,10 @@
 
 ## 2. Evidence Ledger (frozen before Round 1)
 
+**Ledger ID:** <ledger id, if using JSON>
 **Freeze time:** <UTC timestamp>
 **Ledger status:** Frozen before Round 1.
+**Sensitivity:** <public / internal / confidential / secret-derived-not-quoted>
 
 | ID | Item | Source / provenance | Handling |
 | --- | --- | --- | --- |

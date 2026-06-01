@@ -90,6 +90,7 @@ copy_common_skill_files() {
   [[ -d "${SCRIPT_DIR}/demos" ]] && run cp -R "${SCRIPT_DIR}/demos" "${skill_dst}/"
   [[ -d "${SCRIPT_DIR}/configs" ]] && run cp -R "${SCRIPT_DIR}/configs" "${skill_dst}/"
   [[ -d "${SCRIPT_DIR}/docs" ]] && run cp -R "${SCRIPT_DIR}/docs" "${skill_dst}/"
+  [[ -d "${SCRIPT_DIR}/schemas" ]] && run cp -R "${SCRIPT_DIR}/schemas" "${skill_dst}/"
 }
 
 copy_agents_into() {

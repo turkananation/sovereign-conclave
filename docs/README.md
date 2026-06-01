@@ -5,6 +5,8 @@
   Justices, profiles, and the local runner.
 - [EVIDENCE_LEDGER.md](EVIDENCE_LEDGER.md) - Evidence Ledger contract, table shape,
   citation rules, source quality, redactions, and runner usage.
+- [../schemas/evidence-ledger.schema.json](../schemas/evidence-ledger.schema.json) -
+  machine-readable Evidence Ledger schema.
 - [RUNNER.md](RUNNER.md) - local runner commands and current limitations.
 - [SEAT_EXPANSION_RATIONALE.md](SEAT_EXPANSION_RATIONALE.md) - 33-seat expansion standard, balance,
   counterweights, and guardrails.

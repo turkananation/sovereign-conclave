@@ -8,6 +8,8 @@ import re
 import sys
 from pathlib import Path
 
+from evidence_ledger import load_ledger_json, validate_ledger_document
+
 
 ROOT = Path(__file__).resolve().parents[1]
 CONFIG_PATH = ROOT / "configs" / "conclave-roster.json"
@@ -90,6 +92,19 @@ def validate_demo_verdicts(failures: list[str]) -> None:
         unknown = sorted(used_ids - ledger_ids, key=lambda item: int(item[1:]))
         if unknown:
             fail(f"{rel}: cites unknown ledger IDs {unknown}", failures)
+
+
+def validate_demo_ledgers(failures: list[str]) -> None:
+    ledger_dir = ROOT / "demos" / "evidence-ledgers"
+    for path in sorted(ledger_dir.glob("*.json")):
+        rel = path.relative_to(ROOT)
+        try:
+            document = load_ledger_json(path)
+        except (OSError, json.JSONDecodeError, ValueError) as error:
+            fail(f"{rel}: invalid JSON ledger: {error}", failures)
+            continue
+        for issue in validate_ledger_document(document):
+            fail(f"{rel}: {issue}", failures)
 
 
 def validate_agent(seat: dict[str, object], failures: list[str]) -> None:
@@ -187,6 +202,7 @@ def main() -> int:
     for seat in seats:
         validate_agent(seat, failures)
     validate_demo_verdicts(failures)
+    validate_demo_ledgers(failures)
 
     profile_ids = [profile["id"] for profile in profiles]
     if len(profile_ids) != len(set(profile_ids)):
@@ -225,6 +241,9 @@ def main() -> int:
         "docs/EVIDENCE_LEDGER.md",
         "docs/SEAT_EXPANSION_RATIONALE.md",
         "demos/evidence-ledger-template.md",
+        "demos/evidence-ledgers/pandemic-preparedness-county-response.json",
+        "schemas/evidence-ledger.schema.json",
+        "ledgers/.gitkeep",
     ]
     for doc in required_docs:
         if not (ROOT / doc).exists():

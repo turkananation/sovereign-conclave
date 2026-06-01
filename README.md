@@ -107,9 +107,12 @@ bin/conclave --list-profiles
 bin/conclave --profile pandemic-preparedness --dry-run "County outbreak readiness plan"
 bin/conclave --profile architecture --stdout "Move notifications off Cloud Run?"
 bin/conclave --profile risk --evidence-file README.md --evidence-note "Rollback plan is pending owner approval." --stdout "Can this release go out?"
+bin/conclave --profile pandemic-preparedness --ledger-file demos/evidence-ledgers/pandemic-preparedness-county-response.json --stdout "Approve the county outbreak-response plan?"
+bin/conclave --validate-ledger demos/evidence-ledgers/pandemic-preparedness-county-response.json
+bin/conclave --profile risk --evidence-file README.md --write-ledger ledgers/release-risk.json --stdout "Can this release go out?"
 ```
 
-Generated local verdicts go to `verdicts/`, which is ignored by git except for `.gitkeep` because verdicts may contain sensitive evidence.
+Generated local verdicts go to `verdicts/`, and private machine-readable ledgers go to `ledgers/`. Both are ignored by git except for `.gitkeep` because they may contain sensitive evidence.
 
 ## Profiles
 
@@ -153,11 +156,15 @@ They show the expected standard: clear decision framing, frozen evidence, real d
 | [roster.md](roster.md) | Human-readable roster, polarity pairs, and profiles |
 | [configs/conclave-roster.json](configs/conclave-roster.json) | Machine-readable seats, profiles, polarity pairs, and quorum rules |
 | [configs/provider-model-slots.example.yaml](configs/provider-model-slots.example.yaml) | Optional provider/model slot example |
+| [schemas/evidence-ledger.schema.json](schemas/evidence-ledger.schema.json) | Machine-readable Evidence Ledger schema |
 | [scripts/validate_repo.py](scripts/validate_repo.py) | Repository invariant validator |
+| [scripts/evidence_ledger.py](scripts/evidence_ledger.py) | Dependency-free Evidence Ledger JSON validation helpers |
 | [bin/conclave](bin/conclave) | Local verdict-scaffold runner |
 | [demos/verdict-template.md](demos/verdict-template.md) | Blank verdict format |
 | [demos/evidence-ledger-template.md](demos/evidence-ledger-template.md) | Standalone Evidence Ledger preparation template |
+| [demos/evidence-ledgers/](demos/evidence-ledgers/) | Public machine-readable demo ledgers |
 | [demos/verdicts/](demos/verdicts/) | Curated example verdicts |
+| [ledgers/](ledgers/) | Private machine-readable ledgers, git-ignored except `.gitkeep` |
 | [docs/](docs/) | Quickstart, concepts, runner docs, roadmap, progress tracker |
 | [.github/workflows/ci.yml](.github/workflows/ci.yml) | CI validation workflow |
 

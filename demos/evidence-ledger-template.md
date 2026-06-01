@@ -3,6 +3,10 @@
 Use this when preparing a Conclave run outside the local runner. Keep entries
 atomic: one cited artifact, quote, metric, observation, or source per row.
 
+For model-native storage, use the JSON schema at
+`schemas/evidence-ledger.schema.json`. Private JSON ledgers belong under
+`ledgers/`; public demo JSON ledgers belong under `demos/evidence-ledgers/`.
+
 **Decision:** <one-sentence decision question>
 **Prepared by:** <name / role>
 **Freeze time:** <UTC timestamp>

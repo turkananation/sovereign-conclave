@@ -36,6 +36,8 @@ Effort scale:
 | Evidence Ledger guide and template | Done | M | `docs/EVIDENCE_LEDGER.md` and `demos/evidence-ledger-template.md` define the ledger contract, citation rules, source quality, redactions, and freeze behavior. |
 | Evidence-seeded runner scaffolds | Done | M | `bin/conclave` supports repeated `--evidence-file` and `--evidence-note` inputs. |
 | Demo ledger validation | Done | S | `scripts/validate_repo.py` checks demo verdict ledger shape and unknown `E#` citations. |
+| Machine-readable Evidence Ledger schema | Done | M | `schemas/evidence-ledger.schema.json` defines the model-native JSON form. |
+| Ledger import/export runner flags | Done | M | `bin/conclave` supports `--ledger-file` imports, `--validate-ledger` checks, and `--write-ledger` exports. |
 
 ## 0.3.x - Make It Portable
 

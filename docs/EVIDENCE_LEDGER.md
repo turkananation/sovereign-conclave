@@ -21,6 +21,19 @@ The ledger does four jobs:
 The Conclave can reason without much evidence, but it must say confidence is low
 and must not present unsupported decisive claims as a recommendation.
 
+## Storage Locations
+
+There are three ledger locations:
+
+| Location | Purpose | Git behavior |
+| --- | --- | --- |
+| `verdicts/verdict-<UTC-timestamp>.md` | Private generated verdicts with an embedded Markdown ledger. | Ignored except `verdicts/.gitkeep`. |
+| `ledgers/*.json` | Private machine-readable ledgers for local runs, automation, and model consumption. | Ignored except `ledgers/.gitkeep`. |
+| `demos/evidence-ledgers/*.json` | Public demo ledgers that are safe to commit. | Tracked. |
+
+The actual run ledger should travel with the verdict. For model-native reuse,
+also store or export the same evidence as JSON under `ledgers/`.
+
 ## Standard Table
 
 Use this shape in verdicts and standalone ledgers:
@@ -29,7 +42,8 @@ Use this shape in verdicts and standalone ledgers:
 | --- | --- | --- | --- |
 | E1 | Exact fact, quote, metric, file, screenshot, log excerpt, or source summary. | Where it came from: file path, commit, command, URL, owner, date, meeting, dataset, or user-supplied note. | How to treat it: quoted fact, local file, user assertion, public source, redacted source, contested, stale, partial, etc. |
 
-`ID` must be stable. Do not renumber items after Round 1 begins.
+`ID` must be stable and contiguous from `E1`. Do not renumber items after Round
+1 begins.
 
 `Item` should be atomic. One row should support one clear claim. If a file is
 large, quote or summarize the exact relevant lines rather than citing "the file"
@@ -42,6 +56,55 @@ user assertions.
 
 `Handling` records the caution label. A row can be real and still limited,
 stale, contested, private, or redacted.
+
+## Machine-Readable JSON
+
+Models and tools should prefer the JSON format when available. The schema is:
+
+- [schemas/evidence-ledger.schema.json](../schemas/evidence-ledger.schema.json)
+
+The JSON form has this top-level shape:
+
+```json
+{
+  "schema_version": "1.0.0",
+  "ledger_id": "release-risk-20260601",
+  "decision": "Can this release go out?",
+  "prepared_by": "local-runner",
+  "freeze_time_utc": "2026-06-01T10:21:33Z",
+  "ledger_status": "frozen",
+  "sensitivity": "internal",
+  "entries": [
+    {
+      "id": "E1",
+      "item": "Rollback plan is pending owner approval.",
+      "source_type": "user_assertion",
+      "source": "--evidence-note",
+      "provenance": "User-supplied note at runner invocation",
+      "handling": "Treat only as asserted input; do not infer facts beyond the note."
+    }
+  ],
+  "open_evidence_gaps": [],
+  "redactions": []
+}
+```
+
+Each entry uses stable `E#` IDs and must include:
+
+- `id`: stable evidence ID, such as `E1`.
+- `item`: the atomic fact, artifact, metric, source summary, file, or quote.
+- `source_type`: controlled source class, such as `local_file`,
+  `repository_file`, `user_assertion`, `public_url`, `metric`, or `policy`.
+- `source`: the concrete source label, path, command, URL, system, or flag.
+- `provenance`: who supplied it, when, where it came from, or how to reproduce
+  it.
+- `handling`: the caution label for use by seats and Marshall.
+
+Optional useful fields include `content_hash`, `uri`, `path`, `observed_at_utc`,
+`sensitivity`, and `post_freeze`.
+
+Validation is dependency-free: `scripts/validate_repo.py` validates public demo
+ledgers, and `bin/conclave --ledger-file ...` validates any ledger it imports.
 
 ## What Belongs In The Ledger
 
@@ -122,8 +185,9 @@ their provenance supports.
 
 ## Confidentiality
 
-Generated verdicts and ledgers may contain sensitive evidence. Keep private runs
-under `verdicts/`, which is git-ignored except for `.gitkeep`.
+Generated verdicts and ledgers may contain sensitive evidence. Keep private
+verdicts under `verdicts/` and private JSON ledgers under `ledgers/`; both
+directories are git-ignored except for `.gitkeep`.
 
 Rules:
 
@@ -137,7 +201,7 @@ Rules:
 
 ## Runner Support
 
-The local runner can seed a ledger:
+The local runner can seed a ledger from files and notes:
 
 ```bash
 bin/conclave \
@@ -153,6 +217,30 @@ lines before relying on details.
 
 `--evidence-note` freezes an explicit user-supplied note. It proves only that the
 note was supplied, not that the underlying world is true.
+
+The runner can also import and export machine-readable ledgers:
+
+```bash
+bin/conclave \
+  --profile pandemic-preparedness \
+  --ledger-file demos/evidence-ledgers/pandemic-preparedness-county-response.json \
+  --stdout "Should the county approve the outbreak-response plan as written?"
+
+bin/conclave \
+  --validate-ledger demos/evidence-ledgers/pandemic-preparedness-county-response.json
+
+bin/conclave \
+  --profile risk \
+  --evidence-file README.md \
+  --evidence-note "Rollback plan is pending owner approval." \
+  --write-ledger ledgers/release-risk.json \
+  --stdout "Can this release go out?"
+```
+
+`--ledger-file` accepts the JSON schema above and renders its `entries` into the
+verdict scaffold. `--validate-ledger` validates a JSON ledger and exits.
+`--write-ledger` writes the assembled JSON ledger while still producing the
+verdict scaffold. Private output belongs under `ledgers/`.
 
 For manual preparation, use
 [demos/evidence-ledger-template.md](../demos/evidence-ledger-template.md).

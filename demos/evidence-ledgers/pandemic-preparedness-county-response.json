@@ -1,0 +1,73 @@
+{
+  "schema_version": "1.0.0",
+  "ledger_id": "demo-pandemic-preparedness-county-response",
+  "decision": "Should the county approve the outbreak-response plan as written?",
+  "prepared_by": "Sovereign Conclave demo",
+  "freeze_time_utc": "2026-06-01T00:00:00Z",
+  "ledger_status": "frozen",
+  "sensitivity": "public",
+  "entries": [
+    {
+      "id": "E1",
+      "item": "Draft plan names one incident commander but no first, second, or ward-level deputies.",
+      "source_type": "policy",
+      "source": "Sample county readiness packet",
+      "provenance": "Public demo input created for demos/verdicts/pandemic-preparedness-county-response.md.",
+      "handling": "Public demo input; proves only the sample plan state.",
+      "sensitivity": "public"
+    },
+    {
+      "id": "E2",
+      "item": "Communications draft proposes daily SMS and radio updates but has no approved uncertainty language or rumor-response protocol.",
+      "source_type": "policy",
+      "source": "Sample county readiness packet",
+      "provenance": "Public demo input created for demos/verdicts/pandemic-preparedness-county-response.md.",
+      "handling": "Public demo input; communication gap is directly stated.",
+      "sensitivity": "public"
+    },
+    {
+      "id": "E3",
+      "item": "Logistics inventory lists three days of PPE for the county referral hospital and no ward-level stock ledger.",
+      "source_type": "metric",
+      "source": "Sample county readiness packet",
+      "provenance": "Public demo input created for demos/verdicts/pandemic-preparedness-county-response.md.",
+      "handling": "Public demo input; stock depth beyond the packet is unknown.",
+      "sensitivity": "public"
+    },
+    {
+      "id": "E4",
+      "item": "Legal memo authorizes temporary gathering limits but does not define sunset criteria or review cadence.",
+      "source_type": "policy",
+      "source": "Sample county readiness packet",
+      "provenance": "Public demo input created for demos/verdicts/pandemic-preparedness-county-response.md.",
+      "handling": "Public demo input; rights analysis is limited to the draft memo.",
+      "sensitivity": "public"
+    },
+    {
+      "id": "E5",
+      "item": "Clinic access map identifies remote wards with low phone access and community health volunteer coverage gaps.",
+      "source_type": "other",
+      "source": "Sample county readiness packet",
+      "provenance": "Public demo input created for demos/verdicts/pandemic-preparedness-county-response.md.",
+      "handling": "Public demo input; map accuracy is assumed for the demo.",
+      "sensitivity": "public"
+    },
+    {
+      "id": "E6",
+      "item": "Priority-service list covers health workers, elderly residents, and immunocompromised residents, but not transport workers or market vendors.",
+      "source_type": "policy",
+      "source": "Sample county readiness packet",
+      "provenance": "Public demo input created for demos/verdicts/pandemic-preparedness-county-response.md.",
+      "handling": "Public demo input; absence from the list is treated as unresolved coverage.",
+      "sensitivity": "public"
+    }
+  ],
+  "open_evidence_gaps": [
+    {
+      "claim": "Deputy roles, ward-level stock ledgers, sunset clauses, rumor protocols, and missing affected groups may be covered in annexes not included here.",
+      "would_be_settled_by": "The omitted annexes, live county readiness files, or current county approval packet."
+    }
+  ],
+  "redactions": [],
+  "notes": "Public demo ledger. Do not treat as a live county file."
+}

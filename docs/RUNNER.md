@@ -22,6 +22,9 @@ bin/conclave --profile architecture --dry-run "Should we split the service?"
 bin/conclave --profile risk --stdout "Can this release go out?"
 bin/conclave --members feynman,lee-kuan-yew,aurelius "Is the caching design sound?"
 bin/conclave --profile risk --evidence-file README.md --evidence-note "Rollback plan is pending owner approval." --stdout "Can this release go out?"
+bin/conclave --profile pandemic-preparedness --ledger-file demos/evidence-ledgers/pandemic-preparedness-county-response.json --stdout "Approve the county outbreak-response plan?"
+bin/conclave --validate-ledger demos/evidence-ledgers/pandemic-preparedness-county-response.json
+bin/conclave --profile risk --evidence-file README.md --write-ledger ledgers/release-risk.json --stdout "Can this release go out?"
 ```
 
 ## Evidence Inputs
@@ -44,6 +47,18 @@ bin/conclave \
   --evidence-note "Agency counsel has not approved the emergency order." \
   --stdout "Can the emergency order stay active for another 30 days?"
 ```
+
+Use `--ledger-file` to import a machine-readable Evidence Ledger JSON file. The
+file is validated before the verdict scaffold is rendered. Use
+`--validate-ledger` when you only want to validate a ledger file.
+
+Use `--write-ledger` to export the assembled JSON ledger. This works with
+`--evidence-file`, `--evidence-note`, and `--ledger-file`; if a ledger file is
+loaded and new evidence is supplied, the runner appends new `E#` IDs after the
+existing IDs.
+
+Private JSON ledgers belong under `ledgers/`, which is git-ignored except for
+`ledgers/.gitkeep`. Public examples belong under `demos/evidence-ledgers/`.
 
 For manual preparation, use
 [demos/evidence-ledger-template.md](../demos/evidence-ledger-template.md).

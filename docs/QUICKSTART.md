@@ -57,10 +57,15 @@ bin/conclave --list-profiles
 bin/conclave --profile pandemic-preparedness --dry-run "County outbreak readiness plan"
 bin/conclave --profile architecture --stdout "Move notifications off Cloud Run?"
 bin/conclave --profile risk --evidence-file README.md --evidence-note "Rollback plan is pending owner approval." --stdout "Can this release go out?"
+bin/conclave --profile pandemic-preparedness --ledger-file demos/evidence-ledgers/pandemic-preparedness-county-response.json --stdout "Approve the county outbreak-response plan?"
+bin/conclave --validate-ledger demos/evidence-ledgers/pandemic-preparedness-county-response.json
+bin/conclave --profile risk --evidence-file README.md --write-ledger ledgers/release-risk.json --stdout "Can this release go out?"
 ```
 
 By default, generated scaffolds are written to `verdicts/`, which is ignored
 except for `.gitkeep` because verdicts may contain sensitive evidence.
+Private machine-readable ledgers belong under `ledgers/`, which is also ignored
+except for `.gitkeep`.
 
 Use [demos/evidence-ledger-template.md](../demos/evidence-ledger-template.md)
 when preparing evidence outside the runner.
