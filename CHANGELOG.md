@@ -75,6 +75,18 @@ ISO format.
 
 - `roster.md` is now generated from `configs/conclave-roster.json`; edit the
   config and run `scripts/generate_roster.py --write`.
+- `SKILL.md` overhauled for model-execution fidelity: replaced vague "orthogonal seats"
+  instruction with a 4-step axis-and-polarity-pair heuristic; added an explicit
+  orchestration checklist (7 ordered steps) so the main agent cannot skip or reorder
+  rounds; prescribed a strict Round 1 output format with capability-claim discard rule;
+  defined what makes a valid Round 2 challenge (claim → ledger contradiction → consequence);
+  prescribed Marshall's structured table output format; changed the convergence trigger
+  from unmeasurable `~70%` to a concrete threshold (3+ seats on the same option without
+  qualification differences); added Synthesizer rules block covering anti-averaging,
+  no-prestige-weighting, anti-sycophancy, ledger-coverage-based confidence calibration
+  (Low/Medium/High definitions), and mandatory D-4 phrasing; added three new guardrails
+  (anti-sycophancy, confidence-tied-to-evidence, verdict-file-is-mandatory); added
+  an 8-row Failure Modes table covering the most common model drift choke points.
 
 ## [0.1.0] - 2026-06-01
 

@@ -111,6 +111,163 @@ each call. Provider mode runs blind Round 1, Justice checks, Marshall
 verification, and a neutral synthesis - and still only advises; it never
 authorizes an action (D-4).
 
+## Setting keys permanently
+
+`--provider-run` reads credentials **only from the environment** (Directive
+D-5). Set the relevant variable in your shell profile or system environment so
+it is present in every new session without re-typing it.
+
+The two variables are:
+
+| Variable | Purpose |
+|---|---|
+| `ANTHROPIC_API_KEY` | Built-in Anthropic adapter. Format: `sk-ant-…` |
+| `CONCLAVE_PROVIDER_CMD` | Generic command adapter (any provider). Receives prompt on stdin; `{provider}`, `{model_family}`, `{slot}`, `{seat}` are substituted. |
+
+---
+
+### Linux / macOS — bash
+
+Append to `~/.bashrc` (interactive non-login) **and** `~/.bash_profile`
+(login, e.g. SSH) so the variable is visible in both contexts:
+
+```bash
+echo 'export ANTHROPIC_API_KEY="sk-ant-YOUR_KEY_HERE"' >> ~/.bashrc
+echo 'export ANTHROPIC_API_KEY="sk-ant-YOUR_KEY_HERE"' >> ~/.bash_profile
+source ~/.bashrc
+```
+
+---
+
+### Linux / macOS — zsh (default on macOS 10.15+)
+
+```bash
+echo 'export ANTHROPIC_API_KEY="sk-ant-YOUR_KEY_HERE"' >> ~/.zshrc
+source ~/.zshrc
+```
+
+---
+
+### macOS — system-wide (visible to GUI apps and Launch Agents)
+
+launchctl sets the variable for the current login session and all child
+processes, including Spotlight-launched apps:
+
+```bash
+launchctl setenv ANTHROPIC_API_KEY "sk-ant-YOUR_KEY_HERE"
+```
+
+To survive reboots, write a `launchd` plist:
+
+```xml
+<!-- ~/Library/LaunchAgents/com.conclave.env.plist -->
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>        <string>com.conclave.env</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/bin/launchctl</string>
+    <string>setenv</string>
+    <string>ANTHROPIC_API_KEY</string>
+    <string>sk-ant-YOUR_KEY_HERE</string>
+  </array>
+  <key>RunAtLoad</key>    <true/>
+</dict>
+</plist>
+```
+
+Load it once:
+
+```bash
+launchctl load ~/Library/LaunchAgents/com.conclave.env.plist
+```
+
+---
+
+### Windows — PowerShell (current user, permanent)
+
+```powershell
+[System.Environment]::SetEnvironmentVariable(
+  "ANTHROPIC_API_KEY",
+  "sk-ant-YOUR_KEY_HERE",
+  "User"
+)
+```
+
+Verify:
+
+```powershell
+$env:ANTHROPIC_API_KEY   # reads the process-level copy after restarting the shell
+```
+
+---
+
+### Windows — Command Prompt / System GUI
+
+```cmd
+setx ANTHROPIC_API_KEY "sk-ant-YOUR_KEY_HERE"
+```
+
+`setx` writes to the registry (`HKCU\Environment`). Open a **new** terminal to
+pick it up — the current window is unaffected. To set it machine-wide (requires
+Administrator):
+
+```cmd
+setx ANTHROPIC_API_KEY "sk-ant-YOUR_KEY_HERE" /M
+```
+
+You can also use **Settings → System → About → Advanced system settings →
+Environment Variables** and add `ANTHROPIC_API_KEY` under "User variables".
+
+---
+
+### Project-local `.env` (any platform)
+
+For repository-scoped overrides, create a `.env` file **in the repo root** (it
+is already git-ignored):
+
+```bash
+# .env  — loaded automatically when you activate a venv or use direnv/dotenv
+ANTHROPIC_API_KEY=sk-ant-YOUR_KEY_HERE
+CONCLAVE_ANTHROPIC_MODEL=claude-sonnet-4-6
+```
+
+Load it into the current shell:
+
+```bash
+set -a && source .env && set +a
+```
+
+Or use [direnv](https://direnv.net/): `echo 'dotenv' > .envrc && direnv allow`.
+
+---
+
+### Verify the key is live
+
+```bash
+bin/conclave --provider-run --profile pandemic-preparedness --dry-run "Kenya/USA ebola plans 2026"
+# Should NOT print the "no provider is reachable" warning.
+```
+
+---
+
+### Security reminders
+
+- Never commit `.env`, key files, or shell history that contains a key.
+  `ANTHROPIC_API_KEY` is already in `.gitignore`.
+- Rotate keys from the Anthropic Console if one is ever exposed.
+- On shared machines prefer a secrets manager (1Password CLI, AWS SSM, Vault)
+  over shell profile entries:
+
+  ```bash
+  export ANTHROPIC_API_KEY="$(op read 'op://Private/Anthropic/credential')"
+  ```
+
+---
+
 ## Next Step
 
 The opt-in provider mode keeps the deterministic selection layer and adds
