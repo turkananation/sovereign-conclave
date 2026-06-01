@@ -54,6 +54,11 @@ ISO format.
   `docs/GOOD_VS_BAD_VERDICTS.md`.
 - Configurable `default_profile` in the roster config for the local runner.
 - Yi Sun-shin <-> Zhukov polarity pair (22 total).
+- Opt-in provider-backed runner mode (`bin/conclave --provider-run`): real blind
+  Round 1, Justice checks, Marshall verification, and neutral synthesis routed
+  across provider slots, with transcript capture. Off by default, credentials
+  from the environment only (D-5), graceful fallback to the deterministic
+  scaffold, and advice-only output (D-4).
 
 ### Fixed
 

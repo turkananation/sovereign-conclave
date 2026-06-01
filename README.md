@@ -101,7 +101,7 @@ Paste or attach the real artifacts before Round 1. They become the [Evidence Led
 
 ## Local Runner
 
-The local runner is deterministic. It selects seats from `configs/conclave-roster.json` and creates a verdict scaffold. It does not call model providers and does not synthesize claims.
+By default the local runner is deterministic: it selects seats from `configs/conclave-roster.json` and creates a verdict scaffold without calling any model provider or synthesizing claims. Real provider-backed deliberation is available opt-in via `--provider-run` (off by default, env-only keys; see below).
 
 ```bash
 bin/conclave --list-profiles
@@ -114,6 +114,8 @@ bin/conclave --profile risk --evidence-file README.md --write-ledger ledgers/rel
 ```
 
 Generated local verdicts go to `verdicts/`, and private machine-readable ledgers go to `ledgers/`. Both are ignored by git except for `.gitkeep` because they may contain sensitive evidence.
+
+The runner is deterministic and offline by default. For real provider-backed deliberation, opt in with `bin/conclave --provider-run` — off by default, credentials from the environment only, with a graceful fallback to the scaffold. See [docs/RUNNER.md](docs/RUNNER.md).
 
 ## Profiles
 

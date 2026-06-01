@@ -78,9 +78,43 @@ verdicts/verdict-<UTC-timestamp>.md
 Generated verdicts are ignored by git because they may contain sensitive user
 evidence. Curated public examples belong under `demos/verdicts/`.
 
+## Provider mode (opt-in)
+
+By default the runner calls no model. `--provider-run` turns on real
+provider-backed deliberation. It is **off by default**, reads credentials **only**
+from the environment (Directive D-5), and **falls back to the deterministic
+scaffold** when no provider is reachable.
+
+Choose a provider through the environment:
+
+- `CONCLAVE_PROVIDER_CMD` - a command template that receives the prompt on stdin
+  and prints the completion on stdout (`{provider}`, `{model_family}`, `{slot}`,
+  and `{seat}` are substituted). The universal, provider-agnostic escape hatch.
+- `ANTHROPIC_API_KEY` - a built-in Anthropic Messages adapter
+  (`CONCLAVE_ANTHROPIC_MODEL` selects the model; default `claude-sonnet-4-6`).
+
+```bash
+# Preview routing without calling anything:
+bin/conclave --provider-run --profile risk --dry-run "Can this release go out?"
+
+# Run it (writes a filled verdict plus a sibling transcript):
+export CONCLAVE_PROVIDER_CMD="your-cli --model {model_family}"
+bin/conclave --provider-run --profile architecture "Split the notifications service?"
+```
+
+Seats route to provider/model-family slots from
+`configs/provider-model-slots*.yaml` (override with `--provider-config`), spreading
+polarity partners across providers to reduce monoculture. Each file run writes
+`verdict-<stamp>.transcript.json` next to the verdict with per-seat route, timing,
+and output; both stay under git-ignored `verdicts/`. `--provider-timeout` bounds
+each call. Provider mode runs blind Round 1, Justice checks, Marshall
+verification, and a neutral synthesis - and still only advises; it never
+authorizes an action (D-4).
+
 ## Next Step
 
-The future provider-backed runner should keep this deterministic selection layer
-and add explicit provider routing, timeouts, transcript capture, and validation
-that every factual claim still cites the frozen
-[Evidence Ledger](EVIDENCE_LEDGER.md).
+The opt-in provider mode keeps the deterministic selection layer and adds
+routing, timeouts, and transcript capture. Remaining work: stronger
+post-generation validation that every factual claim still cites the frozen
+[Evidence Ledger](EVIDENCE_LEDGER.md), and per-slot model maps for the built-in
+adapters.

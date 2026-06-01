@@ -44,6 +44,7 @@ Last updated: 2026-06-01
 - Made `configs/conclave-roster.json` the single source of truth: `scripts/generate_roster.py` renders `roster.md` with a CI drift check.
 - Added a `tests/` unit suite, CI schema enforcement via `jsonschema`, provider-slot and seat-collision validation, an `install.sh --uninstall` path, architecture and war-game demo verdicts, and `docs/GOOD_VS_BAD_VERDICTS.md`.
 - Hardened the local runner: collision-safe verdict filenames, contiguous multi-ledger merge, type-aware scaffold rows, and a configurable `default_profile`.
+- Added an opt-in provider-backed runner mode (`--provider-run`) with env-only keys, default-off, graceful fallback, slot routing, and transcript capture.
 
 ## Next Milestones
 
@@ -59,7 +60,7 @@ stays **0.1.0** until a release is cut.
 | 0.1.4 | Evidence Ledger buildout | Done | Add guide, template, source-quality rules, redaction handling, and runner evidence flags. |
 | 0.1.5 | Model-native ledgers | Done | Add JSON schema, public demo JSON ledger, private `ledgers/` storage, validation, and runner import/export. |
 | 0.2.0 | Demo verdict pack | Done | eSiasa civic-stress, pandemic-preparedness, architecture, and war-game demos plus a good-vs-bad guide are in. |
-| 0.3.0 | Portable runner | In progress | Deterministic scaffold runner exists; provider-backed execution remains future work. |
+| 0.3.0 | Portable runner | Done | Deterministic scaffold plus an opt-in provider-backed mode (env-only keys, default off, transcript capture). |
 
 ## Open Questions
 

@@ -50,6 +50,7 @@ Effort scale:
 | Unit tests + schema enforcement | Done | M | `tests/` cover the validator and runner; CI enforces the JSON schema via `jsonschema`. |
 | Provider config schema | Done | M | `scripts/validate_repo.py` validates `configs/provider-model-slots*.yaml` slots, seat coverage, and key-source discipline. |
 | Install and uninstall commands | Done | M | `install.sh --uninstall` removes the skill and conclave agents per target. |
+| Opt-in provider-backed runner | Done | L | `--provider-run` runs real deliberation from env-only keys (default off), with slot routing and transcript capture. |
 
 ## 0.4.x - Make It Collaborative
 

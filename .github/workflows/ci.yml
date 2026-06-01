@@ -49,3 +49,4 @@ jobs:
           bin/conclave --members feynman --ledger-file demos/evidence-ledgers/architecture-notifications-platform-split.json --ledger-file demos/evidence-ledgers/war-game-launch-plan.json --stdout "Merge two ledgers without ID collision?" >/tmp/conclave-merge.md
           bin/conclave --validate-ledger demos/evidence-ledgers/pandemic-preparedness-county-response.json
           bin/conclave --profile risk --evidence-file README.md --write-ledger /tmp/conclave-ledger-export.json --stdout "Can this release go out?" >/tmp/conclave-ledger-export.md
+          bin/conclave --provider-run --profile architecture --dry-run "Provider mode falls back safely without keys?"

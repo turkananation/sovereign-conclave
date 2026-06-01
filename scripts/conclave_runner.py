@@ -82,6 +82,13 @@ def resolve_path(raw_path: str) -> Path:
     return path.resolve()
 
 
+def provider_config_path(explicit: str | None) -> Path:
+    if explicit:
+        return resolve_path(explicit)
+    real = ROOT / "configs" / "provider-model-slots.yaml"
+    return real if real.exists() else ROOT / "configs" / "provider-model-slots.example.yaml"
+
+
 def next_evidence_id(used_ids: set[str], start: int = 1) -> str:
     value = start
     while f"E{value}" in used_ids:
@@ -336,6 +343,98 @@ def render_verdict_scaffold(
 """
 
 
+def run_provider_mode(args, config, profile_id, selected, problem, evidence_ledger_document, evidence_entries, timestamp):
+    """Opt-in provider-backed run. Returns an exit code, or None to fall back to the scaffold."""
+    import provider_runner as pr
+
+    cfg_path = provider_config_path(args.provider_config)
+    cfg_text = cfg_path.read_text(encoding="utf-8") if cfg_path.exists() else ""
+    provider_cfg = pr.parse_provider_config(cfg_text)
+    client = pr.get_client()
+    seat_lookup = seat_index(config)
+    convened = selected + [config["marshall"]]
+
+    if client is None:
+        print(
+            "warning: --provider-run requested but no provider is reachable "
+            "(set CONCLAVE_PROVIDER_CMD or ANTHROPIC_API_KEY); falling back to the deterministic scaffold.",
+            file=sys.stderr,
+        )
+        return None
+
+    if args.dry_run:
+        print(pr.routing_plan(convened, seat_lookup, provider_cfg, client.name))
+        return 0
+
+    ledger_section = render_evidence_ledger(evidence_ledger_document, timestamp)
+
+    def agent_text(seat_id: str) -> str:
+        return (ROOT / seat_lookup[seat_id]["path"]).read_text(encoding="utf-8")
+
+    result = pr.run_deliberation(
+        convened=convened,
+        seat_lookup=seat_lookup,
+        agent_text=agent_text,
+        provider_cfg=provider_cfg,
+        client=client,
+        problem=problem,
+        ledger_section=ledger_section,
+        timeout=args.provider_timeout,
+    )
+
+    if args.write_ledger and evidence_entries:
+        failures = validate_ledger_document(evidence_ledger_document)
+        if failures:
+            details = "\n".join(f"- {failure}" for failure in failures)
+            raise SystemExit(f"Cannot write invalid ledger:\n{details}")
+        write_ledger_json(resolve_path(args.write_ledger), evidence_ledger_document)
+
+    if args.stdout:
+        print(
+            pr.render_provider_verdict(
+                problem=problem, profile_id=profile_id, convened=convened,
+                seat_lookup=seat_lookup, ledger_section=ledger_section, result=result,
+                timestamp=timestamp, client_name=client.name, transcript_rel=None,
+            )
+        )
+        return 0
+
+    out_dir = ROOT / args.out_dir
+    out_dir.mkdir(parents=True, exist_ok=True)
+    stamp = timestamp.replace(":", "").replace("-", "")
+    out_path = out_dir / f"verdict-{stamp}.md"
+    counter = 1
+    while out_path.exists():
+        out_path = out_dir / f"verdict-{stamp}-{counter}.md"
+        counter += 1
+    transcript_path = out_dir / f"{out_path.stem}.transcript.json"
+
+    rendered = pr.render_provider_verdict(
+        problem=problem, profile_id=profile_id, convened=convened,
+        seat_lookup=seat_lookup, ledger_section=ledger_section, result=result,
+        timestamp=timestamp, client_name=client.name, transcript_rel=display_path(transcript_path),
+    )
+    out_path.write_text(rendered, encoding="utf-8")
+    transcript_path.write_text(
+        json.dumps(
+            {
+                "run_id": timestamp,
+                "profile": profile_id,
+                "convened": convened,
+                "client": client.name,
+                "errors": result.errors,
+                "calls": result.transcript,
+            },
+            indent=2,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    print(display_path(out_path))
+    print(display_path(transcript_path))
+    return 0
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Create a local Sovereign Conclave verdict scaffold.")
     parser.add_argument("problem", nargs="*", help="Decision question")
@@ -359,6 +458,9 @@ def main() -> int:
     parser.add_argument("--stdout", action="store_true", help="Print scaffold instead of writing a file")
     parser.add_argument("--dry-run", action="store_true", help="Print selected seats without writing a file")
     parser.add_argument("--out-dir", default="verdicts", help="Output directory for verdict files")
+    parser.add_argument("--provider-run", action="store_true", help="Opt-in: run real provider-backed deliberation (needs env keys; OFF by default)")
+    parser.add_argument("--provider-timeout", type=float, default=60.0, help="Per-call timeout in seconds for provider mode")
+    parser.add_argument("--provider-config", help="Provider slot YAML (default: configs/provider-model-slots.yaml, else the example)")
     args = parser.parse_args()
 
     config = load_config()
@@ -392,6 +494,14 @@ def main() -> int:
         if failures:
             details = "\n".join(f"- {failure}" for failure in failures)
             raise SystemExit(f"Invalid assembled ledger:\n{details}")
+
+    if args.provider_run:
+        provider_exit = run_provider_mode(
+            args, config, profile_id, selected, problem,
+            evidence_ledger_document, evidence_entries, timestamp,
+        )
+        if provider_exit is not None:
+            return provider_exit
 
     if args.dry_run:
         if args.write_ledger:

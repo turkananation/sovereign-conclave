@@ -50,6 +50,12 @@ Cross-model routing can reduce shared blind spots, but it may send evidence to
 multiple providers. Users are responsible for matching provider use to their
 data-handling requirements.
 
+The opt-in provider mode (`bin/conclave --provider-run`) is off by default and
+reads credentials only from environment variables (`CONCLAVE_PROVIDER_CMD` or
+`ANTHROPIC_API_KEY`); it never reads keys from files and never writes them to
+transcripts. Run transcripts can contain evidence and model output, so they are
+written under git-ignored `verdicts/`.
+
 ## Scope
 
 In scope:
