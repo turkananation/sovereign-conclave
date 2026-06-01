@@ -39,10 +39,37 @@ ISO format.
 - Public demo JSON ledger under `demos/evidence-ledgers/`.
 - `--ledger-file`, `--validate-ledger`, and `--write-ledger` runner flags for
   validating, importing, and exporting machine-readable ledgers.
+- `scripts/generate_roster.py` to render `roster.md` from the machine-readable
+  config, with a CI drift check so the two cannot diverge.
+- `tests/` unit suite for the Evidence Ledger validator and the local runner,
+  plus byte-compile and unit-test steps in CI.
+- CI enforcement of the published Evidence Ledger JSON schema via `jsonschema`,
+  and a schema/validator sync check that prevents field drift.
+- Provider slot validation for `configs/provider-model-slots*.yaml` (defined
+  slots, seat coverage, environment-only keys, no committed secrets).
+- Lightweight seat-collision checks: duplicate lenses and advocates without a
+  polarity counterweight now fail validation.
+- `install.sh --uninstall` to remove the skill and conclave agents per target.
+- Architecture and war-game demo verdicts with machine-readable ledgers, and
+  `docs/GOOD_VS_BAD_VERDICTS.md`.
+- Configurable `default_profile` in the roster config for the local runner.
+- Yi Sun-shin <-> Zhukov polarity pair (22 total).
 
-### Planned
+### Fixed
 
-- Add richer demo verdicts for architecture and war-game profiles.
+- Verdict files no longer overwrite a prior run written in the same second, and
+  the filename now matches the in-file Run ID.
+- Merging two or more `--ledger-file` inputs renumbers the combined evidence into
+  one contiguous sequence instead of failing on duplicate `E#` IDs.
+- The runner warns and skips when `--write-ledger` is combined with `--dry-run`.
+- The verdict scaffold renders Justice and verifier rows as structural checks,
+  not option recommendations.
+- The validator's argument-move count is scoped to the "How you argue" section.
+
+### Changed
+
+- `roster.md` is now generated from `configs/conclave-roster.json`; edit the
+  config and run `scripts/generate_roster.py --write`.
 
 ## [0.1.0] - 2026-06-01
 

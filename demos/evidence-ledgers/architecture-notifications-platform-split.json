@@ -1,0 +1,73 @@
+{
+  "schema_version": "1.0.0",
+  "ledger_id": "demo-architecture-notifications-platform-split",
+  "decision": "Should we extract the notifications service out of the shared monolith now?",
+  "prepared_by": "Sovereign Conclave demo",
+  "freeze_time_utc": "2026-06-01T00:00:00Z",
+  "ledger_status": "frozen",
+  "sensitivity": "public",
+  "entries": [
+    {
+      "id": "E1",
+      "item": "Notifications shares the monolith's Postgres; 3 of the last 5 Sev2 incidents traced to notification fan-out saturating the shared connection pool.",
+      "source_type": "command_output",
+      "source": "Sample incident-review export",
+      "provenance": "Public demo input created for demos/verdicts/architecture-notifications-platform-split.md.",
+      "handling": "Public demo input; correlation is stated, root-cause depth beyond the export is unknown.",
+      "sensitivity": "public"
+    },
+    {
+      "id": "E2",
+      "item": "Notifications is ~9% of deploys but its shared pipeline stage blocks every release for about 40 minutes.",
+      "source_type": "metric",
+      "source": "Sample CI pipeline metrics",
+      "provenance": "Public demo input created for demos/verdicts/architecture-notifications-platform-split.md.",
+      "handling": "Public demo input; proves only the sample pipeline state.",
+      "sensitivity": "public"
+    },
+    {
+      "id": "E3",
+      "item": "Proposed split extracts notifications to its own service, datastore, and queue; estimated at 6 engineer-weeks with no owner assigned yet.",
+      "source_type": "policy",
+      "source": "Sample architecture decision record draft",
+      "provenance": "Public demo input created for demos/verdicts/architecture-notifications-platform-split.md.",
+      "handling": "Public demo input; the estimate is unvalidated and ownership is open.",
+      "sensitivity": "public"
+    },
+    {
+      "id": "E4",
+      "item": "Current p99 notification send latency is 4.2s at peak against a 2s SLO.",
+      "source_type": "metric",
+      "source": "Sample latency dashboard",
+      "provenance": "Public demo input created for demos/verdicts/architecture-notifications-platform-split.md.",
+      "handling": "Public demo input; single-window measurement.",
+      "sensitivity": "public"
+    },
+    {
+      "id": "E5",
+      "item": "The owning team is 4 engineers and the on-call rotation is already reported at capacity.",
+      "source_type": "user_assertion",
+      "source": "Team lead statement",
+      "provenance": "Public demo input created for demos/verdicts/architecture-notifications-platform-split.md.",
+      "handling": "Treat as an asserted staffing claim, not an audited capacity model.",
+      "sensitivity": "public"
+    },
+    {
+      "id": "E6",
+      "item": "The split's rollback is 'dual-write then cut over', but there is no tested rollback for the datastore migration step.",
+      "source_type": "policy",
+      "source": "Sample architecture decision record draft",
+      "provenance": "Public demo input created for demos/verdicts/architecture-notifications-platform-split.md.",
+      "handling": "Public demo input; absence of a tested rollback is treated as an open risk.",
+      "sensitivity": "public"
+    }
+  ],
+  "open_evidence_gaps": [
+    {
+      "claim": "The shared connection pool, not application code, is the true bottleneck behind the Sev2 incidents.",
+      "would_be_settled_by": "A pool-saturation trace or a load test isolating the notification fan-out path."
+    }
+  ],
+  "redactions": [],
+  "notes": "Public demo ledger. Do not treat as a live production file."
+}

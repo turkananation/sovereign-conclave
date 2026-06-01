@@ -26,7 +26,7 @@ Bad seat:
 ## Danger Lenses
 
 Some seats represent dangerous governance logics such as coercive control or
-extractive administration. These seats exist so the Conclave can name the ugly
+extractive administration. These seats exist so The Sovereign Conclave can name the ugly
 logic before it hides inside words like efficiency, stability, security, or
 order.
 
@@ -41,7 +41,7 @@ The Evidence Ledger is the frozen set of artifacts the verdict may rely on:
 files, quoted documents, logs, metrics, screenshots, or sourced claims. Every
 load-bearing factual claim gets an `E#` citation.
 
-If there is no evidence, the Conclave can still reason, but the verdict must say
+If there is no evidence, The Sovereign Conclave can still reason, but the verdict must say
 that confidence is low and Marshall must flag unsupported decisive claims.
 
 The full ledger standard is documented in

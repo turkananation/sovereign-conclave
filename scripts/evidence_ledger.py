@@ -36,6 +36,8 @@ DOCUMENT_REQUIRED = (
     "ledger_status",
     "sensitivity",
     "entries",
+    "open_evidence_gaps",
+    "redactions",
 )
 
 

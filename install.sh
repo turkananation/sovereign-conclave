@@ -7,6 +7,7 @@ CLAUDE_DIR="${HOME}/.claude"
 CODEX_DIR="${HOME}/.codex"
 ANTIGRAVITY_DIR="${HOME}/.gemini/antigravity"
 DRY_RUN=0
+MODE="install"
 TARGETS=("claude")
 
 usage() {
@@ -20,6 +21,7 @@ Options:
   --codex-dir PATH           Codex config dir (default: ~/.codex)
   --antigravity-dir PATH     Antigravity config dir (default: ~/.gemini/antigravity)
   --dry-run                  Print actions without touching the filesystem
+  --uninstall                Remove installed skill + conclave agents for the target(s)
   -h, --help                 Show this help
 
 Examples:
@@ -27,6 +29,7 @@ Examples:
   ./install.sh --target codex
   ./install.sh --target antigravity
   ./install.sh --target all --dry-run
+  ./install.sh --uninstall --target all
 EOF
 }
 
@@ -59,6 +62,7 @@ while [[ $# -gt 0 ]]; do
     --codex-dir)        CODEX_DIR="$2"; shift 2 ;;
     --antigravity-dir)  ANTIGRAVITY_DIR="$2"; shift 2 ;;
     --dry-run)          DRY_RUN=1; shift ;;
+    --uninstall)        MODE="uninstall"; shift ;;
     -h|--help)          usage; exit 0 ;;
     *) echo "Unknown argument: $1" >&2; usage; exit 2 ;;
   esac
@@ -103,6 +107,15 @@ copy_agents_into() {
   done
 }
 
+remove_agents_from() {
+  local agents_dst="$1"
+
+  shopt -s nullglob
+  for agent in "${AGENTS_SRC}"/conclave-*.md; do
+    run rm -f "${agents_dst}/$(basename "${agent}")"
+  done
+}
+
 install_claude() {
   local agents_dst="${CLAUDE_DIR}/agents"
   local skill_dst="${CLAUDE_DIR}/skills/conclave"
@@ -128,12 +141,35 @@ install_antigravity() {
   copy_agents_into "${skill_dst}/agents"
 }
 
+uninstall_claude() {
+  echo "Removing Sovereign Conclave for Claude Code from ${CLAUDE_DIR}"
+  remove_agents_from "${CLAUDE_DIR}/agents"
+  run rm -rf "${CLAUDE_DIR}/skills/conclave"
+}
+
+uninstall_codex() {
+  echo "Removing Sovereign Conclave for Codex from ${CODEX_DIR}/skills/conclave"
+  run rm -rf "${CODEX_DIR}/skills/conclave"
+}
+
+uninstall_antigravity() {
+  echo "Removing Sovereign Conclave for Antigravity from ${ANTIGRAVITY_DIR}/skills/conclave"
+  run rm -rf "${ANTIGRAVITY_DIR}/skills/conclave"
+}
+
 for target in "${TARGETS[@]}"; do
-  case "${target}" in
-    claude) install_claude ;;
-    codex) install_codex ;;
-    antigravity) install_antigravity ;;
+  case "${MODE}.${target}" in
+    install.claude) install_claude ;;
+    install.codex) install_codex ;;
+    install.antigravity) install_antigravity ;;
+    uninstall.claude) uninstall_claude ;;
+    uninstall.codex) uninstall_codex ;;
+    uninstall.antigravity) uninstall_antigravity ;;
   esac
 done
 
-echo "Done. Restart the target tool so it can discover the /conclave skill."
+if [[ "${MODE}" == "install" ]]; then
+  echo "Done. Restart the target tool so it can discover the /conclave skill."
+else
+  echo "Done. Sovereign Conclave removed for: ${TARGETS[*]}."
+fi

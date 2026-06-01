@@ -24,7 +24,7 @@ The project currently includes:
 
 - 33 active seats.
 - 15 convening profiles.
-- 21 polarity pairs.
+- 22 polarity pairs.
 - Structural Justice checks for evidence, rights, access, values, and dignity.
 - A multi-target installer for Claude Code, Codex, and Antigravity.
 - A machine-readable roster/profile config.
@@ -44,7 +44,7 @@ Use Sovereign Conclave to:
 - Convert messy deliberation into a durable verdict file.
 - Keep unsupported factual claims visible instead of letting them pass as judgment.
 
-It does **not** make autonomous decisions. It does **not** deploy, spend, push, execute, or authorize irreversible action. The Conclave advises; the human decides.
+It does **not** make autonomous decisions. It does **not** deploy, spend, push, execute, or authorize irreversible action. The Sovereign Conclave advises; the human decides.
 
 ## Why It Is Different
 
@@ -73,10 +73,11 @@ bash -n install.sh
 Install for your tool:
 
 ```bash
-./install.sh                         # Claude Code, default target
-./install.sh --target codex          # Codex
-./install.sh --target antigravity    # Antigravity
-./install.sh --target all --dry-run  # preview every target
+./install.sh                          # Claude Code, default target
+./install.sh --target codex           # Codex
+./install.sh --target antigravity     # Antigravity
+./install.sh --target all --dry-run   # preview every target
+./install.sh --uninstall --target all # remove from every target
 ```
 
 Restart the target tool after installation.
@@ -140,10 +141,12 @@ Marshall is convened in every run even when not named.
 
 Curated examples live under [demos/verdicts/](demos/verdicts/):
 
+- [architecture-notifications-platform-split.md](demos/verdicts/architecture-notifications-platform-split.md)
+- [war-game-launch-plan.md](demos/verdicts/war-game-launch-plan.md)
 - [esiasa-civic-stress-route-backed-dossier.md](demos/verdicts/esiasa-civic-stress-route-backed-dossier.md)
 - [pandemic-preparedness-county-response.md](demos/verdicts/pandemic-preparedness-county-response.md)
 
-They show the expected standard: clear decision framing, frozen evidence, real disagreement, Marshall verification, confidence, unresolved dissent, and advice-only recommendation language.
+They show the expected standard: clear decision framing, frozen evidence, real disagreement, Marshall verification, confidence, unresolved dissent, and advice-only recommendation language. [docs/GOOD_VS_BAD_VERDICTS.md](docs/GOOD_VS_BAD_VERDICTS.md) contrasts a grounded verdict with a fluent, ungrounded one on the same decision.
 
 ## Repository Map
 
@@ -157,8 +160,10 @@ They show the expected standard: clear decision framing, frozen evidence, real d
 | [configs/conclave-roster.json](configs/conclave-roster.json) | Machine-readable seats, profiles, polarity pairs, and quorum rules |
 | [configs/provider-model-slots.example.yaml](configs/provider-model-slots.example.yaml) | Optional provider/model slot example |
 | [schemas/evidence-ledger.schema.json](schemas/evidence-ledger.schema.json) | Machine-readable Evidence Ledger schema |
+| [scripts/generate_roster.py](scripts/generate_roster.py) | Generates `roster.md` from the machine-readable config |
 | [scripts/validate_repo.py](scripts/validate_repo.py) | Repository invariant validator |
 | [scripts/evidence_ledger.py](scripts/evidence_ledger.py) | Dependency-free Evidence Ledger JSON validation helpers |
+| [tests/](tests/) | Unit tests for the Evidence Ledger validator and the runner |
 | [bin/conclave](bin/conclave) | Local verdict-scaffold runner |
 | [demos/verdict-template.md](demos/verdict-template.md) | Blank verdict format |
 | [demos/evidence-ledger-template.md](demos/evidence-ledger-template.md) | Standalone Evidence Ledger preparation template |

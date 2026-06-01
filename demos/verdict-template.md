@@ -48,4 +48,4 @@
 
 ## 7. Decision (human)
 
-<Left blank for you. The Conclave advises; you decide, and you own the call.>
+<Left blank for you. The Sovereign Conclave advises; you decide, and you own the call.>

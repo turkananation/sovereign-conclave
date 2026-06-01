@@ -16,14 +16,28 @@ jobs:
         with:
           python-version: "3.11"
 
+      - name: Install optional schema validator
+        run: python -m pip install --upgrade jsonschema
+
+      - name: Byte-compile Python
+        run: python -m py_compile scripts/*.py tests/*.py
+
       - name: Validate shell scripts
         run: bash -n install.sh
 
       - name: Validate repository invariants
         run: python3 scripts/validate_repo.py
 
-      - name: Verify installer dry run
-        run: ./install.sh --target all --dry-run
+      - name: Check roster.md is generated from config
+        run: python3 scripts/generate_roster.py --check
+
+      - name: Run unit tests
+        run: python -m unittest discover -s tests -v
+
+      - name: Verify installer dry runs
+        run: |
+          ./install.sh --target all --dry-run
+          ./install.sh --uninstall --target all --dry-run
 
       - name: Smoke test local runner
         run: |
@@ -32,5 +46,6 @@ jobs:
           bin/conclave --profile pandemic-preparedness --stdout "County outbreak readiness plan" >/tmp/conclave-verdict.md
           bin/conclave --profile risk --evidence-file README.md --evidence-note "Rollback plan is pending owner approval." --stdout "Can this release go out?" >/tmp/conclave-evidence-verdict.md
           bin/conclave --profile pandemic-preparedness --ledger-file demos/evidence-ledgers/pandemic-preparedness-county-response.json --stdout "Approve the county outbreak-response plan?" >/tmp/conclave-ledger-import.md
+          bin/conclave --members feynman --ledger-file demos/evidence-ledgers/architecture-notifications-platform-split.json --ledger-file demos/evidence-ledgers/war-game-launch-plan.json --stdout "Merge two ledgers without ID collision?" >/tmp/conclave-merge.md
           bin/conclave --validate-ledger demos/evidence-ledgers/pandemic-preparedness-county-response.json
           bin/conclave --profile risk --evidence-file README.md --write-ledger /tmp/conclave-ledger-export.json --stdout "Can this release go out?" >/tmp/conclave-ledger-export.md

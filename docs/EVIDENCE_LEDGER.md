@@ -12,13 +12,13 @@ assumption, not evidence.
 
 The ledger does four jobs:
 
-1. **Admits evidence:** records which artifacts the Conclave may rely on.
+1. **Admits evidence:** records which artifacts The Sovereign Conclave may rely on.
 2. **Preserves provenance:** records where each artifact came from.
 3. **Freezes scope:** prevents seats from inventing facts mid-deliberation.
 4. **Enables verification:** lets Marshall tag decisive claims as
    `[SUPPORTED]`, `[UNSUPPORTED]`, or `[CONTESTED]`.
 
-The Conclave can reason without much evidence, but it must say confidence is low
+The Sovereign Conclave can reason without much evidence, but it must say confidence is low
 and must not present unsupported decisive claims as a recommendation.
 
 ## Storage Locations
@@ -103,8 +103,12 @@ Each entry uses stable `E#` IDs and must include:
 Optional useful fields include `content_hash`, `uri`, `path`, `observed_at_utc`,
 `sensitivity`, and `post_freeze`.
 
-Validation is dependency-free: `scripts/validate_repo.py` validates public demo
-ledgers, and `bin/conclave --ledger-file ...` validates any ledger it imports.
+Validation is dependency-free locally: `scripts/validate_repo.py` validates public
+demo ledgers, and `bin/conclave --ledger-file ...` validates any ledger it imports.
+CI additionally installs `jsonschema` and enforces the published schema for real,
+and a sync check keeps the schema and the dependency-free validator from drifting.
+`open_evidence_gaps` and `redactions` are required arrays (use `[]` when empty),
+matching the schema.
 
 ## What Belongs In The Ledger
 
@@ -196,7 +200,7 @@ Rules:
 - Do not paste secret material into public demo files.
 - If a source is sensitive, summarize only the allowed fact and mark the row as
   redacted.
-- If a claim depends on material that cannot be shown to the Conclave, record
+- If a claim depends on material that cannot be shown to The Sovereign Conclave, record
   the confidence penalty.
 
 ## Runner Support

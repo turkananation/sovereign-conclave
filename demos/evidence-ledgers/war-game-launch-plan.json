@@ -1,0 +1,73 @@
+{
+  "schema_version": "1.0.0",
+  "ledger_id": "demo-war-game-launch-plan",
+  "decision": "Should we ship the new auth rewrite to 100% of users behind a flag next week?",
+  "prepared_by": "Sovereign Conclave demo",
+  "freeze_time_utc": "2026-06-01T00:00:00Z",
+  "ledger_status": "frozen",
+  "sensitivity": "public",
+  "entries": [
+    {
+      "id": "E1",
+      "item": "Launch plan enables the new auth path for 100% of users on day one behind a feature flag; the stated rollback is to flip the flag off.",
+      "source_type": "policy",
+      "source": "Sample launch plan",
+      "provenance": "Public demo input created for demos/verdicts/war-game-launch-plan.md.",
+      "handling": "Public demo input; proves only the sample plan state.",
+      "sensitivity": "public"
+    },
+    {
+      "id": "E2",
+      "item": "The new auth path has not been load tested above 30% of projected peak traffic.",
+      "source_type": "metric",
+      "source": "Sample load-test summary",
+      "provenance": "Public demo input created for demos/verdicts/war-game-launch-plan.md.",
+      "handling": "Public demo input; coverage gap is directly stated.",
+      "sensitivity": "public"
+    },
+    {
+      "id": "E3",
+      "item": "Legacy auth is removed from the build in the same release; no parallel fallback is retained beyond a 7-day window.",
+      "source_type": "policy",
+      "source": "Sample launch plan",
+      "provenance": "Public demo input created for demos/verdicts/war-game-launch-plan.md.",
+      "handling": "Public demo input; irreversibility after 7 days is treated as a constraint.",
+      "sensitivity": "public"
+    },
+    {
+      "id": "E4",
+      "item": "The support team is staffed for normal volume with no surge plan for an auth-lockout spike.",
+      "source_type": "user_assertion",
+      "source": "Support lead statement",
+      "provenance": "Public demo input created for demos/verdicts/war-game-launch-plan.md.",
+      "handling": "Treat as an asserted staffing claim, not an audited plan.",
+      "sensitivity": "public"
+    },
+    {
+      "id": "E5",
+      "item": "The main competitor launched a counter-promotion within 72 hours of each of our last three launches.",
+      "source_type": "meeting_note",
+      "source": "Sample market-history note",
+      "provenance": "Public demo input created for demos/verdicts/war-game-launch-plan.md.",
+      "handling": "Public demo input; a three-event pattern, not a guarantee.",
+      "sensitivity": "public"
+    },
+    {
+      "id": "E6",
+      "item": "The feature-flag system depends on the same identity service the auth rewrite modifies.",
+      "source_type": "repository_file",
+      "source": "Sample dependency manifest",
+      "provenance": "Public demo input created for demos/verdicts/war-game-launch-plan.md.",
+      "handling": "Public demo input; shared dependency is the central abort-path risk.",
+      "sensitivity": "public"
+    }
+  ],
+  "open_evidence_gaps": [
+    {
+      "claim": "Flipping the flag off actually restores service if the modified identity service is degraded.",
+      "would_be_settled_by": "A failure-injection test of the flag abort path while the identity service is unhealthy."
+    }
+  ],
+  "redactions": [],
+  "notes": "Public demo ledger. Do not treat as a live launch file."
+}

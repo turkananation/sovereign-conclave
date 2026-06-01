@@ -5,7 +5,9 @@
 It currently does four things:
 
 1. Reads `configs/conclave-roster.json`.
-2. Selects seats from `--profile` or `--members`.
+2. Selects seats from `--profile` or `--members`, or the config `default_profile`
+   when neither is given (the assistant protocol in `SKILL.md` instead picks the
+   seats most orthogonal to the problem).
 3. Optionally seeds the Evidence Ledger from files or explicit notes.
 4. Writes a verdict scaffold to `verdicts/` or prints it to stdout.
 
@@ -52,10 +54,12 @@ Use `--ledger-file` to import a machine-readable Evidence Ledger JSON file. The
 file is validated before the verdict scaffold is rendered. Use
 `--validate-ledger` when you only want to validate a ledger file.
 
-Use `--write-ledger` to export the assembled JSON ledger. This works with
-`--evidence-file`, `--evidence-note`, and `--ledger-file`; if a ledger file is
-loaded and new evidence is supplied, the runner appends new `E#` IDs after the
-existing IDs.
+Use `--write-ledger` to export the assembled JSON ledger. It works with
+`--evidence-file`, `--evidence-note`, and `--ledger-file`. Importing one ledger
+keeps its `E#` IDs and appends new evidence after them; importing two or more
+ledgers renumbers the merged set into one contiguous sequence so their
+overlapping IDs cannot collide. `--write-ledger` is skipped (with a warning to
+stderr) under `--dry-run`.
 
 Private JSON ledgers belong under `ledgers/`, which is git-ignored except for
 `ledgers/.gitkeep`. Public examples belong under `demos/evidence-ledgers/`.

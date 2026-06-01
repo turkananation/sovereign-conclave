@@ -1,6 +1,7 @@
 {
   "version": "0.1.0",
   "marshall": "conclave-marshall",
+  "default_profile": "architecture",
   "quorum": {
     "min_seats": 3,
     "max_seats": 8,
@@ -36,7 +37,7 @@
     },
     {
       "id": "conclave-giap",
-      "display_name": "Giap",
+      "display_name": "Giáp",
       "tier": "General",
       "type": "advocate",
       "lens": "Asymmetric protraction; terrain, will, political clock",
@@ -326,7 +327,8 @@
     {"a": "conclave-colonial-administrator", "b": "conclave-mau-mau", "contrast": "Extractive indirect order vs. anti-colonial land and dignity grievance"},
     {"a": "conclave-jackson", "b": "conclave-cheney", "contrast": "Emergency authority limits vs. emergency executive concentration"},
     {"a": "conclave-sachs", "b": "conclave-authoritarian", "contrast": "Repair and transitional legitimacy vs. coercive control"},
-    {"a": "conclave-colonial-administrator", "b": "conclave-maathai", "contrast": "Extractive administration vs. ecological civic stewardship"}
+    {"a": "conclave-colonial-administrator", "b": "conclave-maathai", "contrast": "Extractive administration vs. ecological civic stewardship"},
+    {"a": "conclave-yi-sun-shin", "b": "conclave-zhukov", "contrast": "Impregnable prepared defense vs. decisive offense"}
   ],
   "profiles": [
     {

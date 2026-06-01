@@ -78,4 +78,4 @@ Required fixes:
 
 ## 7. Decision (human)
 
-<Left blank. The Conclave advises; you decide, and you own the call.>
+<Left blank. The Sovereign Conclave advises; you decide, and you own the call.>

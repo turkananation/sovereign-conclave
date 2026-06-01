@@ -1,11 +1,11 @@
 ---
 name: sovereign-conclave
-description: Convene a chosen conclave of personas for grounded, multi-perspective deliberation on a hard decision — code/architecture calls, strategic or institutional direction, red-team war-gaming, or risk review. Use whenever the user runs /conclave, asks to "war-game", "deliberate", "stress-test", "red-team", or "get the conclave on" a decision, or wants several opposed expert viewpoints to argue a problem before a recommendation. Produces a written verdict grounded in supplied evidence; advises only — the human decides.
+description: Convene a chosen conclave of personas for grounded, multi-perspective deliberation on a hard decision — code/architecture calls, strategic or institutional direction, red-team war-gaming, or risk review. Use whenever the user runs /conclave, asks to "war-game", "deliberate", "stress-test", "red-team", or "get The Sovereign Conclave on" a decision, or wants several opposed expert viewpoints to argue a problem before a recommendation. Produces a written verdict grounded in supplied evidence; advises only — the human decides.
 ---
 
 # Sovereign Conclave
 
-Convene a small conclave of deliberately opposed personas to deliberate a hard decision, ground their reasoning in evidence you supply, and produce a written verdict. **The Conclave advises; the human decides.** It never authorizes an irreversible action (see `directives.md`, D-4).
+Convene a small conclave of deliberately opposed personas to deliberate a hard decision, ground their reasoning in evidence you supply, and produce a written verdict. **The Sovereign Conclave advises; the human decides.** It never authorizes an irreversible action (see `directives.md`, D-4).
 
 ## Command
 
@@ -39,7 +39,7 @@ If Round 1 showed early consensus (D-3), run one **counterfactual pass**: assign
 ### Round 3 — Synthesis → verdict file
 A synthesizer **separate from every advocate** (you, the main agent, acting neutrally — not Zhukov, not Lee Kuan Yew) writes the verdict using `demos/verdict-template.md`: the decision, the ledger, the positions, the real disagreements, Marshall's verification, a recommendation phrased as **advice to the human**, an explicit confidence, what would change it, and any unresolved dissent (preserved, not averaged away).
 
-Write it to `verdicts/verdict-<UTC-timestamp>.md`. A recommendation resting on `[UNSUPPORTED]` decisive claims is downgraded or sent back for evidence — never presented as the conclave's call.
+Write it to `verdicts/verdict-<UTC-timestamp>.md`. A recommendation resting on `[UNSUPPORTED]` decisive claims is downgraded or sent back for evidence — never presented as The Sovereign Conclave's call.
 
 ## Guardrails (enforced)
 - **Anti-herding:** Round 1 is blind. No exceptions.

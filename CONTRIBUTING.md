@@ -1,17 +1,15 @@
 # Contributing
 
-Contributions are welcome when they strengthen the Conclave's reliability,
+Contributions are welcome when they strengthen The Sovereign Conclave's reliability,
 portability, or evidence discipline.
 
 ## Core Rules
 
-- A seat is a lens, not a capability. Do not imply that a name gives the model a
-  historical figure's skill.
-- Add a seat only when it argues a stance or structural check no existing seat
-  covers.
+- A seat is a lens, not a capability. Do not imply that a name gives the model a historical figure's skill.
+- Add a seat only when it argues a stance or structural check no existing seatcovers.
 - Marshall stays opinion-free and is always convened.
 - Justice seats are structural checks, not advocates.
-- The Conclave advises; the human decides.
+- The Sovereign Conclave advises; the human decides.
 - Secrets, API keys, private evidence ledgers, and confidential verdicts must
   not be committed.
 
@@ -42,12 +40,16 @@ Before opening a pull request, run:
 
 ```bash
 python3 scripts/validate_repo.py
+python3 scripts/generate_roster.py --check
+python3 -m unittest discover -s tests
 bash -n install.sh
 git diff --check
 ./install.sh --target all --dry-run
 ```
 
-When validation scripts are added, they become required for pull requests.
+`roster.md` is generated from `configs/conclave-roster.json`; if you change
+seats, profiles, or polarity pairs, run `python3 scripts/generate_roster.py
+--write` and commit the result. These checks are required for pull requests.
 
 ## Commit Style
 

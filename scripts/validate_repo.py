@@ -8,7 +8,13 @@ import re
 import sys
 from pathlib import Path
 
-from evidence_ledger import load_ledger_json, validate_ledger_document
+from evidence_ledger import (
+    DOCUMENT_REQUIRED,
+    ENTRY_REQUIRED,
+    SCHEMA_VERSION,
+    load_ledger_json,
+    validate_ledger_document,
+)
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -47,16 +53,120 @@ def markdown_roster_ids() -> set[str]:
     return set(re.findall(r"`(conclave-[^`]+)`", active))
 
 
-def provider_slot_ids() -> set[str]:
-    path = ROOT / "configs" / "provider-model-slots.example.yaml"
-    if not path.exists():
-        return set()
-    ids: set[str] = set()
-    for line in read_text(path).splitlines():
-        match = re.match(r"\s*(conclave-[a-z0-9-]+):\s*\w+", line)
-        if match:
-            ids.add(match.group(1))
-    return ids
+def section_bullets(text: str, header: str) -> list[str]:
+    """Return the `- ` bullet lines that belong to one bold section only."""
+    if header not in text:
+        return []
+    after = text.split(header, 1)[1]
+    bullets: list[str] = []
+    for line in after.splitlines():
+        if line.strip().startswith("**"):
+            break  # reached the next bold section header
+        if line.startswith("- "):
+            bullets.append(line)
+    return bullets
+
+
+def schema_path() -> Path:
+    return ROOT / "schemas" / "evidence-ledger.schema.json"
+
+
+def schema_validator():
+    """Return a jsonschema validator if the optional dependency is installed.
+
+    Validation stays dependency-free locally; CI installs jsonschema so the
+    published schema is enforced for real there.
+    """
+    try:
+        import jsonschema  # type: ignore
+    except ImportError:
+        return None
+    schema = json.loads(read_text(schema_path()))
+    return jsonschema.Draft202012Validator(schema)
+
+
+def validate_schema_sync(failures: list[str]) -> None:
+    """Catch drift between the JSON Schema and the dependency-free validator."""
+    try:
+        schema = json.loads(read_text(schema_path()))
+    except (OSError, json.JSONDecodeError) as error:
+        fail(f"schema unreadable: {error}", failures)
+        return
+    doc_required = set(schema.get("required", []))
+    if doc_required != set(DOCUMENT_REQUIRED):
+        fail(
+            "schema/validator document-required drift: "
+            f"schema_only={sorted(doc_required - set(DOCUMENT_REQUIRED))} "
+            f"validator_only={sorted(set(DOCUMENT_REQUIRED) - doc_required)}",
+            failures,
+        )
+    entry_required = set(schema.get("$defs", {}).get("entry", {}).get("required", []))
+    if entry_required != set(ENTRY_REQUIRED):
+        fail(
+            "schema/validator entry-required drift: "
+            f"schema_only={sorted(entry_required - set(ENTRY_REQUIRED))} "
+            f"validator_only={sorted(set(ENTRY_REQUIRED) - entry_required)}",
+            failures,
+        )
+    const_version = schema.get("properties", {}).get("schema_version", {}).get("const")
+    if const_version != SCHEMA_VERSION:
+        fail(f"schema/validator version drift: schema={const_version} validator={SCHEMA_VERSION}", failures)
+
+
+def validate_provider_config(seat_id_set: set[str], failures: list[str]) -> None:
+    """Validate optional cross-model provider slot files (Roadmap 0.3.x)."""
+    for path in sorted((ROOT / "configs").glob("provider-model-slots*.yaml")):
+        rel = path.relative_to(ROOT)
+        text = read_text(path)
+        defined_slots: set[str] = set()
+        seat_to_slot: dict[str, str] = {}
+        section: str | None = None
+        for line in text.splitlines():
+            if re.match(r"^[A-Za-z]", line):
+                section = line.split(":", 1)[0].strip()
+                continue
+            if section == "slots":
+                match = re.match(r"^  ([A-Za-z][\w-]*):\s*$", line)
+                if match:
+                    defined_slots.add(match.group(1))
+            if section == "seat_slots":
+                match = re.match(r"^  (conclave-[a-z0-9-]+):\s*([A-Za-z][\w-]*)\s*$", line)
+                if match:
+                    seat_to_slot[match.group(1)] = match.group(2)
+
+        if "key_source: environment" not in text:
+            fail(f"{rel}: must declare key_source: environment (Directive D-5)", failures)
+        for bad in re.findall(r"(?im)^\s*(api[_-]?key|secret|token|password)\s*:\s*\S+", text):
+            fail(f"{rel}: looks like a committed secret ({bad})", failures)
+        fallback = re.search(r"fallback_slot:\s*([A-Za-z][\w-]*)", text)
+        if fallback and fallback.group(1) not in defined_slots:
+            fail(f"{rel}: fallback_slot '{fallback.group(1)}' is not a defined slot", failures)
+        for seat, slot in seat_to_slot.items():
+            if slot not in defined_slots:
+                fail(f"{rel}: seat {seat} maps to undefined slot '{slot}'", failures)
+        missing = sorted(seat_id_set - set(seat_to_slot))
+        if missing:
+            fail(f"{rel}: missing seat slot mappings {missing}", failures)
+
+
+def validate_seat_distinctness(seats: list[dict], polarity_pairs: list[dict], failures: list[str]) -> None:
+    """Roadmap 0.4.x: cheap guard against overlapping or uncountered lenses."""
+    lens_owner: dict[str, str] = {}
+    for seat in seats:
+        lens = " ".join(str(seat.get("lens", "")).lower().split())
+        if not lens:
+            continue
+        if lens in lens_owner:
+            fail(f"duplicate lens: {seat['id']} repeats {lens_owner[lens]}", failures)
+        else:
+            lens_owner[lens] = str(seat["id"])
+    paired: set[str] = set()
+    for pair in polarity_pairs:
+        paired.add(pair["a"])
+        paired.add(pair["b"])
+    for seat in seats:
+        if seat.get("type") == "advocate" and seat["id"] not in paired:
+            fail(f"advocate {seat['id']} has no polarity pair (counterweight) in config", failures)
 
 
 def citation_ids(text: str) -> set[str]:
@@ -94,9 +204,12 @@ def validate_demo_verdicts(failures: list[str]) -> None:
             fail(f"{rel}: cites unknown ledger IDs {unknown}", failures)
 
 
-def validate_demo_ledgers(failures: list[str]) -> None:
+def validate_demo_ledgers(failures: list[str]) -> tuple[int, bool]:
     ledger_dir = ROOT / "demos" / "evidence-ledgers"
+    validator = schema_validator()
+    count = 0
     for path in sorted(ledger_dir.glob("*.json")):
+        count += 1
         rel = path.relative_to(ROOT)
         try:
             document = load_ledger_json(path)
@@ -105,6 +218,11 @@ def validate_demo_ledgers(failures: list[str]) -> None:
             continue
         for issue in validate_ledger_document(document):
             fail(f"{rel}: {issue}", failures)
+        if validator is not None:
+            for error in sorted(validator.iter_errors(document), key=lambda item: list(item.path)):
+                location = "/".join(str(part) for part in error.path) or "<root>"
+                fail(f"{rel}: schema: {location}: {error.message}", failures)
+    return count, validator is not None
 
 
 def validate_agent(seat: dict[str, object], failures: list[str]) -> None:
@@ -142,9 +260,9 @@ def validate_agent(seat: dict[str, object], failures: list[str]) -> None:
         for needle in required:
             if needle not in text:
                 fail(f"{seat_id}: missing {needle}", failures)
-        move_count = sum(1 for line in text.splitlines() if line.startswith("- "))
-        if not 3 <= move_count <= 4:
-            fail(f"{seat_id}: expected 3-4 argument moves, found {move_count}", failures)
+        moves = section_bullets(text, "**How you argue:**")
+        if not 3 <= len(moves) <= 4:
+            fail(f"{seat_id}: expected 3-4 argument moves in How you argue, found {len(moves)}", failures)
     elif seat_type == "justice":
         required = [
             "**Your check:**",
@@ -201,8 +319,10 @@ def main() -> int:
 
     for seat in seats:
         validate_agent(seat, failures)
+    validate_schema_sync(failures)
+    validate_seat_distinctness(seats, config.get("polarity_pairs", []), failures)
     validate_demo_verdicts(failures)
-    validate_demo_ledgers(failures)
+    ledger_count, schema_enforced = validate_demo_ledgers(failures)
 
     profile_ids = [profile["id"] for profile in profiles]
     if len(profile_ids) != len(set(profile_ids)):
@@ -225,10 +345,7 @@ def main() -> int:
             if pair[side] not in seat_id_set:
                 fail(f"polarity pair references unknown seat {pair[side]}", failures)
 
-    provider_ids = provider_slot_ids()
-    missing_provider_slots = sorted(seat_id_set - provider_ids)
-    if missing_provider_slots:
-        fail(f"provider-model-slots.example.yaml missing seats {missing_provider_slots}", failures)
+    validate_provider_config(seat_id_set, failures)
 
     required_docs = [
         "CHANGELOG.md",
@@ -242,6 +359,9 @@ def main() -> int:
         "docs/SEAT_EXPANSION_RATIONALE.md",
         "demos/evidence-ledger-template.md",
         "demos/evidence-ledgers/pandemic-preparedness-county-response.json",
+        "demos/evidence-ledgers/architecture-notifications-platform-split.json",
+        "demos/evidence-ledgers/war-game-launch-plan.json",
+        "docs/GOOD_VS_BAD_VERDICTS.md",
         "schemas/evidence-ledger.schema.json",
         "ledgers/.gitkeep",
     ]
@@ -256,7 +376,11 @@ def main() -> int:
         return 1
 
     print("Validation passed")
-    print(f"seats={len(seats)} profiles={len(profiles)} polarity_pairs={len(config.get('polarity_pairs', []))}")
+    print(
+        f"seats={len(seats)} profiles={len(profiles)} "
+        f"polarity_pairs={len(config.get('polarity_pairs', []))} "
+        f"demo_ledgers={ledger_count} schema_enforced={schema_enforced}"
+    )
     return 0
 
 

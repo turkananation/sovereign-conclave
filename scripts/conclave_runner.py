@@ -89,7 +89,14 @@ def next_evidence_id(used_ids: set[str], start: int = 1) -> str:
     return f"E{value}"
 
 
-def assign_evidence_ids(entries: list[dict[str, Any]]) -> None:
+def assign_evidence_ids(entries: list[dict[str, Any]], *, renumber: bool = False) -> None:
+    if renumber:
+        # Merging multiple source ledgers: each carries its own E1.. sequence,
+        # so discard incoming IDs and lay down one contiguous sequence.
+        for index, entry in enumerate(entries, start=1):
+            entry["id"] = f"E{index}"
+        return
+
     used_ids: set[str] = set()
     for entry in entries:
         entry_id = entry.get("id")
@@ -178,7 +185,9 @@ def build_evidence_document(args: argparse.Namespace, problem: str, timestamp: s
             }
         )
 
-    assign_evidence_ids(entries)
+    # A single imported ledger keeps its own IDs; merging two or more renumbers
+    # the combined set so their overlapping E1.. sequences cannot collide.
+    assign_evidence_ids(entries, renumber=len(loaded_documents) >= 2)
 
     if loaded_documents and len(loaded_documents) == 1 and not args.evidence_file and not args.evidence_note:
         source_document = dict(loaded_documents[0])
@@ -211,7 +220,10 @@ def choose_seats(args: argparse.Namespace, config: dict) -> tuple[str, list[str]
         if args.profile not in profiles:
             raise SystemExit(f"Unknown profile: {args.profile}")
         return args.profile, list(profiles[args.profile]["seats"])
-    return "architecture", list(profiles["architecture"]["seats"])
+    default_profile = config.get("default_profile", "architecture")
+    if default_profile not in profiles:
+        raise SystemExit(f"Configured default_profile is unknown: {default_profile}")
+    return default_profile, list(profiles[default_profile]["seats"])
 
 
 def render_evidence_ledger(ledger: dict[str, Any], timestamp: str) -> str:
@@ -266,10 +278,13 @@ def render_verdict_scaffold(
         f"- **{seat_id}:** {seat_lookup[seat_id]['lens']} ({seat_lookup[seat_id]['model']})"
         for seat_id in convened
     )
-    position_lines = "\n".join(
-        f"- **{seat_id}:** <Round 1 recommendation> -- key claims: [E#]"
-        for seat_id in seats
-    )
+    def position_line(seat_id: str) -> str:
+        seat = seat_lookup[seat_id]
+        if seat.get("type") in {"justice", "verifier"}:
+            return f"- **{seat_id}** ({seat['lens']}): <structural check; states a bound, not an option preference>"
+        return f"- **{seat_id}:** <Round 1 recommendation> -- key claims: [E#]"
+
+    position_lines = "\n".join(position_line(seat_id) for seat_id in seats)
     evidence_ledger = render_evidence_ledger(evidence_ledger_document, timestamp)
 
     return f"""# Conclave Verdict -- {problem or '<decision title>'}
@@ -317,7 +332,7 @@ def render_verdict_scaffold(
 
 ## 8. Decision (human)
 
-<Left blank. The Conclave advises; the human decides.>
+<Left blank. The Sovereign Conclave advises; the human decides.>
 """
 
 
@@ -379,6 +394,8 @@ def main() -> int:
             raise SystemExit(f"Invalid assembled ledger:\n{details}")
 
     if args.dry_run:
+        if args.write_ledger:
+            print("warning: --write-ledger is ignored under --dry-run", file=sys.stderr)
         print(f"profile={profile_id}")
         print("seats=" + ",".join(selected + [config["marshall"]]))
         if evidence_entries:
@@ -401,10 +418,16 @@ def main() -> int:
 
     out_dir = ROOT / args.out_dir
     out_dir.mkdir(parents=True, exist_ok=True)
-    stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+    # Reuse the single run timestamp (so the filename matches the in-file Run ID)
+    # and never overwrite a prior verdict written in the same second.
+    stamp = timestamp.replace(":", "").replace("-", "")
     out_path = out_dir / f"verdict-{stamp}.md"
+    counter = 1
+    while out_path.exists():
+        out_path = out_dir / f"verdict-{stamp}-{counter}.md"
+        counter += 1
     out_path.write_text(rendered, encoding="utf-8")
-    print(out_path.relative_to(ROOT))
+    print(display_path(out_path))
     return 0
 
 

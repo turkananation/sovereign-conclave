@@ -1,6 +1,6 @@
-# The Conclave Roster
+# The Sovereign Conclave Roster
 
-The Conclave is a **library** of seats, not a standing assembly. You convene a small **quorum** per decision: 3-8 seats plus Marshall. The library can be large; the meeting stays small. A seat earns inclusion only by arguing a stance no current seat covers, or by enforcing a structural check no other Justice owns.
+The Sovereign Conclave is a **library** of seats, not a standing assembly. You convene a small **quorum** per decision: 3-8 seats plus Marshall. The library can be large; the meeting stays small. A seat earns inclusion only by arguing a stance no current seat covers, or by enforcing a structural check no other Justice owns.
 
 Marshall is convened in every deliberation. The other Justices are optional structural checks: they hold no opinion on which option should win.
 
@@ -79,6 +79,7 @@ These are the canonical contrasts. Use them to build small quorums with real dis
 | Jackson ⟷ Cheney | Emergency authority limits vs. emergency executive concentration |
 | Sachs ⟷ Authoritarian Control | Repair and transitional legitimacy vs. coercive control |
 | Colonial Administrator ⟷ Maathai | Extractive administration vs. ecological civic stewardship |
+| Yi Sun-shin ⟷ Zhukov | Impregnable prepared defense vs. decisive offense |
 
 ## Convening profiles
 

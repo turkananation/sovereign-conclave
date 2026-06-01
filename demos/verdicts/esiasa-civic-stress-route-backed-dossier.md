@@ -64,4 +64,4 @@ Keep route-backed compact county dossiers as the mobile default, preserve the ri
 
 ## 7. Decision (human)
 
-<Left blank. The Conclave advises; you decide, and you own the call.>
+<Left blank. The Sovereign Conclave advises; you decide, and you own the call.>

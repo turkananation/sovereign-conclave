@@ -7,12 +7,15 @@ minutes.
 
 ```bash
 python3 scripts/validate_repo.py
+python3 scripts/generate_roster.py --check
+python3 -m unittest discover -s tests
 bash -n install.sh
 ./install.sh --target all --dry-run
 ```
 
 The validator checks the machine-readable roster, agent files, Markdown roster,
-profiles, model slots, and required docs.
+profiles, model slots, schema/validator agreement, and required docs. The roster
+check confirms `roster.md` is still generated from `configs/conclave-roster.json`.
 
 ## 2. Install for your tool
 
@@ -29,7 +32,11 @@ Other targets:
 ./install.sh --target antigravity
 ```
 
-Restart the target tool after installing.
+Restart the target tool after installing. To remove it again:
+
+```bash
+./install.sh --uninstall --target all
+```
 
 ## 3. Run a Conclave in an assistant
 
@@ -72,8 +79,12 @@ when preparing evidence outside the runner.
 
 ## 5. Read the examples
 
+- [demos/verdicts/architecture-notifications-platform-split.md](../demos/verdicts/architecture-notifications-platform-split.md)
+- [demos/verdicts/war-game-launch-plan.md](../demos/verdicts/war-game-launch-plan.md)
 - [demos/verdicts/esiasa-civic-stress-route-backed-dossier.md](../demos/verdicts/esiasa-civic-stress-route-backed-dossier.md)
 - [demos/verdicts/pandemic-preparedness-county-response.md](../demos/verdicts/pandemic-preparedness-county-response.md)
 
 They show the intended output standard: clear decision, frozen evidence, real
-disagreement, Marshall verification, and advice rather than action.
+disagreement, Marshall verification, and advice rather than action. See
+[GOOD_VS_BAD_VERDICTS.md](GOOD_VS_BAD_VERDICTS.md) for why grounding beats a
+fluent guess.

@@ -5,6 +5,8 @@
   Justices, profiles, and the local runner.
 - [EVIDENCE_LEDGER.md](EVIDENCE_LEDGER.md) - Evidence Ledger contract, table shape,
   citation rules, source quality, redactions, and runner usage.
+- [GOOD_VS_BAD_VERDICTS.md](GOOD_VS_BAD_VERDICTS.md) - grounded vs. ungrounded
+  verdicts on the same decision, and the ten-second test to tell them apart.
 - [../schemas/evidence-ledger.schema.json](../schemas/evidence-ledger.schema.json) -
   machine-readable Evidence Ledger schema.
 - [RUNNER.md](RUNNER.md) - local runner commands and current limitations.

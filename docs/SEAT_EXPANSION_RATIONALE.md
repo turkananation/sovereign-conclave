@@ -1,8 +1,8 @@
 # Seat Expansion Rationale
 
-This document records why the Conclave expands from 28 to 33 seats and why
+This document records why The Sovereign Conclave expands from 28 to 33 seats and why
 these five were chosen. It is intentionally candid: some seats represent
-dangerous logics so the Conclave can detect and constrain them, not endorse
+dangerous logics so The Sovereign Conclave can detect and constrain them, not endorse
 them.
 
 ## Target
@@ -28,7 +28,7 @@ A seat is eligible only if it passes all of these tests:
 
 ## Source Anchors
 
-The Conclave files are not biographies. They use public historical anchors only
+The Sovereign Conclave files are not biographies. They use public historical anchors only
 to define an oversight role:
 
 - `conclave-jackson` is anchored in emergency-power review associated with
@@ -60,7 +60,7 @@ to define an oversight role:
 
 ## Why Add Danger Lenses?
 
-The Conclave should not be naive about power. A governance or crisis plan can
+The Sovereign Conclave should not be naive about power. A governance or crisis plan can
 look efficient because it suppresses dissent, extracts from the periphery, or
 turns people into categories. Naming those logics helps Marshall and the
 Justices expose unsupported, disproportionate, or value-breaking claims.
