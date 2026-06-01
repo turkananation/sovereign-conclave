@@ -26,7 +26,7 @@ Marshall is convened in every deliberation. The other Justices are optional stru
 | `conclave-cheney` | Emergency Executive | Concentrated command authority under worst-case threat | opus |
 | `conclave-hayden` | Intelligence | Hidden threats, collection discipline, secrecy with oversight debt | opus |
 | `conclave-authoritarian` | Danger Lens | Coercive control, fear, surveillance, patronage, and false stability | opus |
-| `conclave-atkinson` | Law | Legal process, accountability channels, protected records | opus |
+| `conclave-addington` | Law | Legal process, accountability channels, protected records | opus |
 | `conclave-maathai` | Civic Ecology | Grassroots stewardship, land, community legitimacy | sonnet |
 | `conclave-colonial-administrator` | Danger Lens | Extractive administration, indirect rule, classification, and order without belonging | opus |
 | `conclave-mau-mau` | Liberation | Land, dignity, dispossession, closed lawful channels, and resistance pressure | sonnet |
@@ -72,7 +72,7 @@ These are the canonical contrasts. Use them to build small quorums with real dis
 | McChrystal ⟷ Pershing | Networked mission command vs. formal mass and readiness |
 | Hayden ⟷ Lady Hale | Security secrecy vs. proportionality and rights |
 | Obama ⟷ Bush | Public-trust preparedness vs. hardened continuity |
-| Atkinson ⟷ Cheney | Lawful accountability channels vs. emergency executive power |
+| Addington ⟷ Cheney | Lawful accountability channels vs. emergency executive power |
 | Maathai ⟷ Lee Kuan Yew | Grassroots ecological legitimacy vs. technocratic developmental efficiency |
 | Authoritarian Control ⟷ Chaskalson | Coercive control vs. constitutional values and dignity |
 | Colonial Administrator ⟷ Mau Mau | Extractive indirect order vs. anti-colonial land and dignity grievance |
@@ -94,14 +94,14 @@ Marshall is always in. Pick one profile, or name members directly with `--member
 | `policy` | Suleiman + Elizabeth + Sejong + Chaskalson | Rules, access, administration, public-facing systems, and value constraints |
 | `liberation` | Toussaint + Augustus + Mandela + Lady Hale | Imposed-order, self-determination, independence, and rights-heavy decisions |
 | `war-game` | Blue cell + Sun Tzu + Giáp + one Justice | Adversarial stress-test where the adversary is free to win |
-| `esiasa-civic-stress` | McChrystal + Hayden + Maathai + Atkinson + Bhagwati | County/civic-stress, admin intelligence, route-backed dossiers, and legitimacy-heavy resilience work |
+| `esiasa-civic-stress` | McChrystal + Hayden + Maathai + Addington + Bhagwati | County/civic-stress, admin intelligence, route-backed dossiers, and legitimacy-heavy resilience work |
 | `continuity` | Bush + Cheney + Obama + Hayden + Chaskalson | Continuity of government, emergency authority, succession, and crisis governance |
 | `pandemic-preparedness` | Obama + Bush + Sejong + Bhagwati + Lady Hale | Public-health readiness, civic compliance, access, rights, and whole-of-government response |
-| `intelligence-oversight` | Hayden + Atkinson + Lady Hale + Chaskalson + Obama | Intelligence products, surveillance, lawful process, civil liberties, and trust |
+| `intelligence-oversight` | Hayden + Addington + Lady Hale + Chaskalson + Obama | Intelligence products, surveillance, lawful process, civil liberties, and trust |
 | `environmental-governance` | Maathai + Sejong + Mandela + Lee Kuan Yew + Lady Hale | Land, environment, county resilience, public participation, and implementable stewardship |
 | `oppression-audit` | Authoritarian Control + Hayden + Cheney + Jackson + Lady Hale + Chaskalson | Detecting coercion, surveillance, emergency drift, rights violations, and dignity failure |
 | `decolonization` | Colonial Administrator + Mau Mau + Toussaint + Maathai + Bhagwati + Sachs | Land, dispossession, colonial patterns, restitution, self-determination, and repair |
-| `emergency-powers` | Cheney + Bush + Jackson + Lady Hale + Atkinson + Chaskalson | Crisis authority, continuity, lawful limits, oversight, records, and sunset discipline |
+| `emergency-powers` | Cheney + Bush + Jackson + Lady Hale + Addington + Chaskalson | Crisis authority, continuity, lawful limits, oversight, records, and sunset discipline |
 
 ### `war-game` cells
 

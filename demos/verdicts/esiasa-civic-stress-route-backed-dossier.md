@@ -1,7 +1,7 @@
 # Conclave Verdict - eSiasa Civic Stress Route-Backed Dossier
 
 - **Run ID:** demo-2026-06-01-esiasa-civic-stress
-- **Convened:** conclave-mcchrystal, conclave-hayden, conclave-maathai, conclave-atkinson, conclave-bhagwati + conclave-marshall
+- **Convened:** conclave-mcchrystal, conclave-hayden, conclave-maathai, conclave-addington, conclave-bhagwati + conclave-marshall
 - **Profile:** esiasa-civic-stress
 
 ## 1. The decision
@@ -34,14 +34,14 @@ Optimize for mobile reliability, operator trust, auditability, and civic-stress 
 - **conclave-mcchrystal:** Keep the route-backed pattern, because mobile operators need a shared navigation contract rather than layout-specific improvisation; the direct route and `dossierCountyId` create a repeatable operating path [E2, E4].
 - **conclave-hayden:** Keep it, but treat dossier routing as an intelligence surface: route access, refresh behavior, and audit events should be visible enough to detect stale or misused county intelligence [E3, E4].
 - **conclave-maathai:** Keep it if the dossier improves local legitimacy: county-level stress data must be reachable on the devices and contexts closest to communities, and the compact overflow fix matters because cramped UI can hide civic risk [E2, E5].
-- **conclave-atkinson:** Keep it, because a route-backed dossier gives a clearer recordable path than dialogs for full-record viewing; the direct route and router coverage strengthen accountability [E2, E4, E6].
+- **conclave-addington:** Keep it, because a route-backed dossier gives a clearer recordable path than dialogs for full-record viewing; the direct route and router coverage strengthen accountability [E2, E4, E6].
 - **conclave-bhagwati:** Keep it only if affected operator groups are represented in tests and evidence. The ledger proves route behavior and overflow remediation, but not whether county operators or low-bandwidth field users validated the flow [E5, E6].
 
 ## 4. Cross-examination (Round 2)
 
-Atkinson challenged Hayden: intelligence-surface concerns should not block the route pattern because the ledger already shows the route is explicit and test-covered [E2, E6]. Hayden's concern survived only as a follow-up instrumentation requirement, not a reason to revert.
+Addington challenged Hayden: intelligence-surface concerns should not block the route pattern because the ledger already shows the route is explicit and test-covered [E2, E6]. Hayden's concern survived only as a follow-up instrumentation requirement, not a reason to revert.
 
-Bhagwati challenged McChrystal and Atkinson: the ledger proves technical routing, but not field-operator acceptance. That dissent survives because no ledger item contains user research or field feedback [E1-E6].
+Bhagwati challenged McChrystal and Addington: the ledger proves technical routing, but not field-operator acceptance. That dissent survives because no ledger item contains user research or field feedback [E1-E6].
 
 Maathai challenged a narrow "tests passed" interpretation: the overflow fix is not cosmetic; it is part of whether county stress information remains legible on compact devices [E5].
 

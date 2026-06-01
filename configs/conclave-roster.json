@@ -171,13 +171,13 @@
       "path": "agents/conclave-authoritarian.md"
     },
     {
-      "id": "conclave-atkinson",
-      "display_name": "Atkinson",
+      "id": "conclave-addington",
+      "display_name": "David Addington",
       "tier": "Law",
       "type": "advocate",
       "lens": "Legal process, accountability channels, protected records",
       "model": "opus",
-      "path": "agents/conclave-atkinson.md"
+      "path": "agents/conclave-addington.md"
     },
     {
       "id": "conclave-maathai",
@@ -307,108 +307,290 @@
     }
   ],
   "polarity_pairs": [
-    {"a": "conclave-zhukov", "b": "conclave-aurelius", "contrast": "Decisive action vs. restraint and downside containment"},
-    {"a": "conclave-washington", "b": "conclave-zhukov", "contrast": "Strategic endurance vs. decisive audacity"},
-    {"a": "conclave-giap", "b": "conclave-pershing", "contrast": "Asymmetric improvisation vs. industrial mass"},
-    {"a": "conclave-suleiman", "b": "conclave-elizabeth", "contrast": "Codify and commit vs. hedge and preserve optionality"},
-    {"a": "conclave-mandela", "b": "conclave-lee-kuan-yew", "contrast": "Reconciliation and legitimacy vs. efficient technocratic order"},
-    {"a": "conclave-augustus", "b": "conclave-toussaint", "contrast": "Consolidate the center vs. liberate the periphery"},
-    {"a": "conclave-sejong", "b": "conclave-augustus", "contrast": "Empower the many vs. consolidate authority"},
-    {"a": "conclave-von-neumann", "b": "conclave-feynman", "contrast": "Formal model vs. bottom-up mechanism"},
-    {"a": "conclave-oppenheimer", "b": "conclave-zhukov", "contrast": "Reckon with consequence vs. deploy capability"},
-    {"a": "conclave-sun-tzu", "b": "conclave-aurelius", "contrast": "External advantage vs. internal character"},
-    {"a": "conclave-lee-kuan-yew", "b": "conclave-feynman", "contrast": "What works in practice vs. what is explainable in principle"},
-    {"a": "conclave-mcchrystal", "b": "conclave-pershing", "contrast": "Networked mission command vs. formal mass and readiness"},
-    {"a": "conclave-hayden", "b": "conclave-lady-hale", "contrast": "Security secrecy vs. proportionality and rights"},
-    {"a": "conclave-obama", "b": "conclave-bush", "contrast": "Public-trust preparedness vs. hardened continuity"},
-    {"a": "conclave-atkinson", "b": "conclave-cheney", "contrast": "Lawful accountability channels vs. emergency executive power"},
-    {"a": "conclave-maathai", "b": "conclave-lee-kuan-yew", "contrast": "Grassroots ecological legitimacy vs. technocratic developmental efficiency"},
-    {"a": "conclave-authoritarian", "b": "conclave-chaskalson", "contrast": "Coercive control vs. constitutional values and dignity"},
-    {"a": "conclave-colonial-administrator", "b": "conclave-mau-mau", "contrast": "Extractive indirect order vs. anti-colonial land and dignity grievance"},
-    {"a": "conclave-jackson", "b": "conclave-cheney", "contrast": "Emergency authority limits vs. emergency executive concentration"},
-    {"a": "conclave-sachs", "b": "conclave-authoritarian", "contrast": "Repair and transitional legitimacy vs. coercive control"},
-    {"a": "conclave-colonial-administrator", "b": "conclave-maathai", "contrast": "Extractive administration vs. ecological civic stewardship"},
-    {"a": "conclave-yi-sun-shin", "b": "conclave-zhukov", "contrast": "Impregnable prepared defense vs. decisive offense"}
+    {
+      "a": "conclave-zhukov",
+      "b": "conclave-aurelius",
+      "contrast": "Decisive action vs. restraint and downside containment"
+    },
+    {
+      "a": "conclave-washington",
+      "b": "conclave-zhukov",
+      "contrast": "Strategic endurance vs. decisive audacity"
+    },
+    {
+      "a": "conclave-giap",
+      "b": "conclave-pershing",
+      "contrast": "Asymmetric improvisation vs. industrial mass"
+    },
+    {
+      "a": "conclave-suleiman",
+      "b": "conclave-elizabeth",
+      "contrast": "Codify and commit vs. hedge and preserve optionality"
+    },
+    {
+      "a": "conclave-mandela",
+      "b": "conclave-lee-kuan-yew",
+      "contrast": "Reconciliation and legitimacy vs. efficient technocratic order"
+    },
+    {
+      "a": "conclave-augustus",
+      "b": "conclave-toussaint",
+      "contrast": "Consolidate the center vs. liberate the periphery"
+    },
+    {
+      "a": "conclave-sejong",
+      "b": "conclave-augustus",
+      "contrast": "Empower the many vs. consolidate authority"
+    },
+    {
+      "a": "conclave-von-neumann",
+      "b": "conclave-feynman",
+      "contrast": "Formal model vs. bottom-up mechanism"
+    },
+    {
+      "a": "conclave-oppenheimer",
+      "b": "conclave-zhukov",
+      "contrast": "Reckon with consequence vs. deploy capability"
+    },
+    {
+      "a": "conclave-sun-tzu",
+      "b": "conclave-aurelius",
+      "contrast": "External advantage vs. internal character"
+    },
+    {
+      "a": "conclave-lee-kuan-yew",
+      "b": "conclave-feynman",
+      "contrast": "What works in practice vs. what is explainable in principle"
+    },
+    {
+      "a": "conclave-mcchrystal",
+      "b": "conclave-pershing",
+      "contrast": "Networked mission command vs. formal mass and readiness"
+    },
+    {
+      "a": "conclave-hayden",
+      "b": "conclave-lady-hale",
+      "contrast": "Security secrecy vs. proportionality and rights"
+    },
+    {
+      "a": "conclave-obama",
+      "b": "conclave-bush",
+      "contrast": "Public-trust preparedness vs. hardened continuity"
+    },
+    {
+      "a": "conclave-addington",
+      "b": "conclave-cheney",
+      "contrast": "Lawful accountability channels vs. emergency executive power"
+    },
+    {
+      "a": "conclave-maathai",
+      "b": "conclave-lee-kuan-yew",
+      "contrast": "Grassroots ecological legitimacy vs. technocratic developmental efficiency"
+    },
+    {
+      "a": "conclave-authoritarian",
+      "b": "conclave-chaskalson",
+      "contrast": "Coercive control vs. constitutional values and dignity"
+    },
+    {
+      "a": "conclave-colonial-administrator",
+      "b": "conclave-mau-mau",
+      "contrast": "Extractive indirect order vs. anti-colonial land and dignity grievance"
+    },
+    {
+      "a": "conclave-jackson",
+      "b": "conclave-cheney",
+      "contrast": "Emergency authority limits vs. emergency executive concentration"
+    },
+    {
+      "a": "conclave-sachs",
+      "b": "conclave-authoritarian",
+      "contrast": "Repair and transitional legitimacy vs. coercive control"
+    },
+    {
+      "a": "conclave-colonial-administrator",
+      "b": "conclave-maathai",
+      "contrast": "Extractive administration vs. ecological civic stewardship"
+    },
+    {
+      "a": "conclave-yi-sun-shin",
+      "b": "conclave-zhukov",
+      "contrast": "Impregnable prepared defense vs. decisive offense"
+    }
   ],
   "profiles": [
     {
       "id": "architecture",
-      "seats": ["conclave-feynman", "conclave-lee-kuan-yew", "conclave-von-neumann", "conclave-oppenheimer"],
+      "seats": [
+        "conclave-feynman",
+        "conclave-lee-kuan-yew",
+        "conclave-von-neumann",
+        "conclave-oppenheimer"
+      ],
       "use_for": "Code, system design, platform, or irreversible technical capability calls"
     },
     {
       "id": "strategy",
-      "seats": ["conclave-zhukov", "conclave-washington", "conclave-sun-tzu", "conclave-aurelius"],
+      "seats": [
+        "conclave-zhukov",
+        "conclave-washington",
+        "conclave-sun-tzu",
+        "conclave-aurelius"
+      ],
       "use_for": "Competitive, directional, timing, and commitment decisions"
     },
     {
       "id": "risk",
-      "seats": ["conclave-aurelius", "conclave-yi-sun-shin", "conclave-oppenheimer", "conclave-lady-hale"],
+      "seats": [
+        "conclave-aurelius",
+        "conclave-yi-sun-shin",
+        "conclave-oppenheimer",
+        "conclave-lady-hale"
+      ],
       "use_for": "Downside, safety, security, rights, and failure-mode review"
     },
     {
       "id": "institutional",
-      "seats": ["conclave-augustus", "conclave-mandela", "conclave-lee-kuan-yew", "conclave-bhagwati"],
+      "seats": [
+        "conclave-augustus",
+        "conclave-mandela",
+        "conclave-lee-kuan-yew",
+        "conclave-bhagwati"
+      ],
       "use_for": "Governance, legitimacy, operating model, and stakeholder decisions"
     },
     {
       "id": "policy",
-      "seats": ["conclave-suleiman", "conclave-elizabeth", "conclave-sejong", "conclave-chaskalson"],
+      "seats": [
+        "conclave-suleiman",
+        "conclave-elizabeth",
+        "conclave-sejong",
+        "conclave-chaskalson"
+      ],
       "use_for": "Rules, access, administration, public-facing systems, and value constraints"
     },
     {
       "id": "liberation",
-      "seats": ["conclave-toussaint", "conclave-augustus", "conclave-mandela", "conclave-lady-hale"],
+      "seats": [
+        "conclave-toussaint",
+        "conclave-augustus",
+        "conclave-mandela",
+        "conclave-lady-hale"
+      ],
       "use_for": "Imposed-order, self-determination, independence, and rights-heavy decisions"
     },
     {
       "id": "war-game",
-      "seats": ["conclave-sun-tzu", "conclave-giap", "conclave-zhukov", "conclave-lady-hale"],
+      "seats": [
+        "conclave-sun-tzu",
+        "conclave-giap",
+        "conclave-zhukov",
+        "conclave-lady-hale"
+      ],
       "use_for": "Adversarial stress-test where the adversary is free to win",
       "cells": {
-        "blue": ["conclave-zhukov"],
-        "red": ["conclave-sun-tzu", "conclave-giap"],
-        "white": ["conclave-marshall", "conclave-lady-hale"]
+        "blue": [
+          "conclave-zhukov"
+        ],
+        "red": [
+          "conclave-sun-tzu",
+          "conclave-giap"
+        ],
+        "white": [
+          "conclave-marshall",
+          "conclave-lady-hale"
+        ]
       }
     },
     {
       "id": "esiasa-civic-stress",
-      "seats": ["conclave-mcchrystal", "conclave-hayden", "conclave-maathai", "conclave-atkinson", "conclave-bhagwati"],
+      "seats": [
+        "conclave-mcchrystal",
+        "conclave-hayden",
+        "conclave-maathai",
+        "conclave-addington",
+        "conclave-bhagwati"
+      ],
       "use_for": "County/civic-stress, admin intelligence, route-backed dossiers, and legitimacy-heavy resilience work"
     },
     {
       "id": "continuity",
-      "seats": ["conclave-bush", "conclave-cheney", "conclave-obama", "conclave-hayden", "conclave-chaskalson"],
+      "seats": [
+        "conclave-bush",
+        "conclave-cheney",
+        "conclave-obama",
+        "conclave-hayden",
+        "conclave-chaskalson"
+      ],
       "use_for": "Continuity of government, emergency authority, succession, and crisis governance"
     },
     {
       "id": "pandemic-preparedness",
-      "seats": ["conclave-obama", "conclave-bush", "conclave-sejong", "conclave-bhagwati", "conclave-lady-hale"],
+      "seats": [
+        "conclave-obama",
+        "conclave-bush",
+        "conclave-sejong",
+        "conclave-bhagwati",
+        "conclave-lady-hale"
+      ],
       "use_for": "Public-health readiness, civic compliance, access, rights, and whole-of-government response"
     },
     {
       "id": "intelligence-oversight",
-      "seats": ["conclave-hayden", "conclave-atkinson", "conclave-lady-hale", "conclave-chaskalson", "conclave-obama"],
+      "seats": [
+        "conclave-hayden",
+        "conclave-addington",
+        "conclave-lady-hale",
+        "conclave-chaskalson",
+        "conclave-obama"
+      ],
       "use_for": "Intelligence products, surveillance, lawful process, civil liberties, and trust"
     },
     {
       "id": "environmental-governance",
-      "seats": ["conclave-maathai", "conclave-sejong", "conclave-mandela", "conclave-lee-kuan-yew", "conclave-lady-hale"],
+      "seats": [
+        "conclave-maathai",
+        "conclave-sejong",
+        "conclave-mandela",
+        "conclave-lee-kuan-yew",
+        "conclave-lady-hale"
+      ],
       "use_for": "Land, environment, county resilience, public participation, and implementable stewardship"
     },
     {
       "id": "oppression-audit",
-      "seats": ["conclave-authoritarian", "conclave-hayden", "conclave-cheney", "conclave-jackson", "conclave-lady-hale", "conclave-chaskalson"],
+      "seats": [
+        "conclave-authoritarian",
+        "conclave-hayden",
+        "conclave-cheney",
+        "conclave-jackson",
+        "conclave-lady-hale",
+        "conclave-chaskalson"
+      ],
       "use_for": "Detecting coercion, surveillance, emergency drift, rights violations, and dignity failure"
     },
     {
       "id": "decolonization",
-      "seats": ["conclave-colonial-administrator", "conclave-mau-mau", "conclave-toussaint", "conclave-maathai", "conclave-bhagwati", "conclave-sachs"],
+      "seats": [
+        "conclave-colonial-administrator",
+        "conclave-mau-mau",
+        "conclave-toussaint",
+        "conclave-maathai",
+        "conclave-bhagwati",
+        "conclave-sachs"
+      ],
       "use_for": "Land, dispossession, colonial patterns, restitution, self-determination, and repair"
     },
     {
       "id": "emergency-powers",
-      "seats": ["conclave-cheney", "conclave-bush", "conclave-jackson", "conclave-lady-hale", "conclave-atkinson", "conclave-chaskalson"],
+      "seats": [
+        "conclave-cheney",
+        "conclave-bush",
+        "conclave-jackson",
+        "conclave-lady-hale",
+        "conclave-addington",
+        "conclave-chaskalson"
+      ],
       "use_for": "Crisis authority, continuity, lawful limits, oversight, records, and sunset discipline"
     }
   ]
