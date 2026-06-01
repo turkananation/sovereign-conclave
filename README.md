@@ -115,6 +115,19 @@ Sovereign Conclave is built around a stricter spine:
 
 ## Quick Start
 
+Install the tagged `0.1.0` release:
+
+```bash
+git clone https://github.com/turkananation/sovereign-conclave.git
+cd sovereign-conclave
+git checkout 0.1.0
+./install.sh --target codex
+```
+
+Use `./install.sh`, `./install.sh --target claude`, or
+`./install.sh --target antigravity` for the other supported tools.
+Restart the target tool after installation.
+
 Validate the checkout:
 
 ```bash
@@ -123,7 +136,7 @@ bash -n install.sh
 ./install.sh --target all --dry-run
 ```
 
-Install for your tool:
+Install from an existing checkout:
 
 ```bash
 ./install.sh                          # Claude Code, default target

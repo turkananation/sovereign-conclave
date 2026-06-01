@@ -3,7 +3,22 @@
 This gets Sovereign Conclave from clone to first verdict scaffold in a few
 minutes.
 
-## 1. Validate the checkout
+## 1. Install a tagged release
+
+For a stable install, start from the signed `0.1.0` release tag:
+
+```bash
+git clone https://github.com/turkananation/sovereign-conclave.git
+cd sovereign-conclave
+git checkout 0.1.0
+./install.sh --target codex
+```
+
+Use `./install.sh`, `./install.sh --target claude`, or
+`./install.sh --target antigravity` for the other supported tools.
+Restart the target tool after installing.
+
+## 2. Validate the checkout
 
 ```bash
 python3 scripts/validate_repo.py
@@ -17,7 +32,7 @@ The validator checks the machine-readable roster, agent files, Markdown roster,
 profiles, model slots, schema/validator agreement, and required docs. The roster
 check confirms `roster.md` is still generated from `configs/conclave-roster.json`.
 
-## 2. Install for your tool
+## 3. Install from an existing checkout
 
 Claude Code remains the default target:
 
@@ -38,7 +53,7 @@ Restart the target tool after installing. To remove it again:
 ./install.sh --uninstall --target all
 ```
 
-## 3. Run a Conclave in an assistant
+## 4. Run a Conclave in an assistant
 
 Use `/conclave` where slash commands are available:
 
@@ -53,7 +68,7 @@ Paste or attach the real artifacts before Round 1. Those artifacts become the
 one concrete fact, file, quote, metric, command output, or user assertion per
 `E#`.
 
-## 4. Use the local runner scaffold
+## 5. Use the local runner scaffold
 
 The local runner does not call model providers. It selects seats and creates a
 verdict scaffold that can be filled by an assistant or future provider-backed
@@ -77,7 +92,7 @@ except for `.gitkeep`.
 Use [demos/evidence-ledger-template.md](../demos/evidence-ledger-template.md)
 when preparing evidence outside the runner.
 
-## 5. Read the examples
+## 6. Read the examples
 
 - [demos/verdicts/architecture-notifications-platform-split.md](../demos/verdicts/architecture-notifications-platform-split.md)
 - [demos/verdicts/war-game-launch-plan.md](../demos/verdicts/war-game-launch-plan.md)
