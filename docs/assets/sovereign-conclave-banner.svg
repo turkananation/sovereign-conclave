@@ -86,20 +86,31 @@
     .body-text { font-weight: 400; }
     .mono { font-weight: 600; }
     .seat-node { cursor: pointer; }
-    .seat-node circle { fill: #02040A; transition: fill 160ms ease, stroke-width 160ms ease; }
-    .seat-node:hover circle { fill: #0B1325; stroke-width: 3; }
-    .seat-label { font-size: 7.5px; font-weight: 800; letter-spacing: 0; fill: #94A3B8; opacity: 0.88; paint-order: stroke; stroke: #02040A; stroke-width: 3px; stroke-linejoin: round; }
+    .seat-node circle { fill: #02040A; transition: fill 160ms ease, r 160ms ease, stroke-width 160ms ease; }
+    .seat-node:hover circle { fill: #0B1325; r: 7; stroke-width: 3; }
+    .seat-label { font-size: 6.7px; font-weight: 800; letter-spacing: 0; fill: #94A3B8; opacity: 0.88; paint-order: stroke; stroke: #02040A; stroke-width: 3px; stroke-linejoin: round; }
     .seat-node:hover .seat-label { fill: #F8FAFC; opacity: 1; }
-    .seat-node.outer circle { stroke: #38BDF8; }
+    .seat-node.general circle { stroke: #38BDF8; }
     .seat-node.sovereign circle { stroke: #D4AF37; }
-    .seat-node.sanctum circle { stroke: #F472B6; }
-    .seat-node.justice circle { stroke: #38BDF8; }
+    .seat-node.power circle { stroke: #F472B6; }
+    .seat-node.justice circle { stroke: #10B981; }
+    .seat-node.sanctum circle { stroke: #A78BFA; }
     .seat-node.sovereign .seat-label { fill: #D4AF37; }
+    .seat-node.power .seat-label { fill: #F9A8D4; }
+    .seat-node.justice .seat-label { fill: #A7F3D0; }
+    .seat-node.sanctum .seat-label { fill: #C4B5FD; }
+    .matrix-label { font-size: 8px; font-weight: 800; paint-order: stroke; stroke: #02040A; stroke-width: 3px; }
+    .polarity-line { stroke-linecap: round; stroke-dasharray: 5 8; opacity: 0.38; animation: dash-flow 18s linear infinite; }
+    .polarity-line:hover { opacity: 0.95; stroke-width: 2.5; }
+    .tier-band { fill: none; stroke-width: 6; stroke-linecap: round; opacity: 0.78; filter: url(#shadow); }
+    .panel-list { font-size: 7.6px; font-weight: 700; fill: #CBD5E1; }
+    .panel-heading { font-size: 9px; font-weight: 800; }
     .gold-text { fill: #D4AF37; }
     .pulse-slow { animation: pulse 4s infinite alternate; }
     .rotate-slow { transform-origin: 700px 230px; animation: rotate 40s linear infinite; }
     .rotate-reverse { transform-origin: 700px 230px; animation: rotate-rev 60s linear infinite; }
     @keyframes pulse { 0% { opacity: 0.6; } 100% { opacity: 1; } }
+    @keyframes dash-flow { to { stroke-dashoffset: -180; } }
     @keyframes rotate { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     @keyframes rotate-rev { 0% { transform: rotate(360deg); } 100% { transform: rotate(0deg); } }
   </style>
@@ -128,8 +139,8 @@
   <!-- ========================================== -->
   <g transform="translate(60, 85)">
     <!-- Tiny tag -->
-    <rect x="0" y="-40" width="168" height="26" rx="13" fill="#1E293B" stroke="#334155" stroke-width="1"/>
-    <text x="14" y="-23" fill="#38BDF8" font-size="11" font-weight="700" letter-spacing="0" class="mono">AI GOVERNANCE SKILL</text>
+    <rect x="0" y="-62" width="168" height="24" rx="12" fill="#1E293B" stroke="#334155" stroke-width="1"/>
+    <text x="14" y="-46" fill="#38BDF8" font-size="10.5" font-weight="700" letter-spacing="0" class="mono">AI GOVERNANCE SKILL</text>
 
     <!-- Main Title -->
     <text x="0" y="25" fill="#FFFFFF" font-size="64" font-weight="800" letter-spacing="0" filter="url(#shadow)">Sovereign</text>
@@ -177,145 +188,112 @@
   <!-- CENTER: The Deliberation Matrix -->
   <!-- ========================================== -->
   <g transform="translate(700, 230)">
-
     <!-- Background Data Rings -->
     <circle cx="0" cy="0" r="210" fill="#060C18" stroke="#1E293B" stroke-width="1" />
-    <circle cx="0" cy="0" r="180" fill="none" stroke="#334155" stroke-width="1" stroke-dasharray="4 8" class="rotate-slow" />
-    <circle cx="0" cy="0" r="130" fill="#0B1325" stroke="#1E293B" stroke-width="2" />
-    <circle cx="0" cy="0" r="80" fill="#121D36" stroke="#38BDF8" stroke-width="1" stroke-opacity="0.4" stroke-dasharray="2 4" class="rotate-reverse" />
+    <circle cx="0" cy="0" r="188" fill="none" stroke="#334155" stroke-width="1" stroke-dasharray="4 8" class="rotate-slow" />
+    <circle cx="0" cy="0" r="132" fill="#0B1325" stroke="#1E293B" stroke-width="2" />
+    <circle cx="0" cy="0" r="76" fill="#121D36" stroke="#38BDF8" stroke-width="1" stroke-opacity="0.4" stroke-dasharray="2 4" class="rotate-reverse" />
+
+    <!-- Tier group arcs -->
+    <g class="mono">
+      <path d="M -171 -74 A 188 188 0 0 1 -27 -186" class="tier-band" stroke="#38BDF8" />
+      <path d="M 12 -188 A 188 188 0 0 1 188 12" class="tier-band" stroke="#D4AF37" />
+      <path d="M 182 48 A 188 188 0 0 1 25 187" class="tier-band" stroke="#F472B6" />
+      <path d="M -12 188 A 188 188 0 0 1 -141 125" class="tier-band" stroke="#10B981" />
+      <path d="M -162 95 A 188 188 0 0 1 -182 -48" class="tier-band" stroke="#A78BFA" />
+      <text x="-206" y="-105" class="matrix-label" fill="#38BDF8">GENERAL</text>
+      <text x="118" y="-138" class="matrix-label" fill="#D4AF37">SOVEREIGNS</text>
+      <text x="142" y="154" class="matrix-label" fill="#F472B6">POWER / CIVIC</text>
+      <text x="-108" y="157" class="matrix-label" fill="#10B981">JUSTICE</text>
+      <text x="-218" y="35" class="matrix-label" fill="#C4B5FD">SANCTUM</text>
+    </g>
 
     <!-- Hexagonal Tech Grid overlay -->
     <path d="M 0 -210 L 181.8 -105 L 181.8 105 L 0 210 L -181.8 105 L -181.8 -105 Z" fill="none" stroke="#00F2FE" stroke-width="0.5" opacity="0.1" />
-    <path d="M 0 -130 L 112.5 -65 L 112.5 65 L 0 130 L -112.5 65 L -112.5 -65 Z" fill="none" stroke="#00F2FE" stroke-width="1" opacity="0.2" />
+    <path d="M 0 -132 L 114 -66 L 114 66 L 0 132 L -114 66 L -114 -66 Z" fill="none" stroke="#00F2FE" stroke-width="1" opacity="0.2" />
 
-    <!-- Crosshairs & Grid Lines -->
+    <!-- Crosshairs & grid lines -->
     <line x1="-220" y1="0" x2="220" y2="0" stroke="#1E293B" stroke-width="1" />
     <line x1="0" y1="-220" x2="0" y2="220" stroke="#1E293B" stroke-width="1" />
     <path d="M -230 0 L -210 -10 L -210 10 Z" fill="#1E293B" />
     <path d="M 230 0 L 210 -10 L 210 10 Z" fill="#1E293B" />
 
-    <!-- Polarity Pair Connections (Tension Lines) -->
-    <!-- Magenta Axis -->
-    <line x1="-150" y1="-60" x2="150" y2="60" stroke="url(#magenta-glow)" stroke-width="2" stroke-dasharray="8 4" opacity="0.6" filter="url(#shadow)" />
-    <!-- Cyan Axis -->
-    <line x1="-110" y1="120" x2="110" y2="-120" stroke="url(#cyan-glow)" stroke-width="2" stroke-dasharray="6 6" opacity="0.7" filter="url(#shadow)" />
-    <!-- Gold Axis -->
-    <line x1="160" y1="-80" x2="-160" y2="80" stroke="url(#gold-glow)" stroke-width="2" stroke-dasharray="4 8" opacity="0.5" filter="url(#shadow)" />
-
-    <!-- Seat Nodes: labeled and hoverable in direct SVG views -->
-    <g class="mono" stroke-width="2">
-      <g class="seat-node outer" transform="translate(-150 -60)">
-        <title>Georgy Zhukov - decisive force and operational reach</title>
-        <circle r="6" filter="url(#neon-cyan)" />
-        <text x="-12" y="-10" text-anchor="end" class="seat-label">ZHUKOV</text>
-      </g>
-      <g class="seat-node outer" transform="translate(-110 -140)">
-        <title>John J. Pershing - logistics, training, unity of command</title>
-        <circle r="6" />
-        <text x="-10" y="-10" text-anchor="end" class="seat-label">PERSHING</text>
-      </g>
-      <g class="seat-node outer" transform="translate(0 -180)">
-        <title>Vo Nguyen Giap - asymmetric protraction and political clock</title>
-        <circle r="6" />
-        <text x="0" y="-12" text-anchor="middle" class="seat-label">GIAP</text>
-      </g>
-      <g class="seat-node outer" transform="translate(110 -140)">
-        <title>Stanley McChrystal - networked mission command</title>
-        <circle r="6" />
-        <text x="10" y="-10" class="seat-label">MCCHRYSTAL</text>
-      </g>
-      <g class="seat-node outer" transform="translate(160 -80)">
-        <title>Yi Sun-sin - prepared defense and favorable terrain</title>
-        <circle r="6" filter="url(#neon-cyan)" />
-        <text x="12" y="-8" class="seat-label">YI SUN-SIN</text>
-      </g>
-      <g class="seat-node outer" transform="translate(150 60)">
-        <title>George Washington - strategic endurance and legitimacy</title>
-        <circle r="6" filter="url(#neon-cyan)" />
-        <text x="12" y="4" class="seat-label">WASHINGTON</text>
-      </g>
-      <g class="seat-node outer" transform="translate(80 160)">
-        <title>Toussaint Louverture - liberation and sovereignty from below</title>
-        <circle r="6" />
-        <text x="10" y="15" class="seat-label">TOUSSAINT</text>
-      </g>
-      <g class="seat-node outer" transform="translate(-160 80)">
-        <title>Mau Mau - land, dignity, and resistance pressure</title>
-        <circle r="6" filter="url(#neon-cyan)" />
-        <text x="-12" y="5" text-anchor="end" class="seat-label">MAU MAU</text>
-      </g>
-
-      <g class="seat-node sovereign" transform="translate(-110 40)">
-        <title>Lee Kuan Yew - scale, discipline, and pragmatic governance</title>
-        <circle r="5" />
-        <text x="-10" y="-8" text-anchor="end" class="seat-label">LEE KUAN YEW</text>
-      </g>
-      <g class="seat-node sovereign" transform="translate(-70 -100)">
-        <title>Augustus Caesar - institutions, legitimacy, consolidation</title>
-        <circle r="5" />
-        <text x="-9" y="-9" text-anchor="end" class="seat-label">AUGUSTUS</text>
-      </g>
-      <g class="seat-node sovereign" transform="translate(50 -120)">
-        <title>Suleiman the Magnificent - codified law and administration</title>
-        <circle r="5" />
-        <text x="-5" y="-11" text-anchor="end" class="seat-label">SULEIMAN</text>
-      </g>
-      <g class="seat-node sovereign" transform="translate(110 -120)">
-        <title>David Addington - legal process and accountability channels</title>
-        <circle r="5" filter="url(#neon-gold)" />
-        <text x="10" y="-4" class="seat-label">ADDINGTON</text>
-      </g>
-      <g class="seat-node sovereign" transform="translate(120 20)">
-        <title>Sejong the Great - accessible systems and capability of the governed</title>
-        <circle r="5" />
-        <text x="10" y="5" class="seat-label">SEJONG</text>
-      </g>
-      <g class="seat-node sovereign" transform="translate(50 120)">
-        <title>Nelson Mandela - reconciliation, legitimacy, durable peace</title>
-        <circle r="5" />
-        <text x="9" y="14" class="seat-label">MANDELA</text>
-      </g>
-      <g class="seat-node sovereign" transform="translate(-110 120)">
-        <title>Dick Cheney - concentrated command authority under worst-case threat</title>
-        <circle r="5" filter="url(#neon-gold)" />
-        <text x="-10" y="13" text-anchor="end" class="seat-label">CHENEY</text>
-      </g>
-
-      <g class="seat-node sanctum" transform="translate(-50 -60)">
-        <title>Richard Feynman - first principles and unexplained complexity check</title>
-        <circle r="4" />
-        <text x="-9" y="-7" text-anchor="end" class="seat-label">FEYNMAN</text>
-      </g>
-      <g class="seat-node justice" transform="translate(60 -50)">
-        <title>Baroness Brenda Hale - proportionality and rights check</title>
-        <circle r="4" filter="url(#neon-cyan)" />
-        <text x="9" y="-7" class="seat-label">HALE</text>
-      </g>
-      <g class="seat-node sanctum" transform="translate(70 40)">
-        <title>John von Neumann - formal modeling and game theory</title>
-        <circle r="4" />
-        <text x="9" y="5" class="seat-label">VON NEUMANN</text>
-      </g>
-      <g class="seat-node sanctum" transform="translate(-30 70)">
-        <title>J. Robert Oppenheimer - capability, consequence, dual-use control</title>
-        <circle r="4" />
-        <text x="-9" y="12" text-anchor="end" class="seat-label">OPPENHEIMER</text>
-      </g>
+    <!-- Canonical polarity pair connections -->
+    <g fill="none" stroke-width="1.45">
+      <line x1="-158.2" y1="-77.2" x2="-166.4" y2="57.3" stroke="#A78BFA" class="polarity-line" />
+      <line x1="-140.1" y1="-106.5" x2="-158.2" y2="-77.2" stroke="#38BDF8" class="polarity-line" />
+      <line x1="-88.7" y1="-152" x2="-116.6" y2="-131.8" stroke="#38BDF8" class="polarity-line" />
+      <line x1="77.2" y1="-158.2" x2="106.5" y2="-140.1" stroke="#D4AF37" class="polarity-line" />
+      <line x1="152" y1="-88.7" x2="10.7" y2="-175.7" stroke="#D4AF37" class="polarity-line" />
+      <line x1="44.8" y1="-170.2" x2="166.4" y2="-57.3" stroke="#D4AF37" class="polarity-line" />
+      <line x1="131.8" y1="-116.6" x2="44.8" y2="-170.2" stroke="#D4AF37" class="polarity-line" />
+      <line x1="-174.4" y1="23.7" x2="-152" y2="88.7" stroke="#A78BFA" class="polarity-line" />
+      <line x1="-175.7" y1="-10.7" x2="-158.2" y2="-77.2" stroke="#A78BFA" class="polarity-line" />
+      <line x1="-170.2" y1="-44.8" x2="-166.4" y2="57.3" stroke="#A78BFA" class="polarity-line" />
+      <line x1="10.7" y1="-175.7" x2="-152" y2="88.7" stroke="#D4AF37" class="polarity-line" />
+      <line x1="-23.7" y1="-174.4" x2="-116.6" y2="-131.8" stroke="#38BDF8" class="polarity-line" />
+      <line x1="158.2" y1="77.2" x2="-10.7" y2="175.7" stroke="#10B981" class="polarity-line" />
+      <line x1="174.4" y1="-23.7" x2="175.7" y2="10.7" stroke="#D4AF37" class="polarity-line" />
+      <line x1="116.6" y1="131.8" x2="170.2" y2="44.8" stroke="#F472B6" class="polarity-line" />
+      <line x1="88.7" y1="152" x2="10.7" y2="-175.7" stroke="#F472B6" class="polarity-line" />
+      <line x1="140.1" y1="106.5" x2="-77.2" y2="158.2" stroke="#10B981" class="polarity-line" />
+      <line x1="57.3" y1="166.4" x2="23.7" y2="174.4" stroke="#F472B6" class="polarity-line" />
+      <line x1="-106.5" y1="140.1" x2="170.2" y2="44.8" stroke="#10B981" class="polarity-line" />
+      <line x1="-131.8" y1="116.6" x2="140.1" y2="106.5" stroke="#10B981" class="polarity-line" />
+      <line x1="57.3" y1="166.4" x2="88.7" y2="152" stroke="#F472B6" class="polarity-line" />
+      <line x1="-57.3" y1="-166.4" x2="-158.2" y2="-77.2" stroke="#38BDF8" class="polarity-line" />
     </g>
 
-    <!-- Center: MARSHALL Verifier Shield -->
-    <!-- Pulse ring -->
-    <circle cx="0" cy="0" r="32" fill="none" stroke="#10B981" stroke-width="1" class="pulse-slow" filter="url(#neon-emerald)" opacity="0.7"/>
-    <!-- Solid core backing -->
-    <circle cx="0" cy="0" r="26" fill="#02040A" stroke="#059669" stroke-width="2" filter="url(#shadow)" />
-    <!-- Shield Graphic -->
-    <path d="M 0 -14 C -8 -14 -12 -18 -12 -18 C -12 -6 -8 6 0 14 C 8 6 12 -6 12 -18 C 12 -18 8 -14 0 -14 Z" fill="url(#emerald-glow)" filter="url(#neon-emerald)" />
-    <!-- Core dot -->
-    <circle cx="0" cy="-2" r="2" fill="#FFFFFF" />
-    <!-- Marshall Label -->
-    <rect x="-35" y="18" width="70" height="14" rx="2" fill="#064E3B" stroke="#10B981" stroke-width="1" />
-    <text x="0" y="27" fill="#D1FAE5" font-size="8" font-weight="700" class="mono" text-anchor="middle" letter-spacing="0">MARSHALL</text>
+    <!-- Seat Nodes: all 32 advocate seats, grouped by tier -->
+    <g class="mono" stroke-width="2">
+      <g class="seat-node general" transform="translate(-158.2 -77.2)"><title>Georgy Zhukov - decisive force, initiative, operational reach</title><circle r="5.2" filter="url(#neon-cyan)" /><text x="-12" y="-8" text-anchor="end" class="seat-label">ZHUKOV</text></g>
+      <g class="seat-node general" transform="translate(-140.1 -106.5)"><title>George Washington - strategic endurance, preserve force and legitimacy</title><circle r="5.2" /><text x="-12" y="-8" text-anchor="end" class="seat-label">WASHINGTON</text></g>
+      <g class="seat-node general" transform="translate(-116.6 -131.8)"><title>John J. Pershing - logistics, training, unity of command</title><circle r="5.2" /><text x="-12" y="-8" text-anchor="end" class="seat-label">PERSHING</text></g>
+      <g class="seat-node general" transform="translate(-88.7 -152)"><title>Vo Nguyen Giap - asymmetric protraction, terrain, will, political clock</title><circle r="5.2" /><text x="-12" y="-8" text-anchor="end" class="seat-label">GIAP</text></g>
+      <g class="seat-node general" transform="translate(-57.3 -166.4)"><title>Yi Sun-sin - prepared defense, discipline, favorable terrain</title><circle r="5.2" /><text x="-12" y="-8" text-anchor="end" class="seat-label">YI SUN-SIN</text></g>
+      <g class="seat-node general" transform="translate(-23.7 -174.4)"><title>Stanley McChrystal - networked mission command and decentralized execution</title><circle r="5.2" /><text x="-23.7" y="-8" text-anchor="middle" class="seat-label">MCCHRYSTAL</text></g>
 
+      <g class="seat-node sovereign" transform="translate(10.7 -175.7)"><title>Lee Kuan Yew - what works at scale, resource discipline</title><circle r="5.2" filter="url(#neon-gold)" /><text x="10.7" y="-8" text-anchor="middle" class="seat-label">LEE KUAN YEW</text></g>
+      <g class="seat-node sovereign" transform="translate(44.8 -170.2)"><title>Augustus Caesar - durable institutions, legitimacy, consolidation</title><circle r="5.2" /><text x="12" y="-8" class="seat-label">AUGUSTUS</text></g>
+      <g class="seat-node sovereign" transform="translate(77.2 -158.2)"><title>Suleiman the Magnificent - codified law, uniform administration, cohesion</title><circle r="5.2" /><text x="12" y="-8" class="seat-label">SULEIMAN</text></g>
+      <g class="seat-node sovereign" transform="translate(106.5 -140.1)"><title>Queen Elizabeth I - optionality, ambiguity, balancing rivals</title><circle r="5.2" /><text x="12" y="-8" class="seat-label">ELIZABETH</text></g>
+      <g class="seat-node sovereign" transform="translate(131.8 -116.6)"><title>Sejong the Great - capability of the governed, accessible systems</title><circle r="5.2" /><text x="12" y="-8" class="seat-label">SEJONG</text></g>
+      <g class="seat-node sovereign" transform="translate(152 -88.7)"><title>Nelson Mandela - reconciliation, legitimacy, durable peace</title><circle r="5.2" /><text x="12" y="-8" class="seat-label">MANDELA</text></g>
+      <g class="seat-node sovereign" transform="translate(166.4 -57.3)"><title>Toussaint Louverture - liberation, self-determination, sovereignty from below</title><circle r="5.2" /><text x="12" y="-8" class="seat-label">TOUSSAINT</text></g>
+      <g class="seat-node sovereign" transform="translate(174.4 -23.7)"><title>Barack Obama - public-trust preparedness and coalition governance</title><circle r="5.2" /><text x="12" y="-8" class="seat-label">OBAMA</text></g>
+      <g class="seat-node sovereign" transform="translate(175.7 10.7)"><title>George W. Bush - continuity and hardened crisis governance</title><circle r="5.2" /><text x="12" y="14" class="seat-label">BUSH</text></g>
+
+      <g class="seat-node power" transform="translate(170.2 44.8)"><title>Dick Cheney - emergency executive concentration</title><circle r="5.2" filter="url(#neon-gold)" /><text x="12" y="14" class="seat-label">CHENEY</text></g>
+      <g class="seat-node power" transform="translate(158.2 77.2)"><title>Michael Hayden - hidden threats, collection discipline, secrecy with oversight debt</title><circle r="5.2" /><text x="12" y="14" class="seat-label">HAYDEN</text></g>
+      <g class="seat-node power" transform="translate(140.1 106.5)"><title>Authoritarian Control - coercive control, fear, surveillance, patronage, false stability</title><circle r="5.2" /><text x="12" y="14" class="seat-label">AUTH CTRL</text></g>
+      <g class="seat-node power" transform="translate(116.6 131.8)"><title>David Addington - legal process, accountability channels, protected records</title><circle r="5.2" /><text x="12" y="14" class="seat-label">ADDINGTON</text></g>
+      <g class="seat-node power" transform="translate(88.7 152)"><title>Wangari Maathai - grassroots stewardship, land, community legitimacy</title><circle r="5.2" /><text x="12" y="14" class="seat-label">MAATHAI</text></g>
+      <g class="seat-node power" transform="translate(57.3 166.4)"><title>Colonial Administrator - extractive administration, indirect rule, classification</title><circle r="5.2" /><text x="12" y="14" class="seat-label">COLONIAL</text></g>
+      <g class="seat-node power" transform="translate(23.7 174.4)"><title>Mau Mau - land, dignity, dispossession, closed lawful channels</title><circle r="5.2" /><text x="0" y="14" text-anchor="middle" class="seat-label">MAU MAU</text></g>
+
+      <g class="seat-node justice" transform="translate(-10.7 175.7)"><title>Baroness Brenda Hale - proportionality and rights check</title><circle r="5.2" /><text x="0" y="14" text-anchor="middle" class="seat-label">HALE</text></g>
+      <g class="seat-node justice" transform="translate(-44.8 170.2)"><title>Justice P.N. Bhagwati - access, standing, missing-stakeholder check</title><circle r="5.2" /><text x="-12" y="14" text-anchor="end" class="seat-label">BHAGWATI</text></g>
+      <g class="seat-node justice" transform="translate(-77.2 158.2)"><title>Arthur Chaskalson - constitutional values and dignity check</title><circle r="5.2" /><text x="-12" y="14" text-anchor="end" class="seat-label">CHASKALSON</text></g>
+      <g class="seat-node justice" transform="translate(-106.5 140.1)"><title>Justice Robert Jackson - emergency authority, institutional role, oversight, sunset check</title><circle r="5.2" /><text x="-12" y="14" text-anchor="end" class="seat-label">JACKSON</text></g>
+      <g class="seat-node justice" transform="translate(-131.8 116.6)"><title>Justice Albie Sachs - repair, memory, remedy, transitional legitimacy</title><circle r="5.2" /><text x="-12" y="14" text-anchor="end" class="seat-label">SACHS</text></g>
+
+      <g class="seat-node sanctum" transform="translate(-152 88.7)"><title>Richard Feynman - first principles, refuses unexplained complexity</title><circle r="5.2" /><text x="-12" y="14" text-anchor="end" class="seat-label">FEYNMAN</text></g>
+      <g class="seat-node sanctum" transform="translate(-166.4 57.3)"><title>Marcus Aurelius - downside containment, restraint, moral clarity</title><circle r="5.2" /><text x="-12" y="14" text-anchor="end" class="seat-label">AURELIUS</text></g>
+      <g class="seat-node sanctum" transform="translate(-174.4 23.7)"><title>John von Neumann - formal modeling, game theory, expected value</title><circle r="5.2" /><text x="-12" y="14" text-anchor="end" class="seat-label">VON NEUMANN</text></g>
+      <g class="seat-node sanctum" transform="translate(-175.7 -10.7)"><title>J. Robert Oppenheimer - capability, consequence, dual-use control</title><circle r="5.2" /><text x="-12" y="-8" text-anchor="end" class="seat-label">OPPENHEIMER</text></g>
+      <g class="seat-node sanctum" transform="translate(-170.2 -44.8)"><title>Sun Tzu - win before fighting, positioning and deception</title><circle r="5.2" /><text x="-12" y="-8" text-anchor="end" class="seat-label">SUN TZU</text></g>
+    </g>
+
+    <!-- Center: MARSHALL verifier -->
+    <g>
+      <title>Marshall - evidence-grounding and directive check, convened in every deliberation</title>
+      <circle cx="0" cy="0" r="36" fill="none" stroke="#10B981" stroke-width="1" class="pulse-slow" filter="url(#neon-emerald)" opacity="0.7"/>
+      <circle cx="0" cy="0" r="27" fill="#02040A" stroke="#059669" stroke-width="2" filter="url(#shadow)" />
+      <path d="M 0 -14 C -8 -14 -12 -18 -12 -18 C -12 -6 -8 6 0 14 C 8 6 12 -6 12 -18 C 12 -18 8 -14 0 -14 Z" fill="url(#emerald-glow)" filter="url(#neon-emerald)" />
+      <circle cx="0" cy="-2" r="2" fill="#FFFFFF" />
+      <rect x="-37" y="19" width="74" height="14" rx="2" fill="#064E3B" stroke="#10B981" stroke-width="1" />
+      <text x="0" y="29" fill="#D1FAE5" font-size="8" font-weight="700" class="mono" text-anchor="middle" letter-spacing="0">MARSHALL</text>
+    </g>
   </g>
 
   <!-- Top Tech Bar -->
@@ -323,74 +301,66 @@
   <text x="700" y="33" fill="#38BDF8" font-size="10" text-anchor="middle" class="mono" letter-spacing="0">SYS.OP: CONCLAVE // STATUS: VERIFIED // DIRECTIVES: ENFORCED</text>
 
   <!-- ========================================== -->
-  <!-- RIGHT PANEL: Data Flow & Verdict Output -->
+  <!-- RIGHT PANEL: Grouped Roster + Edge Index -->
   <!-- ========================================== -->
 
-  <!-- Flow Lines from Matrix to Right Panel -->
-  <g fill="none" stroke-width="1.5" opacity="0.6">
-    <!-- Top data line -->
-    <path d="M 910 130 L 980 130 L 1000 100 L 1080 100" stroke="#38BDF8" stroke-dasharray="4 4" />
-    <!-- Mid data line -->
-    <path d="M 940 230 L 1020 230" stroke="#10B981" />
-    <!-- Bottom data line -->
-    <path d="M 910 330 L 980 330 L 1000 360 L 1080 360" stroke="#F5D37A" stroke-dasharray="4 4" />
+  <!-- Flow Lines from Matrix to roster panel -->
+  <g fill="none" stroke-width="1.5" opacity="0.62">
+    <path d="M 912 120 L 980 120 L 1002 82 L 1068 82" stroke="#38BDF8" stroke-dasharray="4 4" />
+    <path d="M 925 230 L 1005 230 L 1028 224 L 1068 224" stroke="#10B981" />
+    <path d="M 912 340 L 982 340 L 1004 382 L 1068 382" stroke="#F5D37A" stroke-dasharray="4 4" />
   </g>
 
-  <!-- Animated data packets along the middle line -->
-  <circle cx="950" cy="230" r="2" fill="#10B981" filter="url(#neon-emerald)" class="pulse-slow" />
-  <circle cx="990" cy="230" r="2" fill="#10B981" filter="url(#neon-emerald)" class="pulse-slow" style="animation-delay: 1s;" />
+  <circle cx="960" cy="230" r="2" fill="#10B981" filter="url(#neon-emerald)" class="pulse-slow" />
+  <circle cx="1000" cy="230" r="2" fill="#10B981" filter="url(#neon-emerald)" class="pulse-slow" style="animation-delay: 1s;" />
 
-  <g transform="translate(1080, 70)" filter="url(#shadow)">
+  <g transform="translate(1070, 58)" filter="url(#shadow)">
+    <rect x="0" y="0" width="300" height="354" rx="5" fill="#0F172A" fill-opacity="0.94" stroke="#334155" stroke-width="1" />
+    <rect x="1" y="1" width="298" height="352" rx="4" fill="none" stroke="#FFFFFF" stroke-opacity="0.05" />
+    <text x="14" y="22" fill="#F8FAFC" font-size="13" font-weight="800" class="title">GROUPED NODE MAP</text>
+    <text x="14" y="38" fill="#94A3B8" font-size="8.5" class="mono">33 seats / 22 canonical polarity connections</text>
 
-    <!-- Section 1: Frozen Evidence Ledger -->
-    <text x="0" y="0" fill="#38BDF8" font-size="12" font-weight="700" class="title">I. FROZEN EVIDENCE LEDGER</text>
-    <rect x="0" y="10" width="280" height="90" rx="4" fill="#0F172A" stroke="#334155" stroke-width="1" />
+    <g class="mono">
+      <g transform="translate(14, 58)">
+        <rect x="0" y="-11" width="4" height="38" rx="2" fill="#38BDF8" />
+        <text x="12" y="0" fill="#38BDF8" class="panel-heading">GENERAL</text>
+        <text x="12" y="14" class="panel-list">Zhukov / Washington / Pershing</text>
+        <text x="12" y="27" class="panel-list">Giap / Yi Sun-sin / McChrystal</text>
+      </g>
 
-    <!-- Ledger Items -->
-    <g transform="translate(15, 25)" class="mono" font-size="10">
-      <rect x="0" y="0" width="26" height="14" rx="2" fill="#1E293B" stroke="#475569" stroke-width="1" />
-      <text x="13" y="10" fill="#E2E8F0" text-anchor="middle">E-1</text>
-      <text x="35" y="10" fill="#94A3B8">Telemetry log verified</text>
+      <g transform="translate(14, 111)">
+        <rect x="0" y="-11" width="4" height="52" rx="2" fill="#D4AF37" />
+        <text x="12" y="0" fill="#D4AF37" class="panel-heading">SOVEREIGNS</text>
+        <text x="12" y="14" class="panel-list">Lee Kuan Yew / Augustus / Suleiman</text>
+        <text x="12" y="27" class="panel-list">Elizabeth / Sejong / Mandela</text>
+        <text x="12" y="40" class="panel-list">Toussaint / Obama / Bush</text>
+      </g>
 
-      <rect x="0" y="24" width="26" height="14" rx="2" fill="#1E293B" stroke="#475569" stroke-width="1" />
-      <text x="13" y="34" fill="#E2E8F0" text-anchor="middle">E-2</text>
-      <text x="35" y="34" fill="#94A3B8">Architecture document</text>
+      <g transform="translate(14, 178)">
+        <rect x="0" y="-11" width="4" height="52" rx="2" fill="#F472B6" />
+        <text x="12" y="0" fill="#F472B6" class="panel-heading">POWER + CIVIC LENSES</text>
+        <text x="12" y="14" class="panel-list">Cheney / Hayden / Addington</text>
+        <text x="12" y="27" class="panel-list">Authoritarian / Maathai / Colonial</text>
+        <text x="12" y="40" class="panel-list">Mau Mau</text>
+      </g>
 
-      <rect x="0" y="48" width="26" height="14" rx="2" fill="#1E293B" stroke="#475569" stroke-width="1" />
-      <text x="13" y="58" fill="#E2E8F0" text-anchor="middle">E-3</text>
-      <text x="35" y="58" fill="#94A3B8">Performance bottleneck</text>
+      <g transform="translate(14, 245)">
+        <rect x="0" y="-11" width="4" height="38" rx="2" fill="#10B981" />
+        <text x="12" y="0" fill="#10B981" class="panel-heading">JUSTICE</text>
+        <text x="12" y="14" class="panel-list">Marshall / Hale / Bhagwati</text>
+        <text x="12" y="27" class="panel-list">Chaskalson / Jackson / Sachs</text>
+      </g>
+
+      <g transform="translate(14, 298)">
+        <rect x="0" y="-11" width="4" height="38" rx="2" fill="#A78BFA" />
+        <text x="12" y="0" fill="#C4B5FD" class="panel-heading">INNER SANCTUM</text>
+        <text x="12" y="14" class="panel-list">Feynman / Aurelius / Von Neumann</text>
+        <text x="12" y="27" class="panel-list">Oppenheimer / Sun Tzu</text>
+      </g>
     </g>
 
-    <!-- Vertical Connector -->
-    <line x1="140" y1="100" x2="140" y2="130" stroke="#334155" stroke-width="2" />
-    <polygon points="137,125 143,125 140,132" fill="#334155" />
-
-    <!-- Section 2: Synthesis / Verification -->
-    <text x="0" y="150" fill="#10B981" font-size="12" font-weight="700" class="title">II. MARSHALL VERIFICATION</text>
-    <rect x="0" y="160" width="280" height="50" rx="4" fill="#064E3B" fill-opacity="0.2" stroke="#10B981" stroke-width="1" />
-    <path d="M 15 185 L 20 190 L 30 175" fill="none" stroke="#10B981" stroke-width="2" stroke-linecap="round" filter="url(#neon-emerald)"/>
-    <text x="45" y="182" fill="#D1FAE5" font-size="11" class="mono">CLAIMS: [SUPPORTED]</text>
-    <text x="45" y="196" fill="#A7F3D0" font-size="10" class="mono">DIRECTIVE D-4: PASS</text>
-
-    <!-- Vertical Connector -->
-    <line x1="140" y1="210" x2="140" y2="240" stroke="#334155" stroke-width="2" />
-    <polygon points="137,235 143,235 140,242" fill="#334155" />
-
-    <!-- Section 3: Final Verdict -->
-    <text x="0" y="260" fill="#F5D37A" font-size="12" font-weight="700" class="title">III. SYNTHESIS VERDICT</text>
-    <rect x="0" y="270" width="280" height="70" rx="4" fill="#1E1303" stroke="#F5D37A" stroke-width="1.5" />
-
-    <!-- Document Icon -->
-    <path d="M 15 285 L 30 285 L 30 325 L 15 325 Z" fill="none" stroke="#F5D37A" stroke-width="1" />
-    <path d="M 20 290 L 25 290 M 20 295 L 25 295 M 20 300 L 25 300" stroke="#F5D37A" stroke-width="1" />
-
-    <text x="45" y="292" fill="#E7C76A" font-size="12" font-weight="700" class="title">THE CONCLAVE ADVISES:</text>
-    <text x="45" y="308" fill="#D4AF37" font-size="10" class="body-text">Execute proposed architecture split.</text>
-
-    <!-- Human Decides Badge -->
-    <rect x="155" y="315" width="115" height="18" rx="9" fill="#0F172A" stroke="#F5D37A" stroke-width="1" />
-    <text x="212" y="327" fill="#F5D37A" font-size="8" font-weight="700" text-anchor="middle" class="mono">HUMAN DECIDES</text>
-
+    <rect x="170" y="319" width="112" height="19" rx="9.5" fill="#02040A" stroke="#D4AF37" stroke-width="1" />
+    <text x="226" y="332" fill="#E7C76A" font-size="8" font-weight="800" text-anchor="middle" class="mono">HUMAN DECIDES</text>
   </g>
 
   <!-- Decorative Corner Accents -->

@@ -7,8 +7,14 @@ ISO format.
 
 ## [Unreleased]
 
+## [0.1.0] - 2026-06-01
+
 ### Added
 
+- First public installable release of Sovereign Conclave for Claude Code,
+  Codex, and Antigravity.
+- Interactive README banner with grouped Conclave node map, tier arcs, and
+  polarity-pair connections.
 - CI workflow for shell syntax, repository validation, installer dry-run, and
   local runner smoke tests.
 - `scripts/validate_repo.py` for agent, roster, profile, provider-slot, and doc
@@ -87,21 +93,3 @@ ISO format.
   (Low/Medium/High definitions), and mandatory D-4 phrasing; added three new guardrails
   (anti-sycophancy, confidence-tied-to-evidence, verdict-file-is-mandatory); added
   an 8-row Failure Modes table covering the most common model drift choke points.
-
-## [0.1.0] - 2026-06-01
-
-### Added
-
-- Initial Sovereign Conclave skill protocol with evidence-ledger grounding,
-  blind Round 1 deliberation, cross-examination, Marshall verification, and
-  verdict-file synthesis.
-- Twenty-eight active Conclave seats covering generals, sovereigns, Justices,
-  inner-sanctum reasoning seats, and eSiasa-oriented governance, continuity,
-  intelligence, law, and ecological-civic lenses.
-- Multi-target installer for Claude Code, Codex, and Antigravity.
-- Roster profiles for architecture, strategy, risk, institutional, policy,
-  liberation, war-game, eSiasa civic-stress, continuity,
-  pandemic-preparedness, intelligence oversight, and environmental governance.
-- Verdict template and tracked `verdicts/` output directory.
-- Example provider/model slot mapping for optional cross-model routing.
-- BSD 3-Clause license.
