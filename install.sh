@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Sovereign Conclave — installer for the Claude Code skill + council subagents.
+# Sovereign Conclave — installer for the Claude Code skill + conclave subagents.
 # Independent project. Design-inspired by the public-domain "council" pattern; shares no code with it.
 set -euo pipefail
 
