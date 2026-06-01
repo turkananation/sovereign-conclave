@@ -49,6 +49,14 @@ Paste or attach the real artifacts — code, numbers, the doc. They become the *
 
 Convene small — three to eight seats plus Marshall. The named pantheon in `roster.md` is fully written. Add another seat only when it argues a stance or structural check no current seat covers: copy `_TEMPLATE.md`, write the lens, done. A seat that agrees with one you already have is just cost — and a persona is a *lens*, never a claim that the model gained a skill it lacked.
 
+## Project docs
+
+- `FEATURE_ROADMAP.md` tracks planned work and effort.
+- `PROGRESS_TRACKER.md` records current release state.
+- `CHANGELOG.md` starts at version `0.1.0`.
+- `SECURITY.md` explains disclosure and sensitive-data handling.
+- `CONTRIBUTING.md` defines seat and pull-request standards.
+
 ## License
 
-Yours to choose. MIT or CC0 keep it friction-free if you ever open it up.
+Sovereign Conclave is released under the BSD 3-Clause License. See `LICENSE`.
