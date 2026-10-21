@@ -153,6 +153,295 @@ def load_ledger_entries(raw_path: str) -> tuple[dict[str, Any], list[dict[str, A
     return document, [dict(entry) for entry in document["entries"]]
 
 
+# ---------------------------------------------------------------------------
+# M5 appeals CLI: operate on an emitted case bundle
+# ---------------------------------------------------------------------------
+
+APPEAL_COMMANDS = ("show_appeals", "file_appeal", "screen_appeal", "adjudicate_appeal", "arbitrate_appeal")
+
+
+def parse_appeal_args(parser: argparse.ArgumentParser) -> None:
+    group = parser.add_argument_group("appeals (M5): operate on an emitted case bundle")
+    group.add_argument("--show-appeals", metavar="BUNDLE", help="Print a case bundle's appeal state and exit")
+    group.add_argument("--file-appeal", metavar="BUNDLE", help="File an appeal on the bundle (needs --trigger)")
+    group.add_argument("--screen-appeal", metavar="BUNDLE", help="Record a Marshall T1 screening on the bundle (needs --appeal)")
+    group.add_argument("--adjudicate-appeal", metavar="BUNDLE", help="Record a tier A/B appellate verdict on the bundle (needs --appeal)")
+    group.add_argument("--arbitrate-appeal", metavar="BUNDLE", help="Record a Tier C arbiter ruling closing the appeal (needs --appeal)")
+    group.add_argument("--trigger", choices=("T1", "T2"), help="Trigger for --file-appeal (T3 is automatic at verdict issuance; T4 defers to v0.3)")
+    group.add_argument("--appeal", metavar="CID", help="Appeal CID for the appeal-lifecycle commands")
+    group.add_argument("--decision", choices=("admitted", "rejected"), help="Marshall screening decision for --screen-appeal")
+    group.add_argument("--disposition", choices=("affirm", "reverse", "remand", "dismiss"), help="Final disposition for --arbitrate-appeal (Tier C)")
+    group.add_argument("--tier", choices=("A", "B"), help="Adjudication tier for --adjudicate-appeal")
+    group.add_argument("--outcome", choices=("affirm", "reverse", "remand"), help="Appellate outcome for --adjudicate-appeal (default: the mechanical T2 suggestion; otherwise required)")
+    group.add_argument("--appeal-grounds", help="Grounds text for --file-appeal")
+    group.add_argument("--filed-by", help="Standing party for --file-appeal (default: the marshall seat)")
+    group.add_argument("--screen-reasons", help="Reasons for --screen-appeal")
+    group.add_argument("--rationale", help="Rationale for --adjudicate-appeal")
+    group.add_argument("--ruling", help="Ruling text for --arbitrate-appeal")
+    group.add_argument("--arbiter", help="Named human arbiter for --arbitrate-appeal (Tier C)")
+    group.add_argument("--supplement-ledger", metavar="LEDGER.JSON", help="Evidence Ledger JSON holding the T1 supplement entries")
+    group.add_argument("--panel-size", type=int, default=3, help="Tier B disjoint appellate draw size (default 3)")
+
+
+def _appeal_command(args: argparse.Namespace) -> str | None:
+    requested = [name for name in APPEAL_COMMANDS if getattr(args, name, None)]
+    if len(requested) > 1:
+        raise SystemExit(f"appeal flags are mutually exclusive: {', '.join(requested)}")
+    return requested[0] if requested else None
+
+
+def _identity_seed_for(args: argparse.Namespace):
+    from conclave_core.keystore import IDENTITY_SEED_FILE, load_or_create_seed
+
+    keys_dir = resolve_path(args.keys_dir) if args.keys_dir else Path.home() / ".conclave" / "keys"
+    return load_or_create_seed(Path(keys_dir) / IDENTITY_SEED_FILE)
+
+
+def _sign_and_append(args: argparse.Namespace, bundle: Path, documents: list[dict], appeal, domain: str, timestamp: str, note: str | None = None) -> None:
+    """Sign a lifecycle document with the identity key and append it to the bundle log."""
+
+    import artifact_emitter
+    from conclave_core.artifacts import artifact_cid
+    from conclave_core.signing import make_signature_signed
+
+    identity_seed = _identity_seed_for(args)
+    signature = make_signature_signed(
+        seed=identity_seed,
+        domain=domain,
+        payload=artifact_cid(appeal),
+        signed_at=timestamp,
+        note=note,
+    )
+    artifact_emitter.append_artifacts_to_bundle(
+        bundle,
+        [*documents, signature],
+        identity_seed=identity_seed,
+        published_at=timestamp,
+    )
+
+
+def _require_clean_bundle(engine) -> None:
+    problems = engine.validate_bundle()
+    if problems:
+        raise SystemExit("the bundle does not verify; clean it up before appeal filings:\n"
+                         + "\n".join(f"- {problem}" for problem in problems))
+
+
+def _adjudication_allowed(engine) -> None:
+    """Adjudicators review a clean record, or a record with proven T2 violations
+    on file (the violations ARE the subject of review). Anything else refuses."""
+
+    if not engine.validate_bundle():
+        return
+    proven_t2 = [
+        appeal
+        for _, appeal in engine.appeals
+        if appeal.get("trigger") == "T2" and appeal.get("provenViolationChecks")
+    ]
+    if not proven_t2:
+        raise SystemExit(
+            "the bundle does not verify and no granted T2 appeal carries proven "
+            "violation checks; fix or re-emit the record first"
+        )
+
+
+def _handle_show_appeals(args: argparse.Namespace) -> int:
+    from conclave_core.appeals import DEFAULT_WEIGHT_SHARE_MICRO, AppealCase
+
+    engine = AppealCase(bundle_dir=resolve_path(args.show_appeals))
+    verdict = engine.verdict
+    issued_at = verdict["issuedAt"] if isinstance(verdict, dict) else "(none)"
+    print(f"case: {engine.manifest_cid}")
+    print(f"verdict: {engine.verdict_cid} issued {issued_at}")
+    print(f"finality window: {engine.window_days} days from issuance (T2 exempt)")
+    share = engine.dissent_weight_share_micro()
+    printed_share = share if share is not None else "unknown (no recorded votes)"
+    print(f"dissent weight share: {printed_share} micro (T3 threshold {DEFAULT_WEIGHT_SHARE_MICRO})")
+    if not engine.appeals:
+        print("appeals: none filed")
+        return 0
+    for cid, appeal in engine.appeals:
+        granted, gate = engine.appeal_granted(cid)
+        state = "granted" if granted else "not granted"
+        print(
+            f"appeal {cid}\n"
+            f"  trigger={appeal['trigger']} filedBy={appeal['filedBy']} filedAt={appeal['filedAt']}\n"
+            f"  grounds={appeal['grounds']}\n"
+            f"  state={state} ({gate})"
+        )
+    return 0
+
+
+def _print_append_report(bundle: Path, label: str) -> None:
+    config = json.loads((bundle / "bundle.json").read_text(encoding="utf-8"))
+    print(f"{label} appended to {bundle}")
+    print(f"transparency log: {len(config['log']['leaves'])} leaves, {len(config['log']['sthCids'])} tree heads")
+    print(f"verify: python3 -m conclave_core.verifier {bundle}")
+
+
+def _handle_file_appeal(args: argparse.Namespace, config: dict, timestamp: str) -> int:
+    import artifact_emitter
+    from conclave_core.appeals import AppealCase, AppealError, mechanical_outcome_suggestion
+    from conclave_core.artifacts import artifact_cid
+    from conclave_core.signing import DOMAIN_APPEAL_PETITION
+
+    if not args.trigger:
+        raise SystemExit("--file-appeal requires --trigger T1|T2 (T3 is automatic; T4 defers to v0.3)")
+    bundle = resolve_path(args.file_appeal)
+    engine = AppealCase(bundle_dir=bundle)
+    filed_by = args.filed_by or config["marshall"]
+    try:
+        if args.trigger == "T1":
+            if not args.supplement_ledger:
+                raise SystemExit("--file-appeal T1 requires --supplement-ledger <ledger.json> with the material evidence")
+            _require_clean_bundle(engine)
+            _document, entries = load_ledger_entries(args.supplement_ledger)
+            supplement = artifact_emitter.supplement_ledger_artifact(engine, entries, created_at=timestamp)
+            appeal = engine.file_appeal(
+                trigger="T1",
+                grounds=(
+                    args.appeal_grounds
+                    or (
+                        f"T1 supplement EvidenceLedger {artifact_cid(supplement)} carries "
+                        "evidence absent from the frozen ledger"
+                    )
+                ),
+                filed_by=filed_by,
+                filed_at=timestamp,
+                supplement_ledger=artifact_cid(supplement),
+            )
+            _sign_and_append(args, bundle, [supplement, appeal], appeal, DOMAIN_APPEAL_PETITION, timestamp)
+        else:
+            problems = engine.validate_bundle()
+            if not problems:
+                raise SystemExit("nothing to appeal: the bundle verifies cleanly; T2 needs proven procedural violations")
+            appeal = engine.file_appeal(
+                trigger="T2",
+                grounds=(args.appeal_grounds or "proven procedural violations attached as provenViolationChecks"),
+                filed_by=filed_by,
+                filed_at=timestamp,
+                proven_violation_checks=problems,
+            )
+            _sign_and_append(args, bundle, [appeal], appeal, DOMAIN_APPEAL_PETITION, timestamp)
+            print(f"mechanical disposition suggestion for proven violations: {mechanical_outcome_suggestion(problems)}")
+    except AppealError as error:
+        raise SystemExit(f"appeal refused: {error}") from error
+    _print_append_report(bundle, f"appeal {artifact_cid(appeal)}")
+    return 0
+
+
+def _handle_screen_appeal(args: argparse.Namespace, config: dict, timestamp: str) -> int:
+    from conclave_core.appeals import AppealCase
+    from conclave_core.signing import DOMAIN_APPEAL_SCREENING
+
+    if not args.appeal:
+        raise SystemExit("--screen-appeal requires --appeal <CID>")
+    if args.decision is None:
+        raise SystemExit("--screen-appeal requires --decision admitted|rejected")
+    if not args.screen_reasons:
+        raise SystemExit("--screen-appeal requires --screen-reasons")
+    bundle = resolve_path(args.screen_appeal)
+    engine = AppealCase(bundle_dir=bundle)
+    screening = engine.screen_appeal(
+        appeal_cid=args.appeal,
+        decision=args.decision,
+        screened_by=config["marshall"],
+        reasons=args.screen_reasons,
+        screened_at=timestamp,
+    )
+    _sign_and_append(args, bundle, [screening], screening, DOMAIN_APPEAL_SCREENING, timestamp)
+    _print_append_report(bundle, f"appeal screening ({args.decision})")
+    return 0
+
+
+def _handle_adjudicate_appeal(args: argparse.Namespace, config: dict, timestamp: str) -> int:
+    from conclave_core.appeals import AppealCase, AppealError, mechanical_outcome_suggestion
+    from conclave_core.cid import parse as parse_cid
+    from conclave_core.signing import DOMAIN_APPEAL_VERDICT
+
+    if not args.appeal or not args.tier:
+        raise SystemExit("--adjudicate-appeal requires --appeal <CID> and --tier A|B")
+    bundle = resolve_path(args.adjudicate_appeal)
+    engine = AppealCase(bundle_dir=bundle)
+    problems = engine.validate_bundle()
+    _adjudication_allowed(engine)
+    outcome = args.outcome
+    if outcome is None:
+        appeal = engine.store[parse_cid(args.appeal)]
+        if appeal.get("trigger") == "T2":
+            outcome = mechanical_outcome_suggestion(problems)
+        else:
+            raise SystemExit("--adjudicate-appeal outside T2 requires an explicit --outcome (the human decides)")
+    try:
+        appeal_verdict = engine.adjudicate_appeal(
+            appeal_cid=args.appeal,
+            tier=args.tier,
+            outcome=outcome,
+            scope="appeal grounds and cited evidence only",
+            rationale=args.rationale or f"mechanical scaffold: outcome {outcome} on the appeal record",
+            panel_seats=(
+                engine.allowed_tier_b_panel(
+                    [seat["id"] for seat in config["seats"]], size=args.panel_size
+                )
+                if args.tier == "B"
+                else None
+            ),
+            recorded_at=timestamp,
+        )
+    except (AppealError, ValueError) as error:
+        raise SystemExit(f"adjudication refused: {error}") from error
+    _sign_and_append(args, bundle, [appeal_verdict], appeal_verdict, DOMAIN_APPEAL_VERDICT, timestamp)
+    _print_append_report(bundle, f"tier {args.tier} appellate verdict ({outcome})")
+    return 0
+
+
+def _handle_arbitrate_appeal(args: argparse.Namespace, config: dict, timestamp: str) -> int:
+    from conclave_core.appeals import AppealCase
+    from conclave_core.signing import DOMAIN_ARBITER_RULING
+
+    if not args.appeal:
+        raise SystemExit("--arbitrate-appeal requires --appeal <CID>")
+    if not args.arbiter:
+        raise SystemExit("--arbitrate-appeal requires a named human --arbiter (Tier C closes by human decision)")
+    bundle = resolve_path(args.arbitrate_appeal)
+    engine = AppealCase(bundle_dir=bundle)
+    _adjudication_allowed(engine)
+    ruling = engine.arbitrate_appeal(
+        appeal_cid=args.appeal,
+        arbiter=args.arbiter,
+        disposition=args.disposition,
+        ruling=args.ruling or (
+            f"Ruling by {args.arbiter}: the appeal record stands reviewed and closes "
+            f"with disposition {args.disposition}."
+        ),
+        ruled_at=timestamp,
+    )
+    _sign_and_append(
+        args, bundle, [ruling], ruling, DOMAIN_ARBITER_RULING, timestamp,
+        note="signed by the conclave identity key on behalf of the named arbiter (v0.2 custodial signing)",
+    )
+    _print_append_report(bundle, f"arbiter ruling ({args.disposition})")
+    return 0
+
+
+def handle_appeal_commands(args: argparse.Namespace, config: dict, timestamp: str) -> int | None:
+    if str(ROOT) not in sys.path:
+        sys.path.insert(0, str(ROOT))
+    command = _appeal_command(args)
+    if command is None:
+        return None
+    if command == "show_appeals":
+        return _handle_show_appeals(args)
+    if command == "file_appeal":
+        return _handle_file_appeal(args, config, timestamp)
+    if command == "screen_appeal":
+        return _handle_screen_appeal(args, config, timestamp)
+    if command == "adjudicate_appeal":
+        return _handle_adjudicate_appeal(args, config, timestamp)
+    return _handle_arbitrate_appeal(args, config, timestamp)
+
+
+
 def build_evidence_document(args: argparse.Namespace, problem: str, timestamp: str) -> dict[str, Any]:
     entries: list[dict[str, Any]] = []
     loaded_documents: list[dict[str, Any]] = []
@@ -513,6 +802,7 @@ def main() -> int:
     parser.add_argument("--batch", action="store_true", help="Mark provider calls batch (telemetry flag + 50 percent cost-model discount)")
     parser.add_argument("--write-bundle", help="Write the verifiable v0.2 artifact bundle to this directory (default: <out-dir>/bundle-<run-id>)")
     parser.add_argument("--keys-dir", help="Conclave keystore directory (default: ~/.conclave/keys)")
+    parse_appeal_args(parser)
     args = parser.parse_args()
 
     config = load_config()
@@ -532,6 +822,11 @@ def main() -> int:
             load_ledger_entries(raw_path)
             print(f"{raw_path}: valid")
         return 0
+
+    appeal_command = _appeal_command(args)
+    if appeal_command is not None:
+        appeal_timestamp = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+        return handle_appeal_commands(args, config, appeal_timestamp)
 
     profile_id, selected = choose_seats(args, config)
     unknown = sorted(set(selected) - set(seats))

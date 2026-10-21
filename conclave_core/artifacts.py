@@ -66,6 +66,10 @@ TYPE_KEY_PUBLICATION = "KeyPublication"
 TYPE_CERTIFICATE = "Certificate"
 TYPE_SIGNED_TREE_HEAD = "SignedTreeHead"
 TYPE_TELEMETRY = "Telemetry"
+TYPE_APPEAL = "Appeal"
+TYPE_APPEAL_SCREENING = "AppealScreening"
+TYPE_APPEAL_VERDICT = "AppealVerdict"
+TYPE_ARBITER_RULING = "ArbiterRuling"
 
 ARTIFACT_TYPES = (
     TYPE_DELIBERATION_MANIFEST,
@@ -84,6 +88,10 @@ ARTIFACT_TYPES = (
     TYPE_CERTIFICATE,
     TYPE_SIGNED_TREE_HEAD,
     TYPE_TELEMETRY,
+    TYPE_APPEAL,
+    TYPE_APPEAL_SCREENING,
+    TYPE_APPEAL_VERDICT,
+    TYPE_ARBITER_RULING,
 )
 
 KEY_ROLES = ("identity", "orchestrator", "persona-registry")
@@ -534,6 +542,8 @@ def validate_verdict(obj: dict) -> None:
         _expect_str(d["whatWouldChangeIt"], TYPE_VERDICT, "whatWouldChangeIt")
     if d.get("dissentRecordedNote") is not None:
         _expect_str(d["dissentRecordedNote"], TYPE_VERDICT, "dissentRecordedNote")
+    if d.get("note") is not None:
+        _expect_str(d["note"], TYPE_VERDICT, "note")
     _expect_str(_req(d, "issuedAt", TYPE_VERDICT), TYPE_VERDICT, "issuedAt")
     _check_unknown(
         d,
@@ -541,6 +551,7 @@ def validate_verdict(obj: dict) -> None:
             "manifest", "finalRound", "decision", "recommendation", "votes",
             "confidence", "issuedAt", "dissents", "marshallVerification",
             "signature", "optionsRanked", "whatWouldChangeIt", "dissentRecordedNote",
+            "note",
         ),
         TYPE_VERDICT,
     )
@@ -684,6 +695,88 @@ def validate_telemetry(obj: dict) -> None:
     )
 
 
+def validate_appeal(obj: dict) -> None:
+    """M5 appeal petition (roadmap T1-T3; T4 stakeholder petition defers to v0.3)."""
+
+    d = _base(obj, TYPE_APPEAL)
+    _expect_cid(_req(d, "verdict", TYPE_APPEAL), TYPE_APPEAL, "verdict")
+    _expect_cid(_req(d, "caseManifest", TYPE_APPEAL), TYPE_APPEAL, "caseManifest")
+    _expect_enum(_req(d, "trigger", TYPE_APPEAL), TYPE_APPEAL, "trigger", ("T1", "T2", "T3"))
+    _expect_str(_req(d, "grounds", TYPE_APPEAL), TYPE_APPEAL, "grounds")
+    _expect_str(_req(d, "filedBy", TYPE_APPEAL), TYPE_APPEAL, "filedBy")
+    _expect_str(_req(d, "filedAt", TYPE_APPEAL), TYPE_APPEAL, "filedAt")
+    _expect_cid_opt(d.get("supplementLedger"), TYPE_APPEAL, "supplementLedger")
+    if d.get("provenViolationChecks") is not None:
+        _expect_list(d["provenViolationChecks"], TYPE_APPEAL, "provenViolationChecks", str)
+    if d.get("windowDays") is not None:
+        _expect_int(d["windowDays"], TYPE_APPEAL, "windowDays", minimum=0, maximum=1_000_000)
+    if d.get("note") is not None:
+        _expect_str(d["note"], TYPE_APPEAL, "note")
+    _check_unknown(
+        d,
+        (
+            "verdict", "caseManifest", "trigger", "grounds", "filedBy", "filedAt",
+            "supplementLedger", "provenViolationChecks", "windowDays", "note",
+        ),
+        TYPE_APPEAL,
+    )
+
+
+def validate_appeal_screening(obj: dict) -> None:
+    d = _base(obj, TYPE_APPEAL_SCREENING)
+    _expect_cid(_req(d, "appeal", TYPE_APPEAL_SCREENING), TYPE_APPEAL_SCREENING, "appeal")
+    _expect_enum(_req(d, "decision", TYPE_APPEAL_SCREENING), TYPE_APPEAL_SCREENING, "decision",
+                 ("admitted", "rejected"))
+    _expect_str(_req(d, "screenedBy", TYPE_APPEAL_SCREENING), TYPE_APPEAL_SCREENING, "screenedBy")
+    _expect_str(_req(d, "reasons", TYPE_APPEAL_SCREENING), TYPE_APPEAL_SCREENING, "reasons")
+    _expect_str(_req(d, "screenedAt", TYPE_APPEAL_SCREENING), TYPE_APPEAL_SCREENING, "screenedAt")
+    if d.get("note") is not None:
+        _expect_str(d["note"], TYPE_APPEAL_SCREENING, "note")
+    _check_unknown(
+        d, ("appeal", "decision", "screenedBy", "reasons", "screenedAt", "note"),
+        TYPE_APPEAL_SCREENING,
+    )
+
+
+def validate_appeal_verdict(obj: dict) -> None:
+    d = _base(obj, TYPE_APPEAL_VERDICT)
+    _expect_cid(_req(d, "appeal", TYPE_APPEAL_VERDICT), TYPE_APPEAL_VERDICT, "appeal")
+    _expect_enum(_req(d, "tier", TYPE_APPEAL_VERDICT), TYPE_APPEAL_VERDICT, "tier", ("A", "B"))
+    _expect_enum(_req(d, "outcome", TYPE_APPEAL_VERDICT), TYPE_APPEAL_VERDICT, "outcome",
+                 ("affirm", "reverse", "remand"))
+    _expect_str(_req(d, "scope", TYPE_APPEAL_VERDICT), TYPE_APPEAL_VERDICT, "scope")
+    _expect_str(_req(d, "rationale", TYPE_APPEAL_VERDICT), TYPE_APPEAL_VERDICT, "rationale")
+    _expect_cid(_req(d, "originalVerdict", TYPE_APPEAL_VERDICT), TYPE_APPEAL_VERDICT, "originalVerdict")
+    _expect_cid_opt(d.get("reviewedVerdict"), TYPE_APPEAL_VERDICT, "reviewedVerdict")
+    _expect_str(_req(d, "recordedAt", TYPE_APPEAL_VERDICT), TYPE_APPEAL_VERDICT, "recordedAt")
+    if d.get("panelSeats") is not None:
+        _expect_list(d["panelSeats"], TYPE_APPEAL_VERDICT, "panelSeats", str)
+    if d.get("note") is not None:
+        _expect_str(d["note"], TYPE_APPEAL_VERDICT, "note")
+    _check_unknown(
+        d,
+        ("appeal", "tier", "outcome", "scope", "rationale", "originalVerdict",
+         "reviewedVerdict", "recordedAt", "panelSeats", "note"),
+        TYPE_APPEAL_VERDICT,
+    )
+
+
+def validate_arbiter_ruling(obj: dict) -> None:
+    d = _base(obj, TYPE_ARBITER_RULING)
+    _expect_cid(_req(d, "appeal", TYPE_ARBITER_RULING), TYPE_ARBITER_RULING, "appeal")
+    _expect_str(_req(d, "arbiter", TYPE_ARBITER_RULING), TYPE_ARBITER_RULING, "arbiter")
+    _expect_enum(_req(d, "disposition", TYPE_ARBITER_RULING), TYPE_ARBITER_RULING, "disposition",
+                 ("affirm", "reverse", "remand", "dismiss"))
+    _expect_str(_req(d, "ruling", TYPE_ARBITER_RULING), TYPE_ARBITER_RULING, "ruling")
+    _expect_str(_req(d, "ruledAt", TYPE_ARBITER_RULING), TYPE_ARBITER_RULING, "ruledAt")
+    if d.get("note") is not None:
+        _expect_str(d["note"], TYPE_ARBITER_RULING, "note")
+    _check_unknown(
+        d, ("appeal", "arbiter", "disposition", "ruling", "ruledAt", "note"),
+        TYPE_ARBITER_RULING,
+    )
+
+
 _VALIDATORS = {
     TYPE_QUESTION: validate_question,
     TYPE_EVIDENCE_LEDGER: validate_evidence_ledger,
@@ -701,6 +794,10 @@ _VALIDATORS = {
     TYPE_SIGNATURE: validate_signature,
     TYPE_SIGNED_TREE_HEAD: validate_signed_tree_head,
     TYPE_TELEMETRY: validate_telemetry,
+    TYPE_APPEAL: validate_appeal,
+    TYPE_APPEAL_SCREENING: validate_appeal_screening,
+    TYPE_APPEAL_VERDICT: validate_appeal_verdict,
+    TYPE_ARBITER_RULING: validate_arbiter_ruling,
 }
 
 
@@ -1119,6 +1216,7 @@ def make_verdict(
     votes, confidence: str, dissents=None, marshall_verification: Cid | None = None,
     signature: Cid | None = None, options_ranked=None, what_would_change_it: str | None = None,
     dissent_recorded_note: str | None = None, issued_at: str | None = None,
+    note: str | None = None,
 ) -> dict:
     verdict = {
         "type": TYPE_VERDICT,
@@ -1143,6 +1241,8 @@ def make_verdict(
         verdict["whatWouldChangeIt"] = what_would_change_it
     if dissent_recorded_note is not None:
         verdict["dissentRecordedNote"] = dissent_recorded_note
+    if note is not None:
+        verdict["note"] = note
     validate_artifact(verdict)
     return verdict
 
@@ -1265,3 +1365,96 @@ def make_telemetry(
         telemetry["note"] = note
     validate_artifact(telemetry)
     return telemetry
+
+
+def make_appeal(
+    *, verdict: Cid, case_manifest: Cid, trigger: str, grounds: str, filed_by: str,
+    filed_at: str | None = None, supplement_ledger: Cid | None = None,
+    proven_violation_checks: list[str] | None = None, window_days: int | None = None,
+    note: str | None = None,
+) -> dict:
+    appeal = {
+        "type": TYPE_APPEAL,
+        "codecVersion": CODEC_VERSION,
+        "verdict": verdict,
+        "caseManifest": case_manifest,
+        "trigger": trigger,
+        "grounds": grounds,
+        "filedBy": filed_by,
+        "filedAt": filed_at or utc_now(),
+    }
+    if supplement_ledger is not None:
+        appeal["supplementLedger"] = supplement_ledger
+    if proven_violation_checks is not None:
+        appeal["provenViolationChecks"] = list(proven_violation_checks)
+    if window_days is not None:
+        appeal["windowDays"] = window_days
+    if note is not None:
+        appeal["note"] = note
+    validate_artifact(appeal)
+    return appeal
+
+
+def make_appeal_screening(
+    *, appeal: Cid, decision: str, screened_by: str, reasons: str,
+    screened_at: str | None = None, note: str | None = None,
+) -> dict:
+    screening = {
+        "type": TYPE_APPEAL_SCREENING,
+        "codecVersion": CODEC_VERSION,
+        "appeal": appeal,
+        "decision": decision,
+        "screenedBy": screened_by,
+        "reasons": reasons,
+        "screenedAt": screened_at or utc_now(),
+    }
+    if note is not None:
+        screening["note"] = note
+    validate_artifact(screening)
+    return screening
+
+
+def make_appeal_verdict(
+    *, appeal: Cid, tier: str, outcome: str, scope: str, rationale: str,
+    original_verdict: Cid, reviewed_verdict: Cid | None = None,
+    recorded_at: str | None = None, panel_seats: list[str] | None = None,
+    note: str | None = None,
+) -> dict:
+    appeal_verdict = {
+        "type": TYPE_APPEAL_VERDICT,
+        "codecVersion": CODEC_VERSION,
+        "appeal": appeal,
+        "tier": tier,
+        "outcome": outcome,
+        "scope": scope,
+        "rationale": rationale,
+        "originalVerdict": original_verdict,
+        "recordedAt": recorded_at or utc_now(),
+    }
+    if reviewed_verdict is not None:
+        appeal_verdict["reviewedVerdict"] = reviewed_verdict
+    if panel_seats is not None:
+        appeal_verdict["panelSeats"] = list(panel_seats)
+    if note is not None:
+        appeal_verdict["note"] = note
+    validate_artifact(appeal_verdict)
+    return appeal_verdict
+
+
+def make_arbiter_ruling(
+    *, appeal: Cid, arbiter: str, disposition: str, ruling: str,
+    ruled_at: str | None = None, note: str | None = None,
+) -> dict:
+    arbiter_ruling = {
+        "type": TYPE_ARBITER_RULING,
+        "codecVersion": CODEC_VERSION,
+        "appeal": appeal,
+        "arbiter": arbiter,
+        "disposition": disposition,
+        "ruling": ruling,
+        "ruledAt": ruled_at or utc_now(),
+    }
+    if note is not None:
+        arbiter_ruling["note"] = note
+    validate_artifact(arbiter_ruling)
+    return arbiter_ruling

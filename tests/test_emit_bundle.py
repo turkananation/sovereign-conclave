@@ -13,6 +13,8 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "scripts"))
 
+from conclave_core.artifacts import artifact_cid
+from conclave_core.cbor import decode
 from conclave_core.keystore import load_or_create_seed
 from conclave_core.verifier import verify_bundle
 from scripts.artifact_emitter import CaseSeed, emit_case_bundle
@@ -195,7 +197,18 @@ class TestOpeningBundle(unittest.TestCase):
         self.assertEqual(summary["status"], "VERIFIED")
         config = json.loads((emitted_dir / "bundle.json").read_text(encoding="utf-8"))
         self.assertEqual(config["expectedIdentityFingerprint"], identity_fingerprint)
-        self.assertEqual(config["log"]["leaves"], [])
+        counts = summary["artifactCounts"]
+        # M5: even scaffold runs close with a scaffold round + a verdict leaf.
+        self.assertEqual(counts.get("Round"), 1)
+        self.assertEqual(counts.get("Verdict"), 1)
+        leaves = config["log"]["leaves"]
+        self.assertEqual(len(leaves), 1)
+        verdict = next(
+            artifact
+            for artifact in (decode(path.read_bytes()) for path in sorted((emitted_dir / "artifacts").glob("*.cbor")))
+            if artifact.get("type") == "Verdict"
+        )
+        self.assertEqual(leaves[0], str(artifact_cid(verdict)))
 
     def test_bundle_is_repeatable_and_stable_in_dag(self) -> None:
         seed, base_dir, keys_dir = _case(self.tmp, None)

@@ -120,6 +120,70 @@ ISO format.
   agent manuals, including V2 skill discovery, ID, and loading semantics.
 - CI now verifies the OpenCode install and uninstall dry runs, and
   `validate_repo.py` requires the `OPENCODE.md` manual to stay present.
+- **M5 — appeals: triggers, finality windows, the Tier A/B/C ladder; signed
+  dissent artifacts.** Every case verdict is now appealable through a
+  mechanical public-review flow with one appeal per trigger class:
+  - New artifact types in `conclave_core.artifacts`: `Appeal`,
+    `AppealScreening`, `AppealVerdict`, `ArbiterRuling` (validated dag-cbor;
+    each links the originating verdict and the case manifest — appeals
+    reference the manifest chain, they never supersede it — and every
+    lifecycle document enters the transparency log). New signing domains:
+    `appeal-petition`, `appeal-verdict`, `arbiter-ruling` (screening's domain
+    pre-existed); `Verdict` gains an optional `note`.
+  - `conclave_core.appeals` — the appeal engine: decodes a bundle into a
+    self-consistent CID store, resolves the protocol's
+    `appealDefaultWindowDays` finality window (default 30, T2 exempt), and
+    enforces the anti-abuse gates: one appeal per trigger class, T4
+    infrastructure/build triggers defer to v0.3 with an explicit message; T1
+    requires a supplement `EvidenceLedger` chaining to the frozen ledger, T2
+    requires mechanically proven violation checks taken from the public
+    verifier (a finding cannot be asserted by word alone); pure T3 share
+    math (`weight_share_micro` — filed dissent weight over total voting
+    weight, in micro-share) auto-schedules Tier B at ≥ 300000 with no gate;
+    grant rules (T2 proven checks, T3 threshold, T1 admitted screening with
+    latest-wins semantics); Tier A re-deliberation scope; a Tier B panel
+    drawn deterministically disjoint from everything already convened
+    (the marshall auto-convenes, so drawn seats never double-convene); and a
+    Tier C named human arbiter as the final terminus (`dismiss` included for
+    the human). Per D-4 the mechanical layer never decides reversal — Tier B
+    suggestions are recorded, humans choose.
+  - Disposition suggestions: verifier problems prefixed `signature-chain` or
+    `log:` suggest `reverse`; everything else suggests `remand`
+    (`mechanical_outcome_suggestion`).
+  - Verdict emission completes M3's stub: the final scaffold round resolves
+    `verdict.finalRound`, votes carry per-seat weight, activeDissent is
+    auto-converted to signed `Dissent` artifacts (grounds, `[E#]` cites,
+    cited turns), confidence is extracted, and when the dissent share clears
+    the T3 threshold the petition is filed at emit time under the per-case
+    orchestrator key. The transparency log generalizes: a signed STH per
+    growth step, consistency proofs between steps, base64-encoded audit
+    paths (verdict + automatic appeal are logged leaves).
+  - `append_artifacts_to_bundle` extends an emitted bundle in place without
+    touching the manifest chain: artifact files, one logged leaf per
+    lifecycle document (`Verdict`, `Dissent`, `EvidenceLedger`, `Appeal`,
+    `AppealScreening`, `AppealVerdict`, `ArbiterRuling`), an STH + signature
+    per growth step with RFC 6962 consistency proofs, inclusion proofs for
+    the new leaves, and a rewritten `bundle.json`. Post-emit lifecycle
+    documents are signed with the identity keystore key; per-case
+    orchestrator keys remain ephemeral.
+  - Runner CLI gains an appeals group: `--show-appeals`,
+    `--file-appeal` (T1 takes `--supplement-ledger`; T2 attaches the
+    verifier's findings automatically), `--screen-appeal` (`--appeal`,
+    `--decision`, `--screen-reasons`), `--adjudicate-appeal` (`--tier A|B`;
+    outside T2 the outcome must be explicit), and `--arbitrate-appeal`
+    (requires a named human `--arbiter`). Adjudication reviews a clean
+    record, or a record carrying proven T2 violations — those are the
+    subject of review. Arbitration rulings are custodially signed in v0.2
+    (per-human keys arrive later): the identity key signs on behalf of the
+    named arbiter and the signature's note records that custody.
+  - Acceptance flows are pinned by tests: tamper → verifier findings → T2
+    proven+granted → Tier B reversal with a disjoint panel → Tier C closure;
+    supplement ledger → admitted screening → Tier A affirm → Tier C
+    closure; heavy dissent at emit → automatic T3 logged and verified.
+  - Roadmap deviations (documented): provider appellate re-deliberation
+    (re-convening the case on a reversed/remanded verdict) lands with the M6
+    server; provider-credit measurement of the exit criteria remains
+    operator-side.
 
 ## [0.1.0] - 2026-06-01
 

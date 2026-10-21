@@ -68,7 +68,11 @@ DOMAIN_ROUND_ATTESTATION = "round-attestation"
 DOMAIN_CERTIFY_ORCHESTRATOR = "certify-orchestrator"
 DOMAIN_PERSONA_MANIFEST = "persona-manifest"
 DOMAIN_LOG_STH = "log-sth"
+DOMAIN_DISSENT_FILING = "dissent-filing"
+DOMAIN_APPEAL_PETITION = "appeal-petition"
 DOMAIN_APPEAL_SCREENING = "appeal-screening"
+DOMAIN_APPEAL_VERDICT = "appeal-verdict"
+DOMAIN_ARBITER_RULING = "arbiter-ruling"
 
 
 def context_for(domain: str) -> bytes:

@@ -28,8 +28,10 @@ This module is a library; run it through ``bin/conclave --write-bundle``.
 
 from __future__ import annotations
 
+import base64
 import json
 import os
+import re
 import sys
 from dataclasses import dataclass
 from pathlib import Path
@@ -43,6 +45,8 @@ from conclave_core.artifacts import (
     ArtifactError,
     artifact_bytes,
     artifact_cid,
+    make_appeal,
+    make_dissent,
     make_evidence_ledger,
     make_manifest,
     make_panel,
@@ -53,14 +57,20 @@ from conclave_core.artifacts import (
     make_summary,
     make_telemetry,
     make_turn,
+    make_verdict,
     raw_cid,
 )
+from conclave_core.appeals import DEFAULT_WEIGHT_SHARE_MICRO, weight_share_micro
 from conclave_core.mldsa import public_fingerprint, public_key_bytes
-from conclave_core.merkle import tree_hash
+from conclave_core.merkle import consistency_proof, path, tree_hash
+from conclave_core.cid import Cid, parse
 from conclave_core.keystore import IDENTITY_SEED_FILE, REGISTRY_SEED_FILE, load_or_create_seed
 from conclave_core.signing import (
+    DOMAIN_DISSENT_FILING,
     DOMAIN_PERSONA_MANIFEST,
     DOMAIN_ROUND_ATTESTATION,
+    DOMAIN_VERDICT,
+    DOMAIN_APPEAL_PETITION,
     make_certificate_signed,
     make_key_publication_signed,
     make_signature_signed,
@@ -71,7 +81,14 @@ from provider_runner import parse_consensus, parse_distillation
 BUNDLE_VERSION = 1
 LOG_ID = "conclave-log"
 
-__all__ = ["BUNDLE_VERSION", "LOG_ID", "CaseSeed", "emit_case_bundle"]
+__all__ = [
+    "BUNDLE_VERSION",
+    "LOG_ID",
+    "CaseSeed",
+    "append_artifacts_to_bundle",
+    "emit_case_bundle",
+    "supplement_ledger_artifact",
+]
 
 
 @dataclass
@@ -144,20 +161,32 @@ def _externals_for(record: dict) -> tuple[bytes, bytes]:
     return prompt, output
 
 
+def _extract_confidence(text: str) -> str:
+    """Mechanical confidence parse; unparseable text stays conservative (low)."""
+
+    match = re.search(r"confidence\s*[:\-=]?\s*(low|medium|high)", text, re.IGNORECASE)
+    return match.group(1).lower() if match else "low"
+
+
 def _deliberation_artifacts(
     case: CaseSeed,
     persona_by_seat: dict[str, Any],
     convened: list[str],
-) -> tuple[list[dict], list[tuple[str, bytes]], list[Any]]:
+) -> tuple[list[dict], list[tuple[str, bytes]], list[Any], dict]:
     """Build the provider-run artifact set from the transcript.
 
-    Returns ``(artifacts, externals, round_cids)``. Each transcript round index
-    becomes one Round artifact with its seat Turn artifacts; the mechanical
-    distill pass produces that round's Summary artifact, and every call (seat
-    and mechanical alike) gets a Telemetry artifact over the artifact it
-    produced: turns for seats, the Summary for distillation, the Round for
-    consensus scoring and for the synthesizer. Prompt and output bytes land as
-    ``<cid>.raw`` payloads so every input-context CID resolves offline.
+    Returns ``(artifacts, externals, round_cids, verdict_inputs)``. Each
+    transcript round index becomes one Round artifact with its seat Turn
+    artifacts; the mechanical distill pass produces that round's Summary
+    artifact, and every call (seat and mechanical alike) gets a Telemetry
+    artifact over the artifact it produced: turns for seats, the Summary for
+    distillation, the Round for consensus scoring and for the synthesizer.
+    Prompt and output bytes land as ``<cid>.raw`` payloads so every
+    input-context CID resolves offline.
+
+    ``verdict_inputs`` carries the M5 verdict chain's raw materials: the
+    synthesizer's text, the marshall verification turn CID, the final
+    consensus payload, and each seat's final recorded response/turn pair.
     """
 
     records = [record for record in case.transcript or []]
@@ -167,6 +196,10 @@ def _deliberation_artifacts(
     speaking_keys_by_round: dict[int, list[int]] = {}
     all_keys_by_round: dict[int, list[int]] = {}
     externals: list[tuple[str, bytes]] = []
+
+    seat_final: dict[str, dict[str, Any]] = {}
+    synthesis_text = ""
+    verification_turn_cid: Any = None
 
     for record in records:
         round_index = max(0, int(record.get("round", 0) or 0))
@@ -226,7 +259,12 @@ def _deliberation_artifacts(
         externals.append((f"{output_cid}.raw", output))
         if role == "round":
             speaking_keys_by_round.setdefault(round_index, []).append(key)
+            seat_final[seat_id] = {"text": str(record.get("response", "")), "turn_cid": turn_cid_by_key[key]}
+        elif role == "verification":
+            verification_turn_cid = turn_cid_by_key[key]
         all_keys_by_round.setdefault(round_index, []).append(key)
+        if role == "synthesis":
+            synthesis_text = str(record.get("response", ""))
 
     summary_cid_by_round: dict[int, Any] = {}
     round_cids: list[Any] = []
@@ -338,7 +376,15 @@ def _deliberation_artifacts(
         )
         artifacts.append(telemetry)
 
-    return artifacts, externals, round_cids
+    final_index = max(round_meta) if round_meta else 0
+    final_meta = round_meta.get(final_index, {})
+    verdict_inputs = {
+        "synthesis": synthesis_text,
+        "verification_turn_cid": verification_turn_cid,
+        "final_consensus": final_meta.get("consensus"),
+        "seat_final": seat_final,
+    }
+    return artifacts, externals, round_cids, verdict_inputs
 
 
 def emit_case_bundle(case: CaseSeed, bundle_dir: Path, keys_dir: Path) -> tuple[Path, str]:
@@ -401,9 +447,10 @@ def emit_case_bundle(case: CaseSeed, bundle_dir: Path, keys_dir: Path) -> tuple[
     case_manifest = manifest_open
     externals: list[tuple[str, bytes]] = []
     provider_round_cids: list[Any] = []
+    verdict_inputs: dict | None = None
     if case.transcript:
         persona_by_seat = {seat_id: artifact_cid(personas[seat_id]) for seat_id in convened}
-        provider_artifacts, externals, provider_round_cids = _deliberation_artifacts(
+        provider_artifacts, externals, provider_round_cids, verdict_inputs = _deliberation_artifacts(
             case, persona_by_seat, convened
         )
         artifacts.extend(provider_artifacts)
@@ -420,6 +467,168 @@ def emit_case_bundle(case: CaseSeed, bundle_dir: Path, keys_dir: Path) -> tuple[
         )
         case_manifest = manifest_rounds
         artifacts.append(manifest_rounds)
+
+    # ---- M5 verdict issuance (rounds -> verdict -> final manifest) ---------
+    advocacy_seats = [seat_id for seat_id in convened if seat_lookup[seat_id].get("type") == "advocate"]
+    persona_by_seat = {seat_id: artifact_cid(personas[seat_id]) for seat_id in convened}
+
+    if not provider_round_cids:
+        scaffold_round = make_round(
+            index=0,
+            prev=None,
+            status="committed",
+            participants=convened,
+            turns=None,
+            no_distillation_reason=(
+                "scaffold run: deterministic form validation only; no provider calls occurred"
+            ),
+            round_kind="scaffold",
+            opened_at=case.timestamp,
+            closed_at=case.timestamp,
+        )
+        artifacts.append(scaffold_round)
+        provider_round_cids = [artifact_cid(scaffold_round)]
+
+    votes: list[dict] = []
+    dissent_cids: list[Any] = []
+    confidence = "low"
+    dissent_note = None
+    dissent_seats: list[str] = []
+    if verdict_inputs is not None:
+        synthesis_text = verdict_inputs["synthesis"]
+        confidence = _extract_confidence(synthesis_text)
+        for seat_id in advocacy_seats:
+            final = verdict_inputs["seat_final"].get(seat_id)
+            if final:
+                votes.append(
+                    {
+                        "seatId": seat_id,
+                        "persona": persona_by_seat[seat_id],
+                        "stance": final["text"][:160],
+                        "weightMicro": 1_000_000,
+                    }
+                )
+        active_dissent = (verdict_inputs["final_consensus"] or {}).get("activeDissent", [])
+        dissent_seats = [seat_id for seat_id in active_dissent if seat_id in advocacy_seats]
+        for seat_id in dissent_seats:
+            final = verdict_inputs["seat_final"].get(seat_id)
+            grounds = final["text"][:600] if final else "dissent classified by the mechanical consensus scorer"
+            cited_ledger_ids = sorted(set(re.findall(r"E\d+", grounds)))
+            dissent = make_dissent(
+                round_cid=provider_round_cids[-1],
+                seat_id=seat_id,
+                persona=persona_by_seat[seat_id],
+                grounds=grounds,
+                cited_ledger_ids=cited_ledger_ids,
+                cited_turns=[final["turn_cid"]] if final else None,
+                filed_at=case.timestamp,
+            )
+            artifacts.append(dissent)
+            artifacts.append(
+                make_signature_signed(
+                    seed=orchestrator_seed,
+                    domain=DOMAIN_DISSENT_FILING,
+                    payload=artifact_cid(dissent),
+                    signed_at=case.timestamp,
+                )
+            )
+            dissent_cids.append(artifact_cid(dissent))
+    if dissent_cids:
+        dissent_note = (
+            "active dissent auto-classified by the final consensus scorer; dissents "
+            f"recorded as artifacts for seats: {', '.join(dissent_seats)}"
+        )
+
+    if verdict_inputs is not None and verdict_inputs["synthesis"].strip():
+        synthesis_text = verdict_inputs["synthesis"]
+        if synthesis_text.lower().startswith("the sovereign conclave advises"):
+            recommendation = synthesis_text
+            verdict_note = None
+        else:
+            recommendation = "The Sovereign Conclave advises: " + synthesis_text.strip()
+            verdict_note = (
+                "recommendation envelope: mechanical protocol prefix applied to the "
+                "synthesizer's advice; seat stances truncated to 160 characters"
+            )
+    else:
+        recommendation = (
+            "The Sovereign Conclave advises: the scaffold validates form only; "
+            "a seated deliberation is required before this question is decided."
+        )
+        verdict_note = "scaffold run: no provider calls; standing scaffold advice"
+
+    verdict = make_verdict(
+        manifest=artifact_cid(case_manifest),
+        final_round=provider_round_cids[-1],
+        decision=case.problem or "Untitled conclave case",
+        recommendation=recommendation,
+        votes=votes,
+        confidence=confidence,
+        dissents=dissent_cids or None,
+        marshall_verification=verdict_inputs["verification_turn_cid"] if verdict_inputs else None,
+        dissent_recorded_note=dissent_note,
+        issued_at=case.timestamp,
+        note=verdict_note,
+    )
+    verdict_cid = artifact_cid(verdict)
+    artifacts.append(verdict)
+    artifacts.append(
+        make_signature_signed(
+            seed=identity_seed,
+            domain=DOMAIN_VERDICT,
+            payload=verdict_cid,
+            signed_at=case.timestamp,
+        )
+    )
+    manifest_final = make_manifest(
+        case_id=case_id,
+        question=artifact_cid(question),
+        evidence_ledger=artifact_cid(ledger),
+        panel=artifact_cid(panel),
+        protocol_params=artifact_cid(params),
+        rounds=provider_round_cids,
+        verdict=verdict_cid,
+        supersedes=artifact_cid(case_manifest),
+        title=case.problem or "Untitled conclave case",
+        opened_at=case.timestamp,
+    )
+    case_manifest = manifest_final
+    artifacts.append(manifest_final)
+
+    # ---- automatic T3 scheduling -------------------------------------------
+    # Roadmap M5 T3: when filed dissents hold >= 30% of the voting weight,
+    # appellate review is scheduled mechanically, immediately, with no gate.
+    auto_t3_appeal = None
+    if dissent_cids:
+        dissent_store = {
+            artifact_cid(artifact): artifact
+            for artifact in artifacts
+            if artifact.get("type") == "Dissent"
+        }
+        share = weight_share_micro(verdict, dissent_store.get)
+        if share is not None and share >= DEFAULT_WEIGHT_SHARE_MICRO:
+            auto_t3_appeal = make_appeal(
+                verdict=verdict_cid,
+                case_manifest=artifact_cid(case_manifest),
+                trigger="T3",
+                grounds=(
+                    f"automatic: dissent weight share {share} micro >= "
+                    f"{DEFAULT_WEIGHT_SHARE_MICRO} threshold at verdict issuance"
+                ),
+                filed_by="mechanical:T3",
+                filed_at=case.timestamp,
+                window_days=int(params.get("appealDefaultWindowDays", 30)),
+            )
+            artifacts.append(auto_t3_appeal)
+            artifacts.append(
+                make_signature_signed(
+                    seed=orchestrator_seed,
+                    domain=DOMAIN_APPEAL_PETITION,
+                    payload=artifact_cid(auto_t3_appeal),
+                    signed_at=case.timestamp,
+                )
+            )
+            auto_t3_cid = artifact_cid(auto_t3_appeal)
 
     # ---- key + certificate chain ------------------------------------------
     identity_kp, identity_possession = make_key_publication_signed(
@@ -467,8 +676,8 @@ def emit_case_bundle(case: CaseSeed, bundle_dir: Path, keys_dir: Path) -> tuple[
         )
 
     # ---- transparency log checkpoint --------------------------------------
-    # The opening log is empty: verdict leaves are appended when a case
-    # closes (M5 flow later reuses make_signed_tree_head_signed).
+    # The opening checkpoint is an empty tree; a closing verdict appends its
+    # CID as leaf 0 with an identity signature and an extended tree head.
     sth, sth_signature = make_signed_tree_head_signed(
         log_id=LOG_ID,
         tree_size=0,
@@ -477,6 +686,45 @@ def emit_case_bundle(case: CaseSeed, bundle_dir: Path, keys_dir: Path) -> tuple[
         published_at=case.timestamp,
     )
     artifacts += [sth, sth_signature]
+    log_section = {
+        "leaves": [],
+        "sthCids": [str(artifact_cid(sth))],
+        "consistency": [],
+        "inclusion": {},
+    }
+    if verdict is not None:
+        leaf_cids = [verdict_cid]
+        if auto_t3_appeal is not None:
+            leaf_cids.append(artifact_cid(auto_t3_appeal))
+        total_leaves = len(leaf_cids)
+        for size in range(1, total_leaves + 1):
+            root = tree_hash([leaf.cid_bytes() for leaf in leaf_cids[:size]])
+            sth_growth, sth_growth_signature = make_signed_tree_head_signed(
+                log_id=LOG_ID,
+                tree_size=size,
+                root_hash=root,
+                seed=identity_seed,
+                published_at=case.timestamp,
+            )
+            artifacts += [sth_growth, sth_growth_signature]
+            log_section["sthCids"].append(str(artifact_cid(sth_growth)))
+            if size > 1:
+                log_section["consistency"].append(
+                    {
+                        "first": size - 1,
+                        "second": size,
+                        "path": _encode_nodes(
+                            consistency_proof(size - 1, [leaf.cid_bytes() for leaf in leaf_cids[:size]])
+                        ),
+                    }
+                )
+        log_section["leaves"] = [str(leaf) for leaf in leaf_cids]
+        for index, leaf in enumerate(leaf_cids):
+            log_section["inclusion"][str(leaf)] = {
+                "index": index,
+                "treeSize": total_leaves,
+                "path": _encode_nodes(path(index, [leaf.cid_bytes() for leaf in leaf_cids])),
+            }
 
     _write_bundle_files(bundle_dir, artifacts, externals)
     config = {
@@ -484,12 +732,7 @@ def emit_case_bundle(case: CaseSeed, bundle_dir: Path, keys_dir: Path) -> tuple[
         "manifestCid": str(artifact_cid(case_manifest)),
         "expectedIdentityFingerprint": public_fingerprint(identity_public),
         "expectedRegistryFingerprint": public_fingerprint(registry_public),
-        "log": {
-            "leaves": [],
-            "sthCids": [str(artifact_cid(sth))],
-            "consistency": [],
-            "inclusion": {},
-        },
+        "log": log_section,
     }
     (bundle_dir / "bundle.json").write_text(
         json.dumps(config, indent=2, sort_keys=True) + "\n", encoding="utf-8"
@@ -508,6 +751,121 @@ def _write_bundle_files(
         (artifacts_dir / f"{cid}.cbor").write_bytes(artifact_bytes(artifact))
     for name, payload in externals:
         (artifacts_dir / name).write_bytes(payload)
+
+
+def _encode_nodes(nodes: list[bytes]) -> list[str]:
+    return [base64.b64encode(node).decode("ascii") for node in nodes]
+
+
+LOGGED_TYPES = (
+    "Verdict", "Dissent", "EvidenceLedger", "Appeal",
+    "AppealScreening", "AppealVerdict", "ArbiterRuling",
+)
+
+
+def supplement_ledger_artifact(
+    engine: Any,
+    document_entries: list[dict[str, Any]],
+    created_at: str,
+) -> dict:
+    """T1 supplement: a new EvidenceLedger carrying ALL frozen entries plus the
+    supplement's, with IDs continuing E1..E{n+k} and ``supersedes`` chaining
+    back to the frozen ledger artifact. The frozen ledger's CID is preserved
+    via the chain; the manifest itself is never rewritten.
+    """
+
+    ledger_cid = engine.manifest["evidenceLedger"]
+    stored = engine.store.get(ledger_cid)
+    if not isinstance(stored, dict):
+        raise SystemExit(f"the bundle's frozen evidence ledger {ledger_cid} is missing")
+    entries = list(stored["entries"])
+    index = len(entries) + 1
+    for entry in document_entries:
+        artifact_entry: dict[str, Any] = {
+            "id": f"E{index}",
+            "item": str(entry.get("item", "")),
+            "provenance": {
+                "source": str(entry.get("source", "")),
+                "kind": str(entry.get("source_type", "imported")),
+            },
+            "handling": str(entry.get("handling", "")),
+        }
+        if entry.get("sensitivity"):
+            artifact_entry["sensitivity"] = str(entry["sensitivity"])
+        entries.append(artifact_entry)
+        index += 1
+    return make_evidence_ledger(entries, supersedes=ledger_cid, created_at=created_at)
+
+
+def append_artifacts_to_bundle(
+    bundle_dir: Path,
+    artifacts: list[dict],
+    *,
+    identity_seed: bytes,
+    published_at: str,
+) -> dict:
+    """Append appeal-lifecycle artifacts to an emitted bundle.
+
+    Writes every artifact file, extends the transparency log with one leaf
+    per logged lifecycle document (verdicts, dissents, appeals, screenings,
+    appellate verdicts, arbiter rulings), adds a signed tree head per growth
+    step with an RFC 6962 consistency proof against the prior head, records
+    inclusion proofs for the new leaves, and rewrites bundle.json. The
+    existing artifact set and the manifest chain are never modified; appeal
+    artifacts reference the manifest rather than superseding it.
+
+    Returns the rewritten bundle config.
+    """
+
+    bundle_dir = Path(bundle_dir)
+    config = json.loads((bundle_dir / "bundle.json").read_text(encoding="utf-8"))
+    log_section = config["log"]
+    old_leaves = [parse(entry) for entry in log_section["leaves"]]
+    prior_size = len(old_leaves)
+
+    _write_bundle_files(bundle_dir, artifacts, [])
+
+    leaves = list(old_leaves)
+    for artifact in artifacts:
+        if artifact.get("type") in LOGGED_TYPES:
+            leaves.append(artifact_cid(artifact))
+    log_section["leaves"] = [str(leaf) for leaf in leaves]
+
+    final_new = []
+    for size in range(prior_size + 1, len(leaves) + 1):
+        root = tree_hash([leaf.cid_bytes() for leaf in leaves[:size]])
+        sth, sth_signature = make_signed_tree_head_signed(
+            log_id=LOG_ID,
+            tree_size=size,
+            root_hash=root,
+            seed=identity_seed,
+            published_at=published_at,
+        )
+        final_new += [sth, sth_signature]
+        log_section["sthCids"].append(str(artifact_cid(sth)))
+        if prior_size > 0:
+            log_section["consistency"].append(
+                {
+                    "first": prior_size,
+                    "second": size,
+                    "path": _encode_nodes(
+                        consistency_proof(prior_size, [leaf.cid_bytes() for leaf in leaves[:size]])
+                    ),
+                }
+            )
+    _write_bundle_files(bundle_dir, final_new, [])
+
+    for index, leaf in enumerate(leaves[prior_size:], start=prior_size):
+        log_section["inclusion"][str(leaf)] = {
+            "index": index,
+            "treeSize": len(leaves),
+            "path": _encode_nodes(path(index, [leaf.cid_bytes() for leaf in leaves])),
+        }
+
+    (bundle_dir / "bundle.json").write_text(
+        json.dumps(config, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
+    return config
 
 
 if __name__ == "__main__":
