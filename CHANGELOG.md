@@ -35,6 +35,15 @@ ISO format.
     verification path (tree-head roots, consistency proofs, verdict
     inclusion; logged verdicts must be identity-signed and the case verdict
     must appear among the log leaves).
+  - M3 — skill retrofit: `bin/conclave --write-bundle` now emits the v0.2
+    case bundle for every local run (scaffold runs emit an opening case;
+    provider runs additionally record every seat call as a Turn artifact
+    with the exact prompt/output bytes referenced by CID, one committed
+    Round, and an orchestrator attestation). Emitted bundles verify
+    offline: `python3 -m conclave_core.verifier <bundle>`. Long-lived
+    keys live in a keystore directory (`conclave_core.keystore`,
+    default `~/.conclave/keys`, mode 0600); provider transcripts now
+    record the prompt text alongside responses.
   - Deviation from the roadmap: the M2 backend is OpenSSL via
     `cryptography>=45` instead of the planned `pqcrypto` vendor library —
     all bytes are standard FIPS 204 ML-DSA-65.

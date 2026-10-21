@@ -262,6 +262,7 @@ def _call(
         "provider": route.provider,
         "model_family": route.model_family,
         "prompt_chars": len(prompt),
+        "prompt": prompt,
     }
     try:
         text = client.complete(prompt, route, timeout)

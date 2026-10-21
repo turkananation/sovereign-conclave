@@ -432,7 +432,52 @@ def run_provider_mode(args, config, profile_id, selected, problem, evidence_ledg
     )
     print(display_path(out_path))
     print(display_path(transcript_path))
+    emit_artifact_bundle(
+        args, config, profile_id, selected, problem,
+        evidence_ledger_document, timestamp, transcript=result.transcript,
+    )
     return 0
+
+
+def emit_artifact_bundle(
+    args: argparse.Namespace,
+    config: dict,
+    profile_id: str,
+    selected: list[str],
+    problem: str,
+    evidence_ledger_document: dict[str, Any],
+    timestamp: str,
+    transcript: list[dict[str, Any]] | None,
+) -> None:
+    """Write the verifiable v0.2 case bundle next to the rendered verdict."""
+    import artifact_emitter
+
+    keys_dir = (
+        resolve_path(args.keys_dir) if args.keys_dir else Path.home() / ".conclave" / "keys"
+    )
+    stamp = timestamp.replace(":", "").replace("-", "")
+    bundle_dir = (
+        resolve_path(args.write_bundle)
+        if args.write_bundle
+        else ROOT / args.out_dir / f"bundle-{stamp}"
+    )
+    case = artifact_emitter.CaseSeed(
+        profile_id=profile_id,
+        problem=problem,
+        timestamp=timestamp,
+        seats=list(selected),
+        marshall_id=config["marshall"],
+        roster=config,
+        ledger_entries=list(evidence_ledger_document.get("entries", [])),
+        transcript=transcript,
+    )
+    try:
+        bundle_dir, identity_fingerprint = artifact_emitter.emit_case_bundle(case, bundle_dir, keys_dir)
+    except artifact_emitter.ArtifactError as error:
+        raise SystemExit(f"Could not emit artifact bundle: {error}") from error
+    print(display_path(bundle_dir))
+    print(f"identity-fingerprint={identity_fingerprint}")
+    print(f"verify: python3 -m conclave_core.verifier {display_path(bundle_dir)}")
 
 
 def main() -> int:
@@ -461,6 +506,8 @@ def main() -> int:
     parser.add_argument("--provider-run", action="store_true", help="Opt-in: run real provider-backed deliberation (needs env keys; OFF by default)")
     parser.add_argument("--provider-timeout", type=float, default=60.0, help="Per-call timeout in seconds for provider mode")
     parser.add_argument("--provider-config", help="Provider slot YAML (default: configs/provider-model-slots.yaml, else the example)")
+    parser.add_argument("--write-bundle", help="Write the verifiable v0.2 artifact bundle to this directory (default: <out-dir>/bundle-<run-id>)")
+    parser.add_argument("--keys-dir", help="Conclave keystore directory (default: ~/.conclave/keys)")
     args = parser.parse_args()
 
     config = load_config()
@@ -538,6 +585,10 @@ def main() -> int:
         counter += 1
     out_path.write_text(rendered, encoding="utf-8")
     print(display_path(out_path))
+    emit_artifact_bundle(
+        args, config, profile_id, selected, problem,
+        evidence_ledger_document, timestamp, transcript=None,
+    )
     return 0
 
 
