@@ -1,0 +1,67 @@
+{
+  "version": "v0.2.0-M4",
+  "purpose": "Ten live-deliberation benchmark seeds for the M4 token-architecture exit criterion. Operators run each seed once (bundle + transcript), then aggregate with scripts/cost_estimator.py. See README.md for the procedure and the fidelity spot-audit protocol.",
+  "exitCriterion": "optimized cost <= 30% (micro-ratio <= 300000) of the sonnet-class no-cache/no-cascade baseline for every seed, at zero distillation-fidelity objections after audit",
+  "cases": [
+    {
+      "seed": 1,
+      "profile": "architecture",
+      "ledgers": ["demos/evidence-ledgers/architecture-notifications-platform-split.json"],
+      "question": "Should we split the notifications platform out of the monolith?"
+    },
+    {
+      "seed": 2,
+      "profile": "architecture",
+      "ledgers": ["demos/evidence-ledgers/war-game-launch-plan.json"],
+      "question": "Do we invoke the war-game launch plan this quarter or keep rehearsing?"
+    },
+    {
+      "seed": 3,
+      "profile": "risk",
+      "ledgers": ["demos/evidence-ledgers/self-war-game-repo-readiness.json"],
+      "question": "Is this repository ready for an external security review?"
+    },
+    {
+      "seed": 4,
+      "profile": "pandemic-preparedness",
+      "ledgers": ["demos/evidence-ledgers/pandemic-preparedness-county-response.json"],
+      "question": "Approve the county outbreak-response plan as written?"
+    },
+    {
+      "seed": 5,
+      "profile": "strategy",
+      "ledgers": [],
+      "question": "Should the company open a second research site in a lower-cost region?"
+    },
+    {
+      "seed": 6,
+      "profile": "intelligence-oversight",
+      "ledgers": [],
+      "question": "Should analyst access to Adtech B2B data be moved to an undisclosed-broker channel?"
+    },
+    {
+      "seed": 7,
+      "profile": "emergency-powers",
+      "ledgers": [],
+      "question": "Should a governor use emergency powers to bypass procurement for flood defenses?"
+    },
+    {
+      "seed": 8,
+      "profile": "economic-thinktank",
+      "ledgers": [],
+      "question": "Should we recommend a transactions tax to fund the universal baby grant?"
+    },
+    {
+      "seed": 9,
+      "profile": "oppression-audit",
+      "ledgers": [],
+      "question": "Is the proposed digital-ID rollout compatible with the oppression-audit charter?"
+    },
+    {
+      "seed": 10,
+      "profile": "full-conclave",
+      "ledgers": [],
+      "question": "Should a city adopt a public face-recognition ban with narrow exceptions?"
+    }
+  ]
+}

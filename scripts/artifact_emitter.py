@@ -50,6 +50,8 @@ from conclave_core.artifacts import (
     make_protocol_params,
     make_question,
     make_round,
+    make_summary,
+    make_telemetry,
     make_turn,
     raw_cid,
 )
@@ -64,6 +66,7 @@ from conclave_core.signing import (
     make_signature_signed,
     make_signed_tree_head_signed,
 )
+from provider_runner import parse_consensus, parse_distillation
 
 BUNDLE_VERSION = 1
 LOG_ID = "conclave-log"
@@ -135,46 +138,207 @@ def _ledger_artifact_entries(case: CaseSeed) -> list[dict[str, Any]]:
     return entries
 
 
-def _turn_artifacts(
-    case: CaseSeed, persona_by_seat: dict[str, Any]
-) -> tuple[list[dict], list[tuple[str, bytes]]]:
-    """Build the Round-0 Turn artifacts from provider transcript records.
+def _externals_for(record: dict) -> tuple[bytes, bytes]:
+    prompt = str(record.get("prompt", "")).encode("utf-8")
+    output = str(record.get("response", "")).encode("utf-8")
+    return prompt, output
 
-    The synthesis call is presentation, not a seat turn, and stays in the
-    markdown transcript. Each turn's input/output CIDs reference raw
-    bytes, returned as ``<cid>.raw`` payloads so the bundle is verifiable
-    without trusting the emitter's word about what was prompted.
+
+def _deliberation_artifacts(
+    case: CaseSeed,
+    persona_by_seat: dict[str, Any],
+    convened: list[str],
+) -> tuple[list[dict], list[tuple[str, bytes]], list[Any]]:
+    """Build the provider-run artifact set from the transcript.
+
+    Returns ``(artifacts, externals, round_cids)``. Each transcript round index
+    becomes one Round artifact with its seat Turn artifacts; the mechanical
+    distill pass produces that round's Summary artifact, and every call (seat
+    and mechanical alike) gets a Telemetry artifact over the artifact it
+    produced: turns for seats, the Summary for distillation, the Round for
+    consensus scoring and for the synthesizer. Prompt and output bytes land as
+    ``<cid>.raw`` payloads so every input-context CID resolves offline.
     """
 
-    turns: list[dict] = []
+    records = [record for record in case.transcript or []]
+    turn_by_key: dict[int, dict] = {}
+    turn_cid_by_key: dict[int, Any] = {}
+    round_meta: dict[int, dict] = {}
+    speaking_keys_by_round: dict[int, list[int]] = {}
+    all_keys_by_round: dict[int, list[int]] = {}
     externals: list[tuple[str, bytes]] = []
-    for record in case.transcript or []:
-        if record.get("role") == "synthesis":
-            continue
+
+    for record in records:
+        round_index = max(0, int(record.get("round", 0) or 0))
+        meta = round_meta.setdefault(
+            round_index,
+            {
+                "kind": str(record.get("roundKind", "opening")),
+                "summary": None,
+                "summary_error": None,
+                "consensus": None,
+                "consensus_error": None,
+                "distill_model": "",
+            },
+        )
+        role = record.get("role")
         seat_id = record.get("seat")
-        if seat_id not in persona_by_seat:
+
+        if role in ("distill", "consensus"):
+            if role == "distill":
+                meta["distill_model"] = str(record.get("model_family", ""))
+                parsed = parse_distillation(str(record.get("response", "")))
+                if parsed is None:
+                    meta["summary_error"] = (
+                        "mechanical distillation failed to produce a valid record; "
+                        "the round falls back to verbatim positions"
+                    )
+                else:
+                    meta["summary"] = parsed
+            else:
+                meta["consensus"] = parse_consensus(str(record.get("response", "")))
+                if meta["consensus"] is None:
+                    meta["consensus_error"] = "consensus scoring failed to produce a valid score"
             continue
-        prompt = str(record.get("prompt", "")).encode("utf-8")
-        output = str(record.get("response", "")).encode("utf-8")
+
+        if seat_id not in persona_by_seat:
+            continue  # the synthesizer is presentation, not a seat turn
+
+        prompt, output = _externals_for(record)
         prompt_cid = raw_cid(prompt)
         output_cid = raw_cid(output)
+        key = id(record)
+        turn = make_turn(
+            round_index=round_index,
+            seat_id=seat_id,
+            persona=persona_by_seat[seat_id],
+            input_context_hash=prompt_cid,
+            model_id=str(record.get("model_family", "")),
+            output=output_cid,
+            citations=[],
+            recorded_at=case.timestamp,
+            provider_run=True,
+            note=f"provider slot={record.get('slot')} provider={record.get('provider')} role={role}",
+        )
+        turn_by_key[key] = turn
+        turn_cid_by_key[key] = artifact_cid(turn)
         externals.append((f"{prompt_cid}.raw", prompt))
         externals.append((f"{output_cid}.raw", output))
-        turns.append(
-            make_turn(
-                round_index=0,
-                seat_id=seat_id,
-                persona=persona_by_seat[seat_id],
-                input_context_hash=prompt_cid,
-                model_id=str(record.get("model_family", "")),
-                output=output_cid,
-                citations=[],
-                recorded_at=case.timestamp,
-                provider_run=True,
-                note=f"provider slot={record.get('slot')} provider={record.get('provider')}",
+        if role == "round":
+            speaking_keys_by_round.setdefault(round_index, []).append(key)
+        all_keys_by_round.setdefault(round_index, []).append(key)
+
+    summary_cid_by_round: dict[int, Any] = {}
+    round_cids: list[Any] = []
+    artifacts: list[dict] = []
+
+    for round_index in sorted(round_meta):
+        meta = round_meta[round_index]
+        speaking_cids = [turn_cid_by_key[key] for key in speaking_keys_by_round.get(round_index, [])]
+        all_turn_cids = [turn_cid_by_key[key] for key in all_keys_by_round.get(round_index, [])]
+
+        if meta["summary"] is not None and speaking_cids:
+            summary_text = meta["summary"]["summaryText"]
+            summary = make_summary(
+                round_index=round_index,
+                distilled_from=speaking_cids,
+                positions=meta["summary"]["positions"],
+                summary_text=summary_text,
+                open_disagreements=meta["summary"].get("openDisagreements", []),
+                written_at=case.timestamp,
+                model_id=meta["distill_model"] or None,
+                word_count=len(summary_text.split()) or None,
             )
+            summary_cid_by_round[round_index] = artifact_cid(summary)
+            artifacts.append(summary)
+
+        round_artifact = make_round(
+            index=round_index,
+            prev=round_cids[-1] if round_cids else None,
+            status="committed",
+            participants=convened,
+            turns=all_turn_cids or None,
+            distilled_summary=summary_cid_by_round.get(round_index),
+            no_distillation_reason=(
+                None
+                if summary_cid_by_round.get(round_index) is not None
+                else (meta["summary_error"] or "no distillation pass for this round")
+            ),
+            round_kind=meta["kind"],
+            opened_at=case.timestamp,
+            closed_at=case.timestamp,
         )
-    return turns, externals
+        artifacts.append(round_artifact)
+        round_cids.append(artifact_cid(round_artifact))
+        artifacts.extend(turn_by_key[key] for key in all_keys_by_round.get(round_index, []))
+
+    for record in records:
+        role = record.get("role")
+        round_index = max(0, int(record.get("round", 0) or 0))
+        key = id(record)
+        if key in turn_cid_by_key:
+            subject, subject_kind = turn_cid_by_key[key], "turn"
+        elif role == "distill" and summary_cid_by_round.get(round_index) is not None:
+            subject, subject_kind = summary_cid_by_round[round_index], "summary"
+        else:
+            subject, subject_kind = round_cids[round_index], "round"
+
+        meta = round_meta[round_index]
+        usage = record.get("usage")
+        if usage is None:
+            estimated = True
+            prompt_source = record.get("prompt_chars")
+            input_tokens = (
+                int(prompt_source) if prompt_source is not None else len(str(record.get("prompt", "")))
+            ) // 4
+            token_block = {
+                "inputTokens": input_tokens,
+                "outputTokens": len(str(record.get("response", ""))) // 4,
+            }
+        else:
+            estimated = False
+            token_block = {
+                "inputTokens": int(usage.get("inputTokens", 0) or 0),
+                "outputTokens": int(usage.get("outputTokens", 0) or 0),
+                "cacheReadTokens": int(usage.get("cacheReadTokens", 0) or 0),
+                "cacheWriteTokens": int(usage.get("cacheWriteTokens", 0) or 0),
+            }
+        parts = record.get("prompt_parts")
+        input_parts = (
+            {
+                "staticChars": int(parts.get("static", 0)),
+                "dynamicChars": int(parts.get("dynamic", 0)),
+                "suffixChars": int(parts.get("suffix", 0)),
+            }
+            if parts
+            else None
+        )
+
+        notes = []
+        if role == "consensus":
+            if meta["consensus"] is not None:
+                dissent = ", ".join(meta["consensus"]["activeDissent"]) or "none"
+                notes.append(f"consensusScore={meta['consensus']['consensusScore']}; activeDissent={dissent}")
+            else:
+                notes.append(meta["consensus_error"] or "consensus unparseable")
+        if not record.get("ok", False):
+            notes.append("provider call failed; usage estimates are unreliable")
+        telemetry = make_telemetry(
+            subject=subject,
+            subject_kind=subject_kind,
+            tokens=token_block,
+            model_id=str(record.get("model_family", "")),
+            provider=str(record.get("provider", "")),
+            latency_ms=int(round(float(record.get("elapsed_s", 0.0)) * 1000)),
+            estimated=estimated,
+            batch=bool(record.get("batch", False)),
+            input_parts=input_parts,
+            recorded_at=case.timestamp,
+            note="; ".join(notes) or None,
+        )
+        artifacts.append(telemetry)
+
+    return artifacts, externals, round_cids
 
 
 def emit_case_bundle(case: CaseSeed, bundle_dir: Path, keys_dir: Path) -> tuple[Path, str]:
@@ -236,37 +400,26 @@ def emit_case_bundle(case: CaseSeed, bundle_dir: Path, keys_dir: Path) -> tuple[
 
     case_manifest = manifest_open
     externals: list[tuple[str, bytes]] = []
-    round_zero: dict | None = None
+    provider_round_cids: list[Any] = []
     if case.transcript:
         persona_by_seat = {seat_id: artifact_cid(personas[seat_id]) for seat_id in convened}
-        turn_list, externals = _turn_artifacts(case, persona_by_seat)
-        turn_cids = [artifact_cid(turn) for turn in turn_list]
-        round_zero = make_round(
-            index=0,
-            prev=None,
-            status="committed",
-            participants=convened,
-            turns=turn_cids,
-            no_distillation_reason=(
-                "M3 scope: verbatim provider turns recorded as artifacts; "
-                "structured distillation arrives in M4."
-            ),
-            opened_at=case.timestamp,
-            closed_at=case.timestamp,
+        provider_artifacts, externals, provider_round_cids = _deliberation_artifacts(
+            case, persona_by_seat, convened
         )
+        artifacts.extend(provider_artifacts)
         manifest_rounds = make_manifest(
             case_id=case_id,
             question=artifact_cid(question),
             evidence_ledger=artifact_cid(ledger),
             panel=artifact_cid(panel),
             protocol_params=artifact_cid(params),
-            rounds=[artifact_cid(round_zero)],
+            rounds=provider_round_cids,
             supersedes=artifact_cid(manifest_open),
             title=case.problem or "Untitled conclave case",
             opened_at=case.timestamp,
         )
         case_manifest = manifest_rounds
-        artifacts += [*turn_list, round_zero, manifest_rounds]
+        artifacts.append(manifest_rounds)
 
     # ---- key + certificate chain ------------------------------------------
     identity_kp, identity_possession = make_key_publication_signed(
@@ -303,12 +456,12 @@ def emit_case_bundle(case: CaseSeed, bundle_dir: Path, keys_dir: Path) -> tuple[
                 signed_at=case.timestamp,
             )
         )
-    if round_zero is not None:
+    for round_cid in provider_round_cids:
         artifacts.append(
             make_signature_signed(
                 seed=orchestrator_seed,
                 domain=DOMAIN_ROUND_ATTESTATION,
-                payload=artifact_cid(round_zero),
+                payload=round_cid,
                 signed_at=case.timestamp,
             )
         )

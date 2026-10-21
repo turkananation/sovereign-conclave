@@ -43,12 +43,14 @@ from .artifacts import (
     TYPE_KEY_PUBLICATION,
     TYPE_CERTIFICATE,
     TYPE_SIGNED_TREE_HEAD,
+    TYPE_TELEMETRY,
     ARTIFACT_TYPES,
     artifact_bytes,
     artifact_cid,
     link,
     raw_cid,
     validate_artifact,
+    validate_telemetry,
     verify_manifest,
     make_question,
     make_evidence_ledger,
@@ -65,6 +67,7 @@ from .artifacts import (
     make_certificate,
     make_signature,
     make_signed_tree_head,
+    make_telemetry,
     utc_now,
 )
 from .cbor import DagCborError, decode, encode, is_canonical
@@ -89,6 +92,7 @@ __all__ = [
     "TYPE_KEY_PUBLICATION",
     "TYPE_CERTIFICATE",
     "TYPE_SIGNED_TREE_HEAD",
+    "TYPE_TELEMETRY",
     "Cid",
     "CidError",
     "DagCborError",
@@ -117,5 +121,7 @@ __all__ = [
     "make_certificate",
     "make_signature",
     "make_signed_tree_head",
+    "make_telemetry",
+    "validate_telemetry",
     "utc_now",
 ]

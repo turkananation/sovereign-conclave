@@ -65,38 +65,100 @@ LEDGER_ENTRIES = [
 TRANSCRIPT = [
     {
         "seat": "conclave-feynman",
-        "role": "round1",
+        "role": "round",
+        "round": 0,
+        "roundKind": "opening",
         "slot": "sonnet",
         "provider": "anthropic",
         "model_family": "sonnet",
         "prompt_chars": 42,
+        "prompt_parts": {"static": 900, "dynamic": 60, "suffix": 40},
+        "batch": False,
         "ok": True,
         "prompt": "Round 1 prompt for feynman.",
         "response": "Feynman position text.",
+        "usage": {"inputTokens": 1200, "outputTokens": 280, "cacheReadTokens": 900, "cacheWriteTokens": 300},
+        "usageEstimated": False,
+        "elapsed_s": 0.4,
     },
     {
         "seat": "conclave-zhukov",
-        "role": "round1",
+        "role": "round",
+        "round": 0,
+        "roundKind": "opening",
         "slot": "sonnet",
         "provider": "anthropic",
         "model_family": "sonnet",
         "prompt_chars": 42,
+        "prompt_parts": {"static": 900, "dynamic": 60, "suffix": 40},
+        "batch": False,
         "ok": True,
         "prompt": "Round 1 prompt for zhukov.",
         "response": "Zhukov position text.",
+        "usage": {"inputTokens": 60, "outputTokens": 280, "cacheReadTokens": 1200, "cacheWriteTokens": 0},
+        "usageEstimated": False,
+        "elapsed_s": 0.3,
+    },
+    {
+        "seat": "mechanical",
+        "role": "distill",
+        "round": 0,
+        "roundKind": "mechanical:distill",
+        "slot": "fast",
+        "provider": "provider-alpha",
+        "model_family": "fast-general",
+        "prompt_chars": 80,
+        "prompt_parts": {"static": 900, "dynamic": 60, "suffix": 40},
+        "batch": True,
+        "ok": True,
+        "prompt": "Distiller prompt.",
+        "response": (
+            '{"summaryText": "Feynman wants a flagged split; Zhukov resists on readiness.",'
+            ' "positions": ['
+            '{"seatId": "conclave-feynman", "stance": "Split behind a flag", "citations": ["E1"]},'
+            '{"seatId": "conclave-zhukov", "stance": "Hold the monolith", "citations": ["E1"]}],'
+            ' "openDisagreements": ["feynman vs zhukov: pace of extraction"]}'
+        ),
+        "prompt_parts": {"static": 900, "dynamic": 60, "suffix": 40},
+        "usageEstimated": True,
+        "elapsed_s": 0.4,
     },
     {
         "seat": "conclave-marshall",
         "role": "verification",
+        "round": 0,
+        "roundKind": "opening",
         "slot": "opus",
         "provider": "anthropic",
         "model_family": "opus",
         "prompt_chars": 44,
+        "prompt_parts": {"static": 900, "dynamic": 60, "suffix": 40},
+        "batch": False,
         "ok": True,
         "prompt": "Verification prompt for the marshall.",
         "response": "Verification result text.",
+        "usage": {"inputTokens": 90, "outputTokens": 300, "cacheReadTokens": 1260, "cacheWriteTokens": 0},
+        "usageEstimated": False,
+        "elapsed_s": 0.5,
     },
 ]
+
+CONSENSUS_RECORD = {
+    "seat": "mechanical",
+    "role": "consensus",
+    "round": 0,
+    "roundKind": "mechanical:consensus",
+    "slot": "fast",
+    "provider": "provider-alpha",
+    "model_family": "fast-general",
+    "prompt_parts": {"static": 900, "dynamic": 60, "suffix": 40},
+    "batch": False,
+    "ok": True,
+    "prompt": "Consensus prompt.",
+    "response": '{"consensusScore": 87, "activeDissent": []}',
+    "usageEstimated": True,
+    "elapsed_s": 0.2,
+}
 
 
 def _case(tmp: Path, transcript: list[dict] | None) -> tuple[CaseSeed, Path, Path]:
@@ -166,9 +228,43 @@ class TestProviderBundle(unittest.TestCase):
         self.assertEqual(problems, [], msg="\n".join(problems))
         self.assertEqual(summary["status"], "VERIFIED")
         counts = summary["artifactCounts"]
-        # round1 x2 advocates + the marshall verification call = 3 turns
+        # 2 advocate openings + the mechanical distill + the marshall verification
         self.assertEqual(counts.get("Turn"), 3)
         self.assertEqual(counts.get("Round"), 1)
+        self.assertEqual(counts.get("Summary"), 1)
+        self.assertEqual(counts.get("Telemetry"), 4)
+
+    def test_summary_binds_its_source_turns(self) -> None:
+        seed, bundle_dir, keys_dir = _case(self.tmp, TRANSCRIPT)
+        emitted_dir, _ = emit_case_bundle(seed, bundle_dir, keys_dir)
+        from conclave_core.cbor import decode
+        from conclave_core.artifacts import artifact_cid
+
+        artifacts = [decode(p.read_bytes()) for p in sorted((emitted_dir / "artifacts").glob("*.cbor"))]
+        summary = next(a for a in artifacts if a.get("type") == "Summary")
+        turns = [artifact_cid(t) for t in artifacts if t.get("type") == "Turn" and t["roundIndex"] == 0
+                 and t["seatId"] != "conclave-marshall"]
+        # the mechanical record opens with static+dynamic identical to the seats,
+        # so the summary must distill exactly the two opening positions
+        self.assertEqual(sorted(str(cid) for cid in summary["distilledFrom"]), sorted(str(c) for c in turns))
+        self.assertEqual(len(summary["positions"]), 2)
+
+    def test_consensus_score_recorded_in_telemetry_note(self) -> None:
+        seed, bundle_dir, keys_dir = _case(self.tmp, TRANSCRIPT + [CONSENSUS_RECORD])
+        emitted_dir, _ = emit_case_bundle(seed, bundle_dir, keys_dir)
+        problems, summary_result = verify_bundle(emitted_dir)
+        self.assertEqual(problems, [], msg="\n".join(problems))
+        from conclave_core.cbor import decode
+
+        telemetries = [decode(p.read_bytes()) for p in sorted((emitted_dir / "artifacts").glob("*.cbor"))
+                       if decode(p.read_bytes()).get("type") == "Telemetry"]
+        consensus_notes = [
+            t.get("note", "") for t in telemetries
+            if "consensusScore=87" in (t.get("note") or "")
+        ]
+        self.assertEqual(len(consensus_notes), 1)
+        self.assertIn("activeDissent=none", consensus_notes[0])
+        self.assertEqual(summary_result["artifactCounts"].get("Round"), 1)  # early exit: no later round artifacts
 
     def test_turn_raw_bytes_match_their_cids(self) -> None:
         seed, bundle_dir, keys_dir = _case(self.tmp, TRANSCRIPT)

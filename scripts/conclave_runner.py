@@ -380,6 +380,7 @@ def run_provider_mode(args, config, profile_id, selected, problem, evidence_ledg
         problem=problem,
         ledger_section=ledger_section,
         timeout=args.provider_timeout,
+        options=pr.options_from_args(args),
     )
 
     if args.write_ledger and evidence_entries:
@@ -506,6 +507,10 @@ def main() -> int:
     parser.add_argument("--provider-run", action="store_true", help="Opt-in: run real provider-backed deliberation (needs env keys; OFF by default)")
     parser.add_argument("--provider-timeout", type=float, default=60.0, help="Per-call timeout in seconds for provider mode")
     parser.add_argument("--provider-config", help="Provider slot YAML (default: configs/provider-model-slots.yaml, else the example)")
+    parser.add_argument("--rounds", type=int, default=1, help="Deliberation round budget (default 1; challenge rounds run on the distilled record)")
+    parser.add_argument("--consensus-threshold", type=int, default=85, help="Early-exit consensus score threshold 0..100 (default 85)")
+    parser.add_argument("--committee-size", type=int, default=7, help="Sparse-topology committee size for large panels; 0 disables (default 7)")
+    parser.add_argument("--batch", action="store_true", help="Mark provider calls batch (telemetry flag + 50 percent cost-model discount)")
     parser.add_argument("--write-bundle", help="Write the verifiable v0.2 artifact bundle to this directory (default: <out-dir>/bundle-<run-id>)")
     parser.add_argument("--keys-dir", help="Conclave keystore directory (default: ~/.conclave/keys)")
     args = parser.parse_args()

@@ -65,6 +65,7 @@ TYPE_SIGNATURE = "Signature"
 TYPE_KEY_PUBLICATION = "KeyPublication"
 TYPE_CERTIFICATE = "Certificate"
 TYPE_SIGNED_TREE_HEAD = "SignedTreeHead"
+TYPE_TELEMETRY = "Telemetry"
 
 ARTIFACT_TYPES = (
     TYPE_DELIBERATION_MANIFEST,
@@ -82,6 +83,7 @@ ARTIFACT_TYPES = (
     TYPE_KEY_PUBLICATION,
     TYPE_CERTIFICATE,
     TYPE_SIGNED_TREE_HEAD,
+    TYPE_TELEMETRY,
 )
 
 KEY_ROLES = ("identity", "orchestrator", "persona-registry")
@@ -378,6 +380,8 @@ def validate_summary(obj: dict) -> None:
     _expect_str(_req(d, "summaryText", TYPE_SUMMARY), TYPE_SUMMARY, "summaryText")
     disagreements = d.get("openDisagreements", [])
     _expect_list(disagreements, TYPE_SUMMARY, "openDisagreements", str)
+    if d.get("fidelityObjections") is not None:
+        _expect_list(d["fidelityObjections"], TYPE_SUMMARY, "fidelityObjections", str)
     _expect_str(_req(d, "writtenAt", TYPE_SUMMARY), TYPE_SUMMARY, "writtenAt")
     _expect_str_opt(d.get("modelId"), TYPE_SUMMARY, "modelId")
     if d.get("wordCount") is not None:
@@ -418,6 +422,7 @@ def validate_turn(obj: dict) -> None:
                 raise ArtifactError(f"{TYPE_TURN}.tokens: unknown field {name!r}")
             _expect_int(value, f"{TYPE_TURN}.tokens", name, minimum=0)
     _expect_int_opt(d.get("costMicroUsd"), TYPE_TURN, "costMicroUsd", minimum=0)
+    _expect_cid_opt(d.get("telemetry"), TYPE_TURN, "telemetry")
     struck = _expect_bool(d.get("struck", False), TYPE_TURN, "struck")
     if struck:
         _expect_str(_req(d, "struckReason", TYPE_TURN), TYPE_TURN, "struckReason")
@@ -434,8 +439,8 @@ def validate_turn(obj: dict) -> None:
         (
             "roundIndex", "seatId", "persona", "inputContextHash", "modelId",
             "sampling", "seed", "output", "citations", "recordedAt", "tokens",
-            "costMicroUsd", "struck", "struckReason", "marshallObjection",
-            "providerRun", "note",
+            "costMicroUsd", "telemetry", "struck", "struckReason",
+            "marshallObjection", "providerRun", "note",
         ),
         TYPE_TURN,
     )
@@ -637,6 +642,48 @@ def validate_signed_tree_head(obj: dict) -> None:
     _check_unknown(d, ("logId", "treeSize", "rootHash", "publishedAt", "note"), TYPE_SIGNED_TREE_HEAD)
 
 
+def validate_telemetry(obj: dict) -> None:
+    d = _base(obj, TYPE_TELEMETRY)
+    _expect_cid(_req(d, "subject", TYPE_TELEMETRY), TYPE_TELEMETRY, "subject")
+    _expect_enum(_req(d, "subjectKind", TYPE_TELEMETRY), TYPE_TELEMETRY, "subjectKind",
+                 ("turn", "summary", "round"))
+    tokens = _req(d, "tokens", TYPE_TELEMETRY)
+    if not isinstance(tokens, dict):
+        raise ArtifactError(f"{TYPE_TELEMETRY}.tokens: expected dict")
+    if "inputTokens" not in tokens or "outputTokens" not in tokens:
+        raise ArtifactError(f"{TYPE_TELEMETRY}.tokens: inputTokens and outputTokens are required")
+    for name, value in tokens.items():
+        if name not in ("inputTokens", "outputTokens", "cacheReadTokens", "cacheWriteTokens"):
+            raise ArtifactError(f"{TYPE_TELEMETRY}.tokens: unknown field {name!r}")
+        _expect_int(value, f"{TYPE_TELEMETRY}.tokens", name, minimum=0)
+    _expect_str(_req(d, "modelId", TYPE_TELEMETRY), TYPE_TELEMETRY, "modelId")
+    _expect_str(_req(d, "provider", TYPE_TELEMETRY), TYPE_TELEMETRY, "provider")
+    _expect_int(_req(d, "latencyMs", TYPE_TELEMETRY), TYPE_TELEMETRY, "latencyMs", minimum=0)
+    if d.get("inputParts") is not None:
+        input_parts = d["inputParts"]
+        if not isinstance(input_parts, dict):
+            raise ArtifactError(f"{TYPE_TELEMETRY}.inputParts: expected dict")
+        for name, value in input_parts.items():
+            if name not in ("staticChars", "dynamicChars", "suffixChars"):
+                raise ArtifactError(f"{TYPE_TELEMETRY}.inputParts: unknown field {name!r}")
+            _expect_int(value, f"{TYPE_TELEMETRY}.inputParts", name, minimum=0)
+    _expect_bool(_req(d, "estimated", TYPE_TELEMETRY), TYPE_TELEMETRY, "estimated")
+    _expect_bool(_req(d, "batch", TYPE_TELEMETRY), TYPE_TELEMETRY, "batch")
+    _expect_int_opt(d.get("costMicroUsd"), TYPE_TELEMETRY, "costMicroUsd", minimum=0)
+    _expect_str(_req(d, "recordedAt", TYPE_TELEMETRY), TYPE_TELEMETRY, "recordedAt")
+    if d.get("note") is not None:
+        _expect_str(d["note"], TYPE_TELEMETRY, "note")
+    _check_unknown(
+        d,
+        (
+            "subject", "subjectKind", "tokens", "modelId", "provider",
+            "latencyMs", "inputParts", "estimated", "batch", "costMicroUsd",
+            "recordedAt", "note",
+        ),
+        TYPE_TELEMETRY,
+    )
+
+
 _VALIDATORS = {
     TYPE_QUESTION: validate_question,
     TYPE_EVIDENCE_LEDGER: validate_evidence_ledger,
@@ -653,6 +700,7 @@ _VALIDATORS = {
     TYPE_CERTIFICATE: validate_certificate,
     TYPE_SIGNATURE: validate_signature,
     TYPE_SIGNED_TREE_HEAD: validate_signed_tree_head,
+    TYPE_TELEMETRY: validate_telemetry,
 }
 
 
@@ -943,6 +991,7 @@ def make_turn(
     model_id: str, output: Cid, citations, temperature_micro: int = 1000000,
     top_p_micro: int = 1000000, max_output_tokens: int = 4096, seed: int | None = None,
     tokens: dict | None = None, cost_micro_usd: int | None = None,
+    telemetry: Cid | None = None,
     struck: bool = False, struck_reason: str | None = None,
     marshall_objection: Cid | None = None, recorded_at: str | None = None,
     provider_run: bool | None = None, note: str | None = None,
@@ -969,6 +1018,8 @@ def make_turn(
         turn["tokens"] = tokens
     if cost_micro_usd is not None:
         turn["costMicroUsd"] = cost_micro_usd
+    if telemetry is not None:
+        turn["telemetry"] = telemetry
     if provider_run is not None:
         turn["providerRun"] = provider_run
     if note is not None:
@@ -1184,3 +1235,33 @@ def make_signed_tree_head(*, log_id: str, tree_size: int, root_hash: bytes, publ
         signed_tree_head["note"] = note
     validate_artifact(signed_tree_head)
     return signed_tree_head
+
+
+def make_telemetry(
+    *, subject: Cid, subject_kind: str, tokens: dict, model_id: str, provider: str,
+    latency_ms: int, estimated: bool = False, batch: bool = False,
+    input_parts: dict | None = None,
+    cost_micro_usd: int | None = None, recorded_at: str | None = None,
+    note: str | None = None,
+) -> dict:
+    telemetry = {
+        "type": TYPE_TELEMETRY,
+        "codecVersion": CODEC_VERSION,
+        "subject": subject,
+        "subjectKind": subject_kind,
+        "tokens": dict(tokens),
+        "modelId": model_id,
+        "provider": provider,
+        "latencyMs": latency_ms,
+        "estimated": estimated,
+        "batch": batch,
+        "recordedAt": recorded_at or utc_now(),
+    }
+    if input_parts is not None:
+        telemetry["inputParts"] = dict(input_parts)
+    if cost_micro_usd is not None:
+        telemetry["costMicroUsd"] = cost_micro_usd
+    if note is not None:
+        telemetry["note"] = note
+    validate_artifact(telemetry)
+    return telemetry

@@ -5,6 +5,8 @@
 defaults:
   fallback_slot: balanced
   key_source: environment
+  # M4 model cascade: distill/consensus/tally land on the cheap mechanical tier.
+  mechanical_slot: fast
 
 slots:
   fast:
@@ -19,6 +21,31 @@ slots:
   verifier:
     provider: provider-delta
     model_family: verification-reasoning
+
+# M4 cost model: integer micro-USD per million tokens per model_family.
+# The estimator matches these families exactly, then falls back to builtin
+# rate classes by substring. Values below mirror public list prices.
+pricing:
+  fast-general:
+    input_usd_per_mtok_micro: 80
+    output_usd_per_mtok_micro: 400
+    cache_read_usd_per_mtok_micro: 8
+    cache_write_usd_per_mtok_micro: 100
+  balanced-reasoning:
+    input_usd_per_mtok_micro: 3000
+    output_usd_per_mtok_micro: 15000
+    cache_read_usd_per_mtok_micro: 300
+    cache_write_usd_per_mtok_micro: 3750
+  deep-reasoning:
+    input_usd_per_mtok_micro: 15000
+    output_usd_per_mtok_micro: 75000
+    cache_read_usd_per_mtok_micro: 1500
+    cache_write_usd_per_mtok_micro: 18750
+  verification-reasoning:
+    input_usd_per_mtok_micro: 15000
+    output_usd_per_mtok_micro: 75000
+    cache_read_usd_per_mtok_micro: 1500
+    cache_write_usd_per_mtok_micro: 18750
 
 seat_slots:
   # Spread polarity partners across providers/model families where possible.

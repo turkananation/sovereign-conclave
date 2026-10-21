@@ -47,6 +47,70 @@ ISO format.
   - Deviation from the roadmap: the M2 backend is OpenSSL via
     `cryptography>=45` instead of the planned `pqcrypto` vendor library —
     all bytes are standard FIPS 204 ML-DSA-65.
+- **M4 — token architecture: cached prompts, cascade, distillation, committees,
+  telemetry, cost model.** Provider deliberations are restructured per the
+  roadmap's five compounding cost axes:
+  - Prompt architecture: every call is assembled as byte-exact
+    `[static prefix]` (standing protocol + frozen ledger + convened roster,
+    identical across the whole run) + `[dynamic middle]` (distilled round
+    record, identical within a round) + `[persona suffix]` (per seat). The
+    Anthropic adapter sends two cache breakpoints (end of static system block,
+    end of dynamic block); both clients expose `complete_parts` and return
+    provider-reported usage when available.
+  - Structured distillation: after every deliberation round a mechanical-tier
+    call distills the round's verbatim positions into a `Summary` artifact
+    (positions with `[E#]` citations, open disagreements, distilledFrom bound
+    to that round's turn CIDs, distiller model and word count). Subsequent
+    rounds, the Justice checks, verification, and synthesis consume only the
+    distilled record. Distillation failures degrade honestly: the round falls
+    back to verbatim positions with a `noDistillationReason` on the Round
+    artifact — fidelity never degrades silently. `Summary.fidelityObjections`
+    is a validated field for the documented spot-audit protocol
+    (`demos/benchmarks/README.md`).
+  - Model cascade: provider configs gain `mechanical_slot` (defaults section)
+    for distill/consensus/tally routing and a `pricing:` section of integer
+    micro-USD-per-million-token rates per model family.
+  - Sparse topology: panels larger than twice the committee size run challenge
+    rounds through deterministic committee delegates and cross-committee
+    attackers (first seat per committee delegates; `chunk[1]` attacks); silent
+    seats keep their Round 0 record and vote on the distilled record. Round
+    plans truncate to the requested budget.
+  - Consensus gating: a mechanical consensus scorer runs while later rounds
+    remain; score ≥ threshold with no active dissent ends deliberation early
+    and the skip is recorded.
+  - Telemetry: new `Telemetry` artifact type, one per provider call — tokens
+    (in/out/cache-read/cache-write), provider-reported vs character-estimated
+    flag, batch flag, latency, model family/provider, the char split of the
+    cached prompt parts, and subject links (`turn` for seat calls, `summary`
+    for distillation, `round` for consensus scoring and the synthesizer).
+    `Turn` gains an optional `telemetry` link (unused in emit order to avoid
+    content-address cycles).
+  - Bundle emission: one Round artifact per transcript round index chained by
+    `prev` (rounds contiguous across early exit), per-round
+    `DOMAIN_ROUND_ATTESTATION` signatures, per-round Summary artifacts, and a
+    rounds supersede manifest. Prompt/output bytes of every seat call remain
+    resolvable as `<cid>.raw`.
+  - Cost model: `scripts/cost_estimator.py` prices bundles or transcripts
+    three ways (optimized / uncached-cascade / single-family
+    no-cache-no-cascade baseline) with exact floor-division integer
+    micro-USD math, builtin rate classes (haiku/sonnet/opus/local) plus exact
+    per-family overrides from the provider config, batch discount, and the
+    M4 exit-criterion flag. `demos/benchmarks/` ships the ten live-run seeds,
+    a deterministic sample transcript (CI estimator smoke), and the operator
+    measurement + fidelity spot-audit procedure. CI verifies a scaffold
+    bundle end to end and prices the sample transcript.
+  - Runner CLI gains `--rounds`, `--consensus-threshold`, `--committee-size`,
+    and `--batch`. The default single-round provider flow adds one mechanical
+    distiller call (risk profile: 8 → 9 provider calls).
+  - Roadmap deviations (documented): telemetry stores raw token counts
+    (cache read/write split) rather than a precomputed cache-hit-ratio
+    snapshot — ratios are derived downstream in the estimator; the ≤30%
+    exit measurement itself needs provider credits, so the in-repo
+    deliverable is the estimator + seeds + procedure (no synthetic "measured"
+    numbers); memoization covers hash-triple + registry scanning only (full
+    replay-adaptation lands with M5/M6 appeal flows); multi-persona packing
+    is deferred (the roadmap marks it "sparingly") and `--batch` marks
+    whole-run batch eligibility instead.
 - `opencode` install target: `./install.sh --target opencode` installs the
   skill into `~/.config/opencode/skills/conclave/`, the global skill discovery
   location for OpenCode, with matching uninstall support and `--opencode-dir`

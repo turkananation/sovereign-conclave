@@ -1,0 +1,74 @@
+{
+  "description": "Deterministic M4-shaped sample transcript for CI smoke of scripts/cost_estimator.py (partly character-estimated usage; no provider keys required). Real operator transcripts come from bin/conclave --provider-run runs captured with --out-dir.",
+  "stream": "sample",
+  "calls": [
+    {
+      "seat": "conclave-feynman", "role": "round", "round": 0, "roundKind": "opening",
+      "slot": "balanced", "provider": "anthropic", "model_family": "balanced-reasoning",
+      "prompt_chars": 24000, "prompt_parts": {"static": 20000, "dynamic": 0, "suffix": 4000},
+      "batch": false, "ok": true,
+      "prompt": "(assembled static prefix + persona suffix)",
+      "response": "Position A ~1600 chars.",
+      "usage": {"inputTokens": 6000, "outputTokens": 400, "cacheReadTokens": 0, "cacheWriteTokens": 5000},
+      "usageEstimated": false
+    },
+    {
+      "seat": "conclave-zhukov", "role": "round", "round": 0, "roundKind": "opening",
+      "slot": "balanced", "provider": "anthropic", "model_family": "balanced-reasoning",
+      "prompt_chars": 24000, "prompt_parts": {"static": 20000, "dynamic": 0, "suffix": 4000},
+      "batch": false, "ok": true,
+      "prompt": "(assembled static prefix + persona suffix)",
+      "response": "Position B ~1600 chars.",
+      "usage": {"inputTokens": 6000, "outputTokens": 400, "cacheReadTokens": 5000, "cacheWriteTokens": 0},
+      "usageEstimated": false
+    },
+    {
+      "seat": "mechanical", "role": "distill", "round": 0, "roundKind": "mechanical:distill",
+      "slot": "fast", "provider": "provider-alpha", "model_family": "fast-general",
+      "prompt_chars": 3000, "prompt_parts": {"static": 2000, "dynamic": 0, "suffix": 1000},
+      "batch": true, "ok": true,
+      "prompt": "(static prefix + distill instruction + positions)",
+      "response": "{\"summaryText\": \"Split on pacing\", \"positions\": [{\"seatId\": \"conclave-feynman\", \"stance\": \"Split with flag\", \"citations\": [\"E1\"]}], \"openDisagreements\": []}",
+      "usageEstimated": true
+    },
+    {
+      "seat": "mechanical", "role": "consensus", "round": 0, "roundKind": "mechanical:consensus",
+      "slot": "fast", "provider": "provider-alpha", "model_family": "fast-general",
+      "prompt_chars": 3600, "prompt_parts": {"static": 2000, "dynamic": 400, "suffix": 1200},
+      "batch": false, "ok": true,
+      "prompt": "(static prefix + distilled record + consensus instruction)",
+      "response": "{\"consensusScore\": 71, \"activeDissent\": [\"conclave-zhukov\"]}",
+      "usageEstimated": true
+    },
+    {
+      "seat": "conclave-feynman", "role": "round", "round": 1, "roundKind": "challenge",
+      "slot": "balanced", "provider": "anthropic", "model_family": "balanced-reasoning",
+      "prompt_chars": 20400, "prompt_parts": {"static": 20000, "dynamic": 400, "suffix": 0},
+      "batch": false, "ok": true,
+      "prompt": "(static prefix + distilled record + challenge suffix)",
+      "response": "Amended position ~1200 chars.",
+      "usage": {"inputTokens": 5100, "outputTokens": 300, "cacheReadTokens": 5000, "cacheWriteTokens": 0},
+      "usageEstimated": false
+    },
+    {
+      "seat": "conclave-marshall", "role": "verification", "round": 1, "roundKind": "challenge",
+      "slot": "verifier", "provider": "provider-delta", "model_family": "verification-reasoning",
+      "prompt_chars": 20400, "prompt_parts": {"static": 20000, "dynamic": 400, "suffix": 0},
+      "batch": false, "ok": true,
+      "prompt": "(static prefix + distilled record + verification suffix)",
+      "response": "Verification ~900 chars.",
+      "usage": {"inputTokens": 5100, "outputTokens": 220, "cacheReadTokens": 5000, "cacheWriteTokens": 0},
+      "usageEstimated": false
+    },
+    {
+      "seat": "synthesizer", "role": "synthesis", "round": 1, "roundKind": "challenge",
+      "slot": "verifier", "provider": "provider-delta", "model_family": "verification-reasoning",
+      "prompt_chars": 20800, "prompt_parts": {"static": 20000, "dynamic": 400, "suffix": 400},
+      "batch": false, "ok": true,
+      "prompt": "(static prefix + distilled record + synthesis suffix)",
+      "response": "Synthesis ~1400 chars.",
+      "usage": {"inputTokens": 5300, "outputTokens": 350, "cacheReadTokens": 5100, "cacheWriteTokens": 0},
+      "usageEstimated": false
+    }
+  ]
+}
