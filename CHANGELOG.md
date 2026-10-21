@@ -7,6 +7,18 @@ ISO format.
 
 ## [Unreleased]
 
+### Added
+
+- `opencode` install target: `./install.sh --target opencode` installs the
+  skill into `~/.config/opencode/skills/conclave/`, the global skill discovery
+  location for OpenCode, with matching uninstall support and `--opencode-dir`
+  override. OpenCode is now listed across the README and all agent manuals
+  (`AGENT.md`, `CLAUDE.md`, `GEMINI.md`, `CODEX.md`, `OPENCODE.md`).
+- `OPENCODE.md` — OpenCode-specific operating manual aligned with the other
+  agent manuals, including V2 skill discovery, ID, and loading semantics.
+- CI now verifies the OpenCode install and uninstall dry runs, and
+  `validate_repo.py` requires the `OPENCODE.md` manual to stay present.
+
 ## [0.1.0] - 2026-06-01
 
 ### Added

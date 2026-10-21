@@ -16,7 +16,7 @@ What should have happened?
 
 ## Environment
 
-- Tool target: Claude Code / Codex / Antigravity / other
+- Tool target: Claude Code / Codex / Antigravity / OpenCode / other
 - OS:
 - Install command:
 

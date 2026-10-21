@@ -8,7 +8,7 @@ It is built for decisions where a fluent single answer is not enough: architectu
 
 ## What It Is
 
-Sovereign Conclave is a portable skill package for Claude Code, Codex, and Antigravity.
+Sovereign Conclave is a portable skill package for Claude Code, Codex, Antigravity, and OpenCode.
 
 At its core, it gives an assistant a repeatable protocol:
 
@@ -26,7 +26,7 @@ The project currently includes:
 - 24 convening profiles across domains: code, strategy, geopolitics, space, cryptography, economics, leadership, war-gaming, and more.
 - 22 polarity pairs.
 - Structural Justice checks for evidence, rights, access, values, and dignity.
-- A multi-target installer for Claude Code, Codex, and Antigravity.
+- A multi-target installer for Claude Code, Codex, Antigravity, and OpenCode.
 - A machine-readable roster/profile config.
 - A local verdict-scaffold runner.
 - CI and repository validation scripts.
@@ -124,8 +124,8 @@ git checkout 0.1.0
 ./install.sh --target codex
 ```
 
-Use `./install.sh`, `./install.sh --target claude`, or
-`./install.sh --target antigravity` for the other supported tools.
+Use `./install.sh`, `./install.sh --target claude`, `./install.sh --target antigravity`,
+or `./install.sh --target opencode` for the other supported tools.
 Restart the target tool after installation.
 
 Validate the checkout:
@@ -142,6 +142,7 @@ Install from an existing checkout:
 ./install.sh                          # Claude Code, default target
 ./install.sh --target codex           # Codex
 ./install.sh --target antigravity     # Antigravity
+./install.sh --target opencode        # OpenCode
 ./install.sh --target all --dry-run   # preview every target
 ./install.sh --uninstall --target all # remove from every target
 ```

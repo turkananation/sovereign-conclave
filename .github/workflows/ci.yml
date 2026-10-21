@@ -20,7 +20,7 @@ jobs:
         run: python -m pip install --upgrade jsonschema
 
       - name: Byte-compile Python
-        run: python -m py_compile scripts/*.py tests/*.py
+        run: python -m py_compile scripts/*.py tests/*.py conclave_core/*.py
 
       - name: Validate shell scripts
         run: bash -n install.sh
@@ -38,6 +38,8 @@ jobs:
         run: |
           ./install.sh --target all --dry-run
           ./install.sh --uninstall --target all --dry-run
+          ./install.sh --target opencode --dry-run
+          ./install.sh --uninstall --target opencode --dry-run
 
       - name: Smoke test local runner
         run: |

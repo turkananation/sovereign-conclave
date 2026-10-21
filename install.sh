@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
-# Sovereign Conclave installer for Claude Code, Codex, and Antigravity.
+# Sovereign Conclave installer for Claude Code, Codex, Antigravity, and OpenCode.
 # Independent project. Design-inspired by the public-domain "conclave" pattern; shares no code with it.
 set -euo pipefail
 
 CLAUDE_DIR="${HOME}/.claude"
 CODEX_DIR="${HOME}/.codex"
 ANTIGRAVITY_DIR="${HOME}/.gemini/antigravity"
+OPENCODE_DIR="${HOME}/.config/opencode"
 DRY_RUN=0
 MODE="install"
 TARGETS=("claude")
@@ -15,11 +16,12 @@ usage() {
 Usage: ./install.sh [options]
 
 Options:
-  --target NAME[,NAME]       Install target(s): claude, codex, antigravity, all
-                             (default: claude)
+  --target NAME[,NAME]       Install target(s): claude, codex, antigravity,
+                             opencode, all (default: claude)
   --claude-dir PATH          Claude config dir (default: ~/.claude)
   --codex-dir PATH           Codex config dir (default: ~/.codex)
   --antigravity-dir PATH     Antigravity config dir (default: ~/.gemini/antigravity)
+  --opencode-dir PATH        OpenCode config dir (default: ~/.config/opencode)
   --dry-run                  Print actions without touching the filesystem
   --uninstall                Remove installed skill + conclave agents for the target(s)
   -h, --help                 Show this help
@@ -28,6 +30,7 @@ Examples:
   ./install.sh
   ./install.sh --target codex
   ./install.sh --target antigravity
+  ./install.sh --target opencode
   ./install.sh --target all --dry-run
   ./install.sh --uninstall --target all
 EOF
@@ -38,14 +41,14 @@ parse_targets() {
   TARGETS=()
 
   if [[ "${raw}" == "all" ]]; then
-    TARGETS=("claude" "codex" "antigravity")
+    TARGETS=("claude" "codex" "antigravity" "opencode")
     return
   fi
 
   IFS=',' read -r -a TARGETS <<<"${raw}"
   for target in "${TARGETS[@]}"; do
     case "${target}" in
-      claude|codex|antigravity) ;;
+      claude|codex|antigravity|opencode) ;;
       *)
         echo "Unknown target: ${target}" >&2
         usage
@@ -61,6 +64,7 @@ while [[ $# -gt 0 ]]; do
     --claude-dir)       CLAUDE_DIR="$2"; shift 2 ;;
     --codex-dir)        CODEX_DIR="$2"; shift 2 ;;
     --antigravity-dir)  ANTIGRAVITY_DIR="$2"; shift 2 ;;
+    --opencode-dir)     OPENCODE_DIR="$2"; shift 2 ;;
     --dry-run)          DRY_RUN=1; shift ;;
     --uninstall)        MODE="uninstall"; shift ;;
     -h|--help)          usage; exit 0 ;;
@@ -141,6 +145,14 @@ install_antigravity() {
   copy_agents_into "${skill_dst}/agents"
 }
 
+install_opencode() {
+  local skill_dst="${OPENCODE_DIR}/skills/conclave"
+
+  echo "Installing Sovereign Conclave for OpenCode into ${skill_dst}"
+  copy_common_skill_files "${skill_dst}"
+  copy_agents_into "${skill_dst}/agents"
+}
+
 uninstall_claude() {
   echo "Removing Sovereign Conclave for Claude Code from ${CLAUDE_DIR}"
   remove_agents_from "${CLAUDE_DIR}/agents"
@@ -157,14 +169,21 @@ uninstall_antigravity() {
   run rm -rf "${ANTIGRAVITY_DIR}/skills/conclave"
 }
 
+uninstall_opencode() {
+  echo "Removing Sovereign Conclave for OpenCode from ${OPENCODE_DIR}/skills/conclave"
+  run rm -rf "${OPENCODE_DIR}/skills/conclave"
+}
+
 for target in "${TARGETS[@]}"; do
   case "${MODE}.${target}" in
     install.claude) install_claude ;;
     install.codex) install_codex ;;
     install.antigravity) install_antigravity ;;
+    install.opencode) install_opencode ;;
     uninstall.claude) uninstall_claude ;;
     uninstall.codex) uninstall_codex ;;
     uninstall.antigravity) uninstall_antigravity ;;
+    uninstall.opencode) uninstall_opencode ;;
   esac
 done
 

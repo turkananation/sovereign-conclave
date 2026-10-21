@@ -14,8 +14,8 @@ git checkout 0.1.0
 ./install.sh --target codex
 ```
 
-Use `./install.sh`, `./install.sh --target claude`, or
-`./install.sh --target antigravity` for the other supported tools.
+Use `./install.sh`, `./install.sh --target claude`, `./install.sh --target
+antigravity`, or `./install.sh --target opencode` for the other supported tools.
 Restart the target tool after installing.
 
 ## 2. Validate the checkout
@@ -45,6 +45,7 @@ Other targets:
 ```bash
 ./install.sh --target codex
 ./install.sh --target antigravity
+./install.sh --target opencode
 ```
 
 Restart the target tool after installing. To remove it again:

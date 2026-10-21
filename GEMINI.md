@@ -6,7 +6,7 @@ Authoritative guide for any Gemini-based AI assistant or Antigravity runtime wor
 
 ## What This Repository Is
 
-**Sovereign Conclave** is a portable, evidence-grounded deliberation skill package for Claude Code, Codex, and Antigravity. It is not a chatbot, not a coding assistant, and not a reasoning shortcut. It is a **structured protocol** for hard decisions where a fluent single answer is untrustworthy.
+**Sovereign Conclave** is a portable, evidence-grounded deliberation skill package for Claude Code, Codex, Antigravity, and OpenCode. It is not a chatbot, not a coding assistant, and not a reasoning shortcut. It is a **structured protocol** for hard decisions where a fluent single answer is untrustworthy.
 
 The core idea: convene a small quorum of deliberately opposed personas ("seats"), force every factual claim back to a frozen Evidence Ledger, preserve genuine dissent, and write a decision record that advises a human without authorizing action.
 
@@ -149,6 +149,7 @@ The runner is **deterministic and offline by default**. It does not call any mod
 
 ```bash
 ./install.sh --target antigravity     # Antigravity (Gemini environment)
+./install.sh --target opencode        # OpenCode
 ./install.sh --target all --dry-run   # Preview without writing
 ./install.sh --uninstall --target antigravity # Remove from Antigravity target
 ```

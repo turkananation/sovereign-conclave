@@ -2,7 +2,7 @@
 
 Authoritative guide for any AI agent working inside this repository. Read this before touching any file.
 
-This file is the generic, agent-facing counterpart to the platform-specific operating manuals (`CLAUDE.md`, `GEMINI.md`, and `CODEX.md`). If protocol, workflow, roster, or validation rules change, keep all files aligned.
+This file is the generic, agent-facing counterpart to the platform-specific operating manuals (`CLAUDE.md`, `GEMINI.md`, `CODEX.md`, and `OPENCODE.md`). If protocol, workflow, roster, or validation rules change, keep all files aligned.
 
 # sovereign-conclave / workflow
 
@@ -11,7 +11,7 @@ This file is the generic, agent-facing counterpart to the platform-specific oper
 
 ## What This Repository Is
 
-**Sovereign Conclave** is a portable, evidence-grounded deliberation skill package for Claude Code, Codex, Copilot-style agents, and other agent runtimes. It is not a chatbot, not a coding assistant persona, and not a reasoning shortcut. It is a **structured protocol** for hard decisions where a fluent single answer is untrustworthy.
+**Sovereign Conclave** is a portable, evidence-grounded deliberation skill package for Claude Code, Codex, Antigravity, OpenCode, Copilot-style agents, and other agent runtimes. It is not a chatbot, not a coding assistant persona, and not a reasoning shortcut. It is a **structured protocol** for hard decisions where a fluent single answer is untrustworthy.
 
 The core idea: convene a small quorum of deliberately opposed personas ("seats"), force every factual claim back to a frozen Evidence Ledger, preserve genuine dissent, and write a decision record that advises a human without authorizing action.
 
@@ -33,6 +33,7 @@ AGENT.md                         # Generic agent-facing operating manual for thi
 CLAUDE.md                        # Claude-specific operating manual; keep aligned with AGENT.md
 GEMINI.md                        # Gemini/Antigravity-specific operating manual; keep aligned with AGENT.md
 CODEX.md                         # Codex-specific operating manual; keep aligned with AGENT.md
+OPENCODE.md                      # OpenCode-specific operating manual; keep aligned with AGENT.md
 SKILL.md                         # /conclave protocol - assistant-facing command definition
 directives.md                    # Standing rules D-1 through D-6 - enforced by Marshall
 roster.md                        # GENERATED - do not edit by hand; regenerate via generate_roster.py
@@ -168,6 +169,7 @@ The runner is deterministic and offline by default. It does not call any model p
 ./install.sh
 ./install.sh --target codex
 ./install.sh --target antigravity
+./install.sh --target opencode
 ./install.sh --target all --dry-run
 ./install.sh --uninstall --target all
 ```
@@ -450,7 +452,7 @@ Common failure modes in this repository:
 4. Read `docs/CONCEPTS.md` and `docs/GOOD_VS_BAD_VERDICTS.md` to calibrate quality.
 5. Inspect `configs/conclave-roster.json` before touching `roster.md`.
 6. Use `scripts/validate_repo.py` and the full validation stack to confirm changes.
-7. Keep `AGENT.md`, `CLAUDE.md`, `GEMINI.md`, and `CODEX.md` aligned when the repo's operating rules change.
+7. Keep `AGENT.md`, `CLAUDE.md`, `GEMINI.md`, `CODEX.md`, and `OPENCODE.md` aligned when the repo's operating rules change.
 
 ## Bottom Line
 
