@@ -74,6 +74,9 @@ DOMAIN_APPEAL_SCREENING = "appeal-screening"
 DOMAIN_APPEAL_VERDICT = "appeal-verdict"
 DOMAIN_ARBITER_RULING = "arbiter-ruling"
 
+# The transparency log's stable network identifier (STH artifacts carry it).
+LOG_ID = "conclave-log"
+
 
 def context_for(domain: str) -> bytes:
     """FIPS 204 context string binding a signature to its purpose."""

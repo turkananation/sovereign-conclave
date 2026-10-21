@@ -25,6 +25,10 @@ from evidence_ledger import (
 
 
 ROOT = Path(__file__).resolve().parents[1]
+# every command path (provider mode, appeals, artifact emission) imports
+# conclave_core; bootstrap the repo root once at module scope
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 CONFIG_PATH = ROOT / "configs" / "conclave-roster.json"
 
 

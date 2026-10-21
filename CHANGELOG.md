@@ -184,6 +184,90 @@ ISO format.
     (re-convening the case on a reversed/remanded verdict) lands with the M6
     server; provider-credit measurement of the exit criteria remains
     operator-side.
+- **M6 — `conclave_server`: the live protocol host with persistence,
+  streaming, and budgets.** The orchestrator becomes a real server: cases
+  run as a durable FSM over an append-only artifact store, progress streams
+  to watchers, and every deliverable re-materializes into a fully
+  verifiable case bundle.
+  - `conclave_server/store` — the artifact store: an append-only `artifacts`
+    table (cid PK, canonical dag-cbor bytes, type tag, created_at — never
+    updated, never deleted; duplicates rejected by content address) plus
+    rebuildable relational projections, the case-scoped transparency log
+    (`log_entries` + `signed_tree_heads` with RFC 6962 consistency and
+    inclusion proofs), server-private payloads (`<cid>.raw` prompt/output
+    bytes that never join the DAG), and durable session rows (FSM position +
+    state + token spend) are the only mutable records.
+  - `conclave_server/sessions` — the session hub: in-memory FSM positions,
+    per-session token-budget counters, a five-rung degradation ladder, and
+    pub/sub fan-out (`events`/`wait_for`) for DeliberationEvents.
+  - `conclave_server/orchestrator` — the CaseRun FSM: convene (roster +
+    personas + question + frozen ledger + trust chain), threaded round
+    plans, per-seat turn recording, mechanical distillation + consensus
+    scoring, verdict emission with signed dissents and the automatic T3
+    share appeal, everything checkpointed per step (artifacts first, then
+    the session row) so a killed process resumes from its last persisted
+    step with a clean DAG (state-deterministic replay: fixed case
+    timestamp, a per-case orchestrator signing seed persisted
+    server-privately in the session row, deterministic keys with FIPS 204
+    hedged ML-DSA signatures — signature artifacts are fresh-but-
+    equivalent per run and every other CID replays identically).
+  - Budget enforcement: a hard soft-cap token ladder applied at round
+    boundaries, never mid-quality silently: suspend batching → halve word
+    budgets (at most twice) → drop to a single consolidated round →
+    request an early verdict over the reduced record (flagged in the
+    manifest) → degrade to minimum-quorum continuation. Spend is recorded
+    per call from provider usage (character estimates when absent);
+    degradation events are published to watchers.
+  - `conclave_server/appeals` — the petition/screening bridge: materializes
+    the case's current store subset into a temp bundle, runs the M5 engine
+    gates over it (T1 requires a clean record plus a supplement
+    `EvidenceLedger` chaining to the frozen ledger; T2 attaches the
+    verifier's mechanically proven findings; the capped T3 class keeps its
+    one-per-trigger anti-abuse cap), and persists the returned artifacts
+    through the store: ingest, identity-key petition/screening signature,
+    one logged leaf per lifecycle document with STH + consistency growth,
+    and a re-tracked session row so later materializations carry the full
+    appeal history.
+  - `conclave_server/http` — the endpoint layer (stdlib `http.server`,
+    Serverpod-shaped contract): `POST /convene` (returns caseRef + session
+    token), `GET /watch` (SSE stream of DeliberationEvents with `after=`
+    resumption, keepalives, and terminal-aware close), `GET /verdict`,
+    `POST /petition`, `POST /screening` (the three writes behind the
+    `X-Conclave-Token` session header), plus civic-public verification:
+    `GET /artifact/<cid>` serves the canonical CBOR bytes, `GET /prove/<cid>`
+    serves RFC 6962 inclusion proofs (with an automatic single-case
+    resolution and a 409 listing when a leaf is shared across cases), and
+    `GET /latestSTH` serves the newest signed tree head. Case-existence
+    checks on `/watch` are sent before the stream headers so watchers get a
+    real 404.
+  - `conclave_server/materialize` — rebuilds a verifier bundle directly
+    from store rows (bundle.json, manifest chain, signatures, and the log
+    section with per-growth STHs, consistency proofs, and per-leaf
+    inclusion proofs); the emitted bundle verifies clean with the M2
+    offline verifier, including for killed-and-resumed and post-appeal
+    cases.
+  - `tests/test_server_http.py` exercises the roadmap exit criteria over a
+    real bound server: two concurrent live deliberations streamed over SSE
+    to independent watchers, the public verify endpoints round-tripped
+    against `verify_inclusion`, token-auth negatives, petition + admitted
+    screening growing the case log, and post-appeal bundles verifying
+    clean.
+  - Roadmap deviations (documented): stdlib SQLite substitutes Postgres
+    (same table contract and invariants; same SQL surface moves unchanged
+    to Postgres under M9+ if adopted); an in-process locked hub substitutes
+    Redis/Memorystore (same pub/sub + counter interface, swappable as one
+    module); SSE substitutes WebSocket for `watch` (one-way event flow,
+    curl-compatible, `EventSource`-compatible on the client); the verdict
+    phase is mechanical (advice = standing envelope over the final
+    distilled summary, else standing advice; D-4 text) with provider
+    synthesis joining under M7 provider adapters; the token budget is
+    enforced as a soft cap (degradation order per the ladder, "hard" only
+    in the sense that it never silently reduces quality — every rung is
+    published); transparency logs are case-scoped (one Merkle log per
+    conclave) rather than one global append stream, matching the per-case
+    bundle contract; and without a provider adapter configured the server
+    answers with the deterministic standing voice so the full flow runs
+    offline (the same adapter interface M7 will wire to providers).
 
 ## [0.1.0] - 2026-06-01
 

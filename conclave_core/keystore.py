@@ -20,6 +20,7 @@ and out of any eventual cloud sync.
 from __future__ import annotations
 
 import os
+import threading
 from pathlib import Path
 
 from .mldsa import SEED_SIZE
@@ -31,27 +32,40 @@ REGISTRY_SEED_FILE = "registry.seed"
 
 
 def load_or_create_seed(path: Path) -> bytes:
-    """Read an existing ML-DSA seed, or mint one with ``os.urandom``."""
+    """Read an existing ML-DSA seed, or mint one with ``os.urandom``.
+
+    Race-safe for concurrent first creation: whoever's staging file loses
+    the O_EXCL race re-reads the winning file, so every concurrent caller
+    ends up holding the same seed bytes.
+    """
 
     path = path.expanduser()
     if path.exists():
-        seed = path.read_bytes()
-        if len(seed) != SEED_SIZE:
-            raise RuntimeError(
-                f"{path}: expected a {SEED_SIZE}-byte seed, found {len(seed)} bytes"
-            )
-        return seed
+        return _read_seed(path)
     path.parent.mkdir(parents=True, exist_ok=True)
-    seed = os.urandom(SEED_SIZE)
-    staging = path.with_name(path.name + ".creating")
-    descriptor = os.open(
-        staging, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_TRUNC, 0o600
-    )
-    try:
-        os.write(descriptor, seed)
-    finally:
-        os.close(descriptor)
-    os.replace(staging, path)
+    while not path.exists():
+        seed = os.urandom(SEED_SIZE)
+        # staging names are unique to this writer so concurrent first
+        # creation never collides; the final os.replace decides the winner
+        staging = path.with_name(f"{path.name}.{os.getpid()}.{threading.get_ident()}.creating")
+        descriptor = os.open(
+            staging, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_TRUNC, 0o600
+        )
+        try:
+            os.write(descriptor, seed)
+            os.fsync(descriptor)
+        finally:
+            os.close(descriptor)
+        os.replace(staging, path)
+    return _read_seed(path)
+
+
+def _read_seed(path: Path) -> bytes:
+    seed = path.read_bytes()
+    if len(seed) != SEED_SIZE:
+        raise RuntimeError(
+            f"{path}: expected a {SEED_SIZE}-byte seed, found {len(seed)} bytes"
+        )
     return seed
 
 

@@ -50,7 +50,6 @@ from conclave_core.artifacts import (
     make_evidence_ledger,
     make_manifest,
     make_panel,
-    make_persona,
     make_protocol_params,
     make_question,
     make_round,
@@ -61,6 +60,8 @@ from conclave_core.artifacts import (
     raw_cid,
 )
 from conclave_core.appeals import DEFAULT_WEIGHT_SHARE_MICRO, weight_share_micro
+from conclave_core.ledger import artifact_entries_from_draft
+from conclave_core.roster import persona_for_seat
 from conclave_core.mldsa import public_fingerprint, public_key_bytes
 from conclave_core.merkle import consistency_proof, path, tree_hash
 from conclave_core.cid import Cid, parse
@@ -79,7 +80,7 @@ from conclave_core.signing import (
 from provider_runner import parse_consensus, parse_distillation
 
 BUNDLE_VERSION = 1
-LOG_ID = "conclave-log"
+from conclave_core.signing import LOG_ID  # single source of truth (also used by the server)
 
 __all__ = [
     "BUNDLE_VERSION",
@@ -107,52 +108,13 @@ class CaseSeed:
 
 
 def _persona_artifact(seat: dict[str, Any], roster_version: str, case: CaseSeed) -> dict:
-    role = seat.get("type", "advocate")
-    lens = str(seat.get("lens", "")).strip()
-    persona = make_persona(
-        seat_id=seat["id"],
-        display_name=str(seat.get("display_name") or seat["id"]),
-        tier=str(seat.get("tier", "General")),
-        lens=lens or f"{role} lens",
-        stance=f"Convenes as a {role} seat. Argues the {lens or 'prescribed'} lens.",
-        how_you_argue=(
-            [
-                "Applies the roster lens for this seat.",
-                "Attacks the strongest opposing claim; concedes when the ledger disagrees.",
-            ]
-            if role == "advocate"
-            else ["Structural checks only.", "States a bound, not an option preference."]
-        ),
-        characteristic_bias="Full persona prose lives in the roster document (sourceDigest).",
-        is_not=["Not any other seat."],
-        model=str(seat.get("model", "local")),
-        version=roster_version,
+    return persona_for_seat(
+        seat, roster_version, agent_markdown=case.agent_markdown, root=ROOT
     )
-    markdown_path = (case.agent_markdown or {}).get(seat["id"])
-    if markdown_path is None:
-        from_path = ROOT / seat.get("path", "")
-        markdown_path = from_path if from_path.is_file() else None
-    if markdown_path is not None:
-        persona["sourceDigest"] = raw_cid(markdown_path.read_bytes())
-    return persona
 
 
 def _ledger_artifact_entries(case: CaseSeed) -> list[dict[str, Any]]:
-    entries = []
-    for entry in case.ledger_entries:
-        artifact_entry: dict[str, Any] = {
-            "id": str(entry["id"]),
-            "item": str(entry.get("item", "")),
-            "provenance": {
-                "source": str(entry.get("source", "")),
-                "kind": str(entry.get("source_type", "imported")),
-            },
-            "handling": str(entry.get("handling", "")),
-        }
-        if entry.get("sensitivity"):
-            artifact_entry["sensitivity"] = str(entry["sensitivity"])
-        entries.append(artifact_entry)
-    return entries
+    return artifact_entries_from_draft(case.ledger_entries)
 
 
 def _externals_for(record: dict) -> tuple[bytes, bytes]:
