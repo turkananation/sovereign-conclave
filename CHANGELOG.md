@@ -9,6 +9,35 @@ ISO format.
 
 ### Added
 
+- **M2 — signing, certificate chain, and transparency log.** Verdicts, rounds,
+  persona manifests, and log checkpoints are now signed end to end:
+  - `conclave_core.mldsa`: ML-DSA-65 (FIPS 204) adapter over the vetted
+    OpenSSL-backed `cryptography>=45` package. No hand-rolled crypto: the
+    OpenSSL implementation does all of the cryptography. Deterministic
+    seed-based keypairs (32-byte FIPS 204 seed → 1952-byte public key,
+    3309-byte signatures) keep CI and demos reproducible.
+  - New artifact types: `Signature`, `KeyPublication`, `Certificate`,
+    `SignedTreeHead` (codecVersion 1; validators include key-fingerprint
+    self-consistency and dag-cbor payload binding).
+  - Hash-then-sign conventions in `conclave_core.signing`: signatures are
+    made over the raw binary CID of the payload artifact; FIPS 204 context
+    strings (`conclave/<domain>/v1`) provide domain separation (verdict,
+    round attestation, orchestrator certification, persona registry, log STH).
+  - `conclave_core.merkle`: RFC 6962 transparency-log primitives — leaf/interior
+    hashing, audit paths, consistency proofs — transcribed exactly (generators
+    from RFC 6962 §2.1, verifiers from RFC 9162 §2.1.3.2/§2.1.4.2), with the
+    RFC's worked seven-leaf example pinned as tests.
+  - `conclave_core.verifier`: fully offline case verifier
+    (`python3 -m conclave_core.verifier <bundle-dir>`, exit 0/1). Validates
+    artifact integrity + DAG, the signature chain (identity verdict
+    signature, per-case orchestrator certificate, round attestations,
+    persona-registry signatures, key possession proofs), and the RFC 6962
+    verification path (tree-head roots, consistency proofs, verdict
+    inclusion; logged verdicts must be identity-signed and the case verdict
+    must appear among the log leaves).
+  - Deviation from the roadmap: the M2 backend is OpenSSL via
+    `cryptography>=45` instead of the planned `pqcrypto` vendor library —
+    all bytes are standard FIPS 204 ML-DSA-65.
 - `opencode` install target: `./install.sh --target opencode` installs the
   skill into `~/.config/opencode/skills/conclave/`, the global skill discovery
   location for OpenCode, with matching uninstall support and `--opencode-dir`

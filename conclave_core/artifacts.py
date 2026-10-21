@@ -46,6 +46,7 @@ from datetime import datetime, timezone
 
 from .cbor import encode
 from .cid import Cid, MULTICODEC_DAG_CBOR, MULTICODEC_RAW
+from .mldsa import ALGORITHM, PK_SIZE, SIG_SIZE, public_fingerprint
 
 CODEC_VERSION = 1
 
@@ -60,6 +61,10 @@ TYPE_TURN = "Turn"
 TYPE_SUMMARY = "Summary"
 TYPE_VERDICT = "Verdict"
 TYPE_DISSENT = "Dissent"
+TYPE_SIGNATURE = "Signature"
+TYPE_KEY_PUBLICATION = "KeyPublication"
+TYPE_CERTIFICATE = "Certificate"
+TYPE_SIGNED_TREE_HEAD = "SignedTreeHead"
 
 ARTIFACT_TYPES = (
     TYPE_DELIBERATION_MANIFEST,
@@ -73,7 +78,13 @@ ARTIFACT_TYPES = (
     TYPE_SUMMARY,
     TYPE_VERDICT,
     TYPE_DISSENT,
+    TYPE_SIGNATURE,
+    TYPE_KEY_PUBLICATION,
+    TYPE_CERTIFICATE,
+    TYPE_SIGNED_TREE_HEAD,
 )
+
+KEY_ROLES = ("identity", "orchestrator", "persona-registry")
 
 MODELS = ("sonnet", "opus", "local", "haiku-class")
 
@@ -116,6 +127,14 @@ def _expect_str_opt(value, context: str, field: str):
 def _expect_str_items(value, context: str, field: str):
     for index, element in enumerate(value):
         _expect_str(element, f"{context}.{field}[{index}]", "text")
+
+
+def _expect_bytes(value, context: str, field: str, length: int | None = None):
+    if not isinstance(value, (bytes, bytearray)):
+        raise ArtifactError(f"{context}.{field}: expected bytes, got {type(value).__name__}")
+    if length is not None and len(value) != length:
+        raise ArtifactError(f"{context}.{field}: expected {length} bytes, got {len(value)}")
+    return bytes(value)
 
 
 def _expect_int(value, context: str, field: str, minimum=None, maximum=None):
@@ -556,6 +575,68 @@ def validate_manifest(obj: dict) -> None:
     )
 
 
+def validate_key_publication(obj: dict) -> None:
+    d = _base(obj, TYPE_KEY_PUBLICATION)
+    _expect_enum(d.get("algorithm"), TYPE_KEY_PUBLICATION, "algorithm", (ALGORITHM,))
+    _expect_enum(_req(d, "role", TYPE_KEY_PUBLICATION), TYPE_KEY_PUBLICATION, "role", KEY_ROLES)
+    _expect_str(_req(d, "keyFingerprint", TYPE_KEY_PUBLICATION), TYPE_KEY_PUBLICATION, "keyFingerprint")
+    public_key = _expect_bytes(
+        _req(d, "publicKey", TYPE_KEY_PUBLICATION), TYPE_KEY_PUBLICATION, "publicKey", PK_SIZE
+    )
+    computed = public_fingerprint(public_key)
+    if d["keyFingerprint"] != computed:
+        raise ArtifactError(
+            f"{TYPE_KEY_PUBLICATION}: keyFingerprint {d['keyFingerprint'][:16]}… does not match "
+            f"the published public key ({computed[:16]}…)"
+        )
+    _expect_str(_req(d, "publishedAt", TYPE_KEY_PUBLICATION), TYPE_KEY_PUBLICATION, "publishedAt")
+    if d.get("note") is not None:
+        _expect_str(d["note"], TYPE_KEY_PUBLICATION, "note")
+    _check_unknown(
+        d, ("algorithm", "role", "keyFingerprint", "publicKey", "publishedAt", "note"),
+        TYPE_KEY_PUBLICATION,
+    )
+
+
+def validate_certificate(obj: dict) -> None:
+    d = _base(obj, TYPE_CERTIFICATE)
+    _expect_cid(_req(d, "subjectKey", TYPE_CERTIFICATE), TYPE_CERTIFICATE, "subjectKey")
+    _expect_cid(_req(d, "caseManifest", TYPE_CERTIFICATE), TYPE_CERTIFICATE, "caseManifest")
+    _expect_str(_req(d, "issuedAt", TYPE_CERTIFICATE), TYPE_CERTIFICATE, "issuedAt")
+    if d.get("note") is not None:
+        _expect_str(d["note"], TYPE_CERTIFICATE, "note")
+    _check_unknown(d, ("subjectKey", "caseManifest", "issuedAt", "note"), TYPE_CERTIFICATE)
+
+
+def validate_signature(obj: dict) -> None:
+    d = _base(obj, TYPE_SIGNATURE)
+    _expect_enum(d.get("algorithm"), TYPE_SIGNATURE, "algorithm", (ALGORITHM,))
+    domain = _expect_str(_req(d, "domain", TYPE_SIGNATURE), TYPE_SIGNATURE, "domain")
+    if len(domain) > 200:
+        raise ArtifactError(f"{TYPE_SIGNATURE}.domain: domain string too long")
+    _expect_str(_req(d, "keyFingerprint", TYPE_SIGNATURE), TYPE_SIGNATURE, "keyFingerprint")
+    _expect_cid(_req(d, "payload", TYPE_SIGNATURE), TYPE_SIGNATURE, "payload")
+    _expect_str(_req(d, "signedAt", TYPE_SIGNATURE), TYPE_SIGNATURE, "signedAt")
+    _expect_bytes(_req(d, "signature", TYPE_SIGNATURE), TYPE_SIGNATURE, "signature", SIG_SIZE)
+    if d.get("note") is not None:
+        _expect_str(d["note"], TYPE_SIGNATURE, "note")
+    _check_unknown(
+        d, ("algorithm", "domain", "keyFingerprint", "payload", "signedAt", "signature", "note"),
+        TYPE_SIGNATURE,
+    )
+
+
+def validate_signed_tree_head(obj: dict) -> None:
+    d = _base(obj, TYPE_SIGNED_TREE_HEAD)
+    _expect_str(_req(d, "logId", TYPE_SIGNED_TREE_HEAD), TYPE_SIGNED_TREE_HEAD, "logId")
+    _expect_int(_req(d, "treeSize", TYPE_SIGNED_TREE_HEAD), TYPE_SIGNED_TREE_HEAD, "treeSize", minimum=0)
+    _expect_bytes(_req(d, "rootHash", TYPE_SIGNED_TREE_HEAD), TYPE_SIGNED_TREE_HEAD, "rootHash", 32)
+    _expect_str(_req(d, "publishedAt", TYPE_SIGNED_TREE_HEAD), TYPE_SIGNED_TREE_HEAD, "publishedAt")
+    if d.get("note") is not None:
+        _expect_str(d["note"], TYPE_SIGNED_TREE_HEAD, "note")
+    _check_unknown(d, ("logId", "treeSize", "rootHash", "publishedAt", "note"), TYPE_SIGNED_TREE_HEAD)
+
+
 _VALIDATORS = {
     TYPE_QUESTION: validate_question,
     TYPE_EVIDENCE_LEDGER: validate_evidence_ledger,
@@ -568,6 +649,10 @@ _VALIDATORS = {
     TYPE_VERDICT: validate_verdict,
     TYPE_DISSENT: validate_dissent,
     TYPE_DELIBERATION_MANIFEST: validate_manifest,
+    TYPE_KEY_PUBLICATION: validate_key_publication,
+    TYPE_CERTIFICATE: validate_certificate,
+    TYPE_SIGNATURE: validate_signature,
+    TYPE_SIGNED_TREE_HEAD: validate_signed_tree_head,
 }
 
 
@@ -1037,3 +1122,65 @@ def make_manifest(
         manifest["note"] = note
     validate_artifact(manifest)
     return manifest
+
+
+def make_key_publication(*, role: str, public_key: bytes, published_at: str | None = None, note: str | None = None) -> dict:
+    key_publication = {
+        "type": TYPE_KEY_PUBLICATION,
+        "codecVersion": CODEC_VERSION,
+        "algorithm": ALGORITHM,
+        "role": role,
+        "keyFingerprint": public_fingerprint(public_key),
+        "publicKey": bytes(public_key),
+        "publishedAt": published_at or utc_now(),
+    }
+    if note is not None:
+        key_publication["note"] = note
+    validate_artifact(key_publication)
+    return key_publication
+
+
+def make_certificate(*, subject_key: Cid, case_manifest: Cid, issued_at: str | None = None, note: str | None = None) -> dict:
+    certificate = {
+        "type": TYPE_CERTIFICATE,
+        "codecVersion": CODEC_VERSION,
+        "subjectKey": subject_key,
+        "caseManifest": case_manifest,
+        "issuedAt": issued_at or utc_now(),
+    }
+    if note is not None:
+        certificate["note"] = note
+    validate_artifact(certificate)
+    return certificate
+
+
+def make_signature(*, domain: str, key_fingerprint: str, payload: Cid, signature: bytes, signed_at: str | None = None, note: str | None = None) -> dict:
+    signature_artifact = {
+        "type": TYPE_SIGNATURE,
+        "codecVersion": CODEC_VERSION,
+        "algorithm": ALGORITHM,
+        "domain": domain,
+        "keyFingerprint": key_fingerprint,
+        "payload": payload,
+        "signedAt": signed_at or utc_now(),
+        "signature": bytes(signature),
+    }
+    if note is not None:
+        signature_artifact["note"] = note
+    validate_artifact(signature_artifact)
+    return signature_artifact
+
+
+def make_signed_tree_head(*, log_id: str, tree_size: int, root_hash: bytes, published_at: str | None = None, note: str | None = None) -> dict:
+    signed_tree_head = {
+        "type": TYPE_SIGNED_TREE_HEAD,
+        "codecVersion": CODEC_VERSION,
+        "logId": log_id,
+        "treeSize": tree_size,
+        "rootHash": bytes(root_hash),
+        "publishedAt": published_at or utc_now(),
+    }
+    if note is not None:
+        signed_tree_head["note"] = note
+    validate_artifact(signed_tree_head)
+    return signed_tree_head

@@ -11,6 +11,14 @@ artifacts:
 - :mod:`conclave_core.jcs` — NON-NORMATIVE JCS-JSON view of the same values.
 - :mod:`conclave_core.artifacts` — typed artifact model, validators, DAG
   verifier, and builders for the deliberation artifact DAG.
+- :mod:`conclave_core.mldsa` — ML-DSA-65 (FIPS 204) adapter over the
+  OpenSSL-backed `cryptography` package (the ONLY external dependency; used
+  for signing, verification, and key material).
+- :mod:`conclave_core.signing` — hash-then-sign artifact conventions:
+  Signature artifacts, key publications, orchestrator certificates.
+- :mod:`conclave_core.merkle` — RFC 6962 Merkle transparency log primitives.
+- :mod:`conclave_core.verifier` — offline case verifier CLI (``python -m
+  conclave_core.verifier``).
 
 This package is importable by the deliberation skill (via the ``bin/conclave``
 CLI) and by future verification services; it deliberately has no
@@ -31,6 +39,10 @@ from .artifacts import (
     TYPE_SUMMARY,
     TYPE_VERDICT,
     TYPE_DISSENT,
+    TYPE_SIGNATURE,
+    TYPE_KEY_PUBLICATION,
+    TYPE_CERTIFICATE,
+    TYPE_SIGNED_TREE_HEAD,
     ARTIFACT_TYPES,
     artifact_bytes,
     artifact_cid,
@@ -49,6 +61,10 @@ from .artifacts import (
     make_dissent,
     make_verdict,
     make_manifest,
+    make_key_publication,
+    make_certificate,
+    make_signature,
+    make_signed_tree_head,
     utc_now,
 )
 from .cbor import DagCborError, decode, encode, is_canonical
@@ -69,6 +85,10 @@ __all__ = [
     "TYPE_SUMMARY",
     "TYPE_VERDICT",
     "TYPE_DISSENT",
+    "TYPE_SIGNATURE",
+    "TYPE_KEY_PUBLICATION",
+    "TYPE_CERTIFICATE",
+    "TYPE_SIGNED_TREE_HEAD",
     "Cid",
     "CidError",
     "DagCborError",
@@ -93,5 +113,9 @@ __all__ = [
     "make_dissent",
     "make_verdict",
     "make_manifest",
+    "make_key_publication",
+    "make_certificate",
+    "make_signature",
+    "make_signed_tree_head",
     "utc_now",
 ]

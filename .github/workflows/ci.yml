@@ -19,6 +19,9 @@ jobs:
       - name: Install optional schema validator
         run: python -m pip install --upgrade jsonschema
 
+      - name: Install signing backend (OpenSSL-backed ML-DSA via cryptography)
+        run: python -m pip install --upgrade "cryptography>=45"
+
       - name: Byte-compile Python
         run: python -m py_compile scripts/*.py tests/*.py conclave_core/*.py
 
