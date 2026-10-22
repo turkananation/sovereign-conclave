@@ -23,7 +23,7 @@ jobs:
         run: python -m pip install --upgrade "cryptography>=45"
 
       - name: Byte-compile Python
-        run: python -m py_compile scripts/*.py tests/*.py conclave_core/*.py
+        run: python -m py_compile scripts/*.py tests/*.py conclave_core/*.py conclave_server/*.py
 
       - name: Validate shell scripts
         run: bash -n install.sh

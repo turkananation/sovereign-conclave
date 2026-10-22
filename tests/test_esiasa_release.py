@@ -12,7 +12,11 @@ regenerates from the fixed demo seeds and pins the record layer:
   sign knob), so cids, manifests, and verdict CIDs that embed them
   legitimately differ run to run;
 - the committed exports re-render byte-identically from the committed
-  bundle (the archive pair is internally consistent).
+  bundle, modulo the environment-dependent verification-QR region (the
+  archive was rendered with the optional ``qrcode`` extra installed; a
+  fresh render without it omits exactly the ``<div class="qr">`` region —
+  the markdown and JSON-LD records are extra-free and byte-identical
+  everywhere);
 """
 
 from __future__ import annotations
@@ -36,7 +40,7 @@ DEMO = ROOT / "demos" / "esiasa"
 def _regenerate() -> Path:
     """Run the demo generator into a fresh temp dir; return its root."""
 
-    staging = tempfile.mkdtemp(prefix="esiasa-regen-", dir="/tmp/opencode")
+    staging = tempfile.mkdtemp(prefix="esiasa-regen-")
     # the generator anchors its defaults at the repo; --out redirects both
     # bundle and exports, and the ledger/roster reads stay at the repo paths
     result = subprocess.run(
@@ -47,6 +51,14 @@ def _regenerate() -> Path:
     if result.returncode != 0:
         raise AssertionError(f"demo regeneration failed: {result.stdout}\n{result.stderr}")
     return Path(staging)
+
+
+def _without_qr_region(html: bytes) -> bytes:
+    """Drop the environment-dependent ``<div class="qr">…</div>`` line."""
+
+    import re
+
+    return re.sub(rb'\n<div class="qr">.*?</div>', b"", html, flags=re.DOTALL)
 
 
 class EsiasaReleaseTests(unittest.TestCase):
@@ -95,11 +107,27 @@ class EsiasaReleaseTests(unittest.TestCase):
             )
 
     def test_regen_exports_match_committed_exports(self):
-        for name in ("decision-record.md", "decision-record.jsonld",
-                     "decision-record.html"):
+        for name in ("decision-record.md", "decision-record.jsonld"):
             committed = (DEMO / "exports" / name).read_bytes()
             regenerated = (self.regen / "exports" / name).read_bytes()
             self.assertEqual(committed, regenerated, name)
+
+        # The HTML carries the verification QR only where the optional
+        # `qrcode` extra is importable; committed exports were rendered
+        # with it. Byte-compare in full where the extras match, and
+        # otherwise compare with exactly the QR region removed from both.
+        committed = (DEMO / "exports" / "decision-record.html").read_bytes()
+        regenerated = (self.regen / "exports" / "decision-record.html").read_bytes()
+        try:
+            import qrcode  # noqa: F401  (optional extra, mirrors verdict_export)
+        except ImportError:
+            self.assertEqual(
+                _without_qr_region(committed),
+                _without_qr_region(regenerated),
+                "decision-record.html (QR region stripped)",
+            )
+        else:
+            self.assertEqual(committed, regenerated, "decision-record.html")
 
     def test_demo_keystore_seeds_are_committed_and_live(self):
         for name in ("identity.seed", "registry.seed"):
