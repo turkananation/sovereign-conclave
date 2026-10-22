@@ -1,0 +1,156 @@
+{
+  "@context": [
+    "https://schema.org",
+    {
+      "cid": {
+        "@id": "https://sovereign-conclave.org/v0.2#cid",
+        "@type": "@id"
+      },
+      "conclave": "https://sovereign-conclave.org/v0.2#"
+    }
+  ],
+  "@id": "urn:conclave:cid:bafyreide4uvt3mudxkpoqu2glvcs5vec27z3227lotjkavqs3rn5uqwgsm",
+  "@type": [
+    "conclave:Decision",
+    "https://schema.org/Conclusion"
+  ],
+  "conclave:dissents": [],
+  "conclave:evidence": [
+    {
+      "@id": "urn:conclave:cid:E0=E1",
+      "conclave:evidenceId": "E1",
+      "conclave:handling": "Public demo input; proves only what the sample inventory records.",
+      "conclave:sensitivity": "public",
+      "conclave:source": "Siaya County Roads Department inventory workbook (FY2025 close)",
+      "conclave:sourceKind": "policy",
+      "description": "The county's active feeder-road inventory records 412 route segments totalling 1,360 km under the roads department."
+    },
+    {
+      "@id": "urn:conclave:cid:E1=E2",
+      "conclave:evidenceId": "E2",
+      "conclave:handling": "Public demo input; demonstrates the reactive-spend pattern only.",
+      "conclave:sensitivity": "public",
+      "conclave:source": "County treasury FY2025 maintenance vote outturn",
+      "conclave:sourceKind": "budget",
+      "description": "Reactive pothole patching consumed 61% of the FY2025 feeder-road maintenance vote against a 40% plan, with no recorded closure rate per ward."
+    },
+    {
+      "@id": "urn:conclave:cid:E2=E3",
+      "conclave:evidenceId": "E3",
+      "conclave:handling": "Public demo input; durability findings illustrate, not certify.",
+      "conclave:sensitivity": "public",
+      "conclave:source": "County audit office FY2024 roads sampling report",
+      "conclave:sourceKind": "audit",
+      "description": "The 2024 county audit sampled 18 completed patching works and found 11 degraded below usable surface within six months of handover."
+    },
+    {
+      "@id": "urn:conclave:cid:E3=E4",
+      "conclave:evidenceId": "E4",
+      "conclave:handling": "Public demo input; precedent value only.",
+      "conclave:sensitivity": "public",
+      "conclave:source": "Neighbouring county roads tender board summary",
+      "conclave:sourceKind": "benchmark",
+      "description": "A neighbouring county ran a two-year route-backed performance contract in which payment released only against quarterly measured geometry and travel-speed indices."
+    },
+    {
+      "@id": "urn:conclave:cid:E4=E5",
+      "conclave:evidenceId": "E5",
+      "conclave:handling": "Public demo input; precedent value only.",
+      "conclave:sensitivity": "public",
+      "conclave:source": "Neighbouring county roads tender board summary",
+      "conclave:sourceKind": "benchmark",
+      "description": "The pilot's contracted enforcement used a third-party survey vehicle for speed-index runs with results published to the eSiasa portal each quarter."
+    },
+    {
+      "@id": "urn:conclave:cid:E5=E6",
+      "conclave:evidenceId": "E6",
+      "conclave:handling": "Public demo input; shows repeat-failure geography.",
+      "conclave:sensitivity": "public",
+      "conclave:source": "eSiasa civic complaint intake dashboard",
+      "conclave:sourceKind": "platform",
+      "description": "Ward-level complaint intake logged 2,214 feeder-road reports in FY2025, of which 38% repeated within a kilometre of a previously patched segment."
+    },
+    {
+      "@id": "urn:conclave:cid:E6=E7",
+      "conclave:evidenceId": "E7",
+      "conclave:handling": "Public demo input; binds any recommended contract design.",
+      "conclave:sensitivity": "public",
+      "conclave:source": "Siaya County public procurement manual",
+      "conclave:sourceKind": "policy",
+      "description": "County procurement rules require multi-year service contracts above the threshold value to carry measurable output clauses and independent verification."
+    }
+  ],
+  "conclave:logHead": {
+    "@id": "urn:conclave:cid:bafyreih2pprmkwvzjg72wza43eidogbq4twvj7attalkmuzsdmfhritqdi",
+    "publishedAt": "2026-10-21T07:30:00Z",
+    "rootHashBase64": "IouHAySnlviRxDATkrKQCKa9+1wToaKw0jqudbVpgAQ=",
+    "treeSize": 1
+  },
+  "conclave:logLeaves": [
+    {
+      "@id": "urn:conclave:cid:bafyreidypijosxnkyelxcp64bguygktz4acyxk2alceyp7zntng5onnjl4",
+      "artifactType": "Verdict",
+      "auditPathBase64": [],
+      "index": 0,
+      "treeSize": 1
+    }
+  ],
+  "conclave:panel": {
+    "@id": "urn:conclave:cid:bafyreid6yckyv3bg4wzrfuav7j72xad7mkejdk72mwbc5ntdcqbqxl4vdy",
+    "convenedAt": "2026-10-21T07:30:00Z",
+    "seats": [
+      "conclave-mcchrystal",
+      "conclave-hayden",
+      "conclave-maathai",
+      "conclave-addington",
+      "conclave-bhagwati",
+      "conclave-sejong",
+      "conclave-marshall"
+    ]
+  },
+  "conclave:question": {
+    "@id": "urn:conclave:cid:bafyreibterve23uiokpregvvmhakq2ya2spt5fq5j4knexakekv2eof7ve",
+    "askedAt": "2026-10-21T07:30:00Z",
+    "askedBy": "esiasa-civic-stress",
+    "text": "Should Siaya County shift feeder-road maintenance from reactive pothole patching to route-backed performance contracts with quarterly speed-index verification?"
+  },
+  "conclave:status": "advised-non-binding",
+  "conclave:verdict": {
+    "@id": "urn:conclave:cid:bafyreidypijosxnkyelxcp64bguygktz4acyxk2alceyp7zntng5onnjl4",
+    "confidence": "low",
+    "issuedAt": "2026-10-21T07:30:00Z",
+    "optionsRanked": [],
+    "recommendation": "The Sovereign Conclave advises: Round 0 recorded standing positions from conclave-mcchrystal, conclave-hayden, conclave-maathai, conclave-addington, conclave-bhagwati, conclave-sejong, conclave-marshall.",
+    "votes": [
+      {
+        "seatId": "conclave-mcchrystal",
+        "stance": "Standing position from conclave-mcchrystal for round 0 (opening). The recorded question finds its answer in the ledger's own terms; the conclave advises care be",
+        "weightMicro": 1000000
+      },
+      {
+        "seatId": "conclave-hayden",
+        "stance": "Standing position from conclave-hayden for round 0 (opening). The recorded question finds its answer in the ledger's own terms; the conclave advises care before",
+        "weightMicro": 1000000
+      },
+      {
+        "seatId": "conclave-maathai",
+        "stance": "Standing position from conclave-maathai for round 0 (opening). The recorded question finds its answer in the ledger's own terms; the conclave advises care befor",
+        "weightMicro": 1000000
+      },
+      {
+        "seatId": "conclave-addington",
+        "stance": "Standing position from conclave-addington for round 0 (opening). The recorded question finds its answer in the ledger's own terms; the conclave advises care bef",
+        "weightMicro": 1000000
+      },
+      {
+        "seatId": "conclave-sejong",
+        "stance": "Standing position from conclave-sejong for round 0 (opening). The recorded question finds its answer in the ledger's own terms; the conclave advises care before",
+        "weightMicro": 1000000
+      }
+    ],
+    "whatWouldChangeIt": null
+  },
+  "conclave:verifyEndpoint": "https://sovereign-conclave.org/verify/v0.2/",
+  "identifier": "case-esiasa-civic-stress-20261021T073000Z",
+  "name": "Should Siaya County shift feeder-road maintenance from reactive pothole patching to route-backed performance contracts with quarterly speed-index verification?"
+}

@@ -1,0 +1,74 @@
+{
+ "schema_version": "1.0.0",
+ "ledger_id": "esiasa-feeder-road-performance-contract",
+ "decision": "Should Siaya County shift feeder-road maintenance from reactive pothole patching to route-backed performance contracts with quarterly speed-index verification?",
+ "prepared_by": "eSiasa civic-stress workstream",
+ "freeze_time_utc": "2026-10-21T07:00:00Z",
+ "ledger_status": "frozen",
+ "sensitivity": "public",
+ "entries": [
+  {
+   "id": "E1",
+   "item": "The county's active feeder-road inventory records 412 route segments totalling 1,360 km under the roads department.",
+   "source_type": "policy",
+   "source": "Siaya County Roads Department inventory workbook (FY2025 close)",
+   "provenance": "Public demo input prepared for demos/esiasa; stands in for the department's published inventory.",
+   "handling": "Public demo input; proves only what the sample inventory records.",
+   "sensitivity": "public"
+  },
+  {
+   "id": "E2",
+   "item": "Reactive pothole patching consumed 61% of the FY2025 feeder-road maintenance vote against a 40% plan, with no recorded closure rate per ward.",
+   "source_type": "budget",
+   "source": "County treasury FY2025 maintenance vote outturn",
+   "provenance": "Public demo input prepared for demos/esiasa; matches no confidential treasury record.",
+   "handling": "Public demo input; demonstrates the reactive-spend pattern only.",
+   "sensitivity": "public"
+  },
+  {
+   "id": "E3",
+   "item": "The 2024 county audit sampled 18 completed patching works and found 11 degraded below usable surface within six months of handover.",
+   "source_type": "audit",
+   "source": "County audit office FY2024 roads sampling report",
+   "provenance": "Public demo input prepared for demos/esiasa; the sampling narrative is illustrative.",
+   "handling": "Public demo input; durability findings illustrate, not certify.",
+   "sensitivity": "public"
+  },
+  {
+   "id": "E4",
+   "item": "A neighbouring county ran a two-year route-backed performance contract in which payment released only against quarterly measured geometry and travel-speed indices.",
+   "source_type": "benchmark",
+   "source": "Neighbouring county roads tender board summary",
+   "provenance": "Public demo input prepared for demos/esiasa; the pilot summary is illustrative.",
+   "handling": "Public demo input; precedent value only.",
+   "sensitivity": "public"
+  },
+  {
+   "id": "E5",
+   "item": "The pilot's contracted enforcement used a third-party survey vehicle for speed-index runs with results published to the eSiasa portal each quarter.",
+   "source_type": "benchmark",
+   "source": "Neighbouring county roads tender board summary",
+   "provenance": "Public demo input prepared for demos/esiasa; the pilot summary is illustrative.",
+   "handling": "Public demo input; precedent value only.",
+   "sensitivity": "public"
+  },
+  {
+   "id": "E6",
+   "item": "Ward-level complaint intake logged 2,214 feeder-road reports in FY2025, of which 38% repeated within a kilometre of a previously patched segment.",
+   "source_type": "platform",
+   "source": "eSiasa civic complaint intake dashboard",
+   "provenance": "Public demo input prepared for demos/esiasa; intake figures stand in for portal analytics.",
+   "handling": "Public demo input; shows repeat-failure geography.",
+   "sensitivity": "public"
+  },
+  {
+   "id": "E7",
+   "item": "County procurement rules require multi-year service contracts above the threshold value to carry measurable output clauses and independent verification.",
+   "source_type": "policy",
+   "source": "Siaya County public procurement manual",
+   "provenance": "Public demo input prepared for demos/esiasa; constraint quoted from the public manual.",
+   "handling": "Public demo input; binds any recommended contract design.",
+   "sensitivity": "public"
+  }
+ ]
+}

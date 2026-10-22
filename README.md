@@ -115,12 +115,12 @@ Sovereign Conclave is built around a stricter spine:
 
 ## Quick Start
 
-Install the tagged `0.1.0` release:
+Install the tagged `0.2.0` release:
 
 ```bash
 git clone https://github.com/turkananation/sovereign-conclave.git
 cd sovereign-conclave
-git checkout 0.1.0
+git checkout 0.2.0
 ./install.sh --target codex
 ```
 
@@ -280,6 +280,31 @@ The self-war-game example is intentionally historical: it captures the repo insp
 - [demos/prompts/self-war-game-repo-readiness.md](demos/prompts/self-war-game-repo-readiness.md)
 - [demos/evidence-ledgers/self-war-game-repo-readiness.json](demos/evidence-ledgers/self-war-game-repo-readiness.json)
 - [demos/verdicts/self-war-game-repo-readiness.md](demos/verdicts/self-war-game-repo-readiness.md)
+
+## Machine-Verified Records and the Server (v0.2.0)
+
+Since `0.2.0` the protocol runs as machine artifacts, not just prose:
+
+- Every case is an **artifact bundle**: canonical DAG-CBOR artifacts under
+  CIDs, an ML-DSA (FIPS 204) signature chain, and an RFC 6962 transparency
+  log. Verify any bundle offline with no trust in the operator:
+
+  ```bash
+  python3 -m conclave_core.verifier demos/esiasa/bundle
+  ```
+
+  See [docs/VERIFYING.md](docs/VERIFYING.md) for the external-party
+  procedure. The release demo [demos/esiasa/](demos/esiasa/) runs one real
+  eSiasa policy question end to end and publishes its decision record as
+  ADR markdown, JSON-LD, and self-contained signed HTML
+  (`demos/esiasa/exports/`), renderable by
+  `scripts/verdict_export.py`.
+
+- `conclave_server/` hosts live deliberations: durable FSM sessions,
+  streaming event watch (SSE), token-budget degradation ladder,
+  kill/resume with a clean DAG, appeal petition/screening through the
+  M5 engine, and civic-public verification endpoints
+  (`/artifact/<cid>`, `/prove/<cid>`, `/latestSTH`).
 
 ## Repository Map
 

@@ -25,3 +25,6 @@ Thumbs.db
 __pycache__/
 tmp/
 .tmp/
+
+# Demo regeneration scratch (the eSiasa generator's local artifact store).
+demos/esiasa/store.sqlite3

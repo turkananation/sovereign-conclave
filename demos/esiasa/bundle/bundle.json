@@ -1,0 +1,23 @@
+{
+  "expectedIdentityFingerprint": "6fea79df17751d33cd570fdf803a127b67430a1660e629f8659ca6730dd49330",
+  "expectedRegistryFingerprint": "ca81c32ab49061de84a35bae44e2e010f798ca7b002a6b92656d2c40a6abc072",
+  "log": {
+    "consistency": [],
+    "inclusion": {
+      "bafyreidypijosxnkyelxcp64bguygktz4acyxk2alceyp7zntng5onnjl4": {
+        "index": 0,
+        "path": [],
+        "treeSize": 1
+      }
+    },
+    "leaves": [
+      "bafyreidypijosxnkyelxcp64bguygktz4acyxk2alceyp7zntng5onnjl4"
+    ],
+    "sthCids": [
+      "bafyreicr3n4biyc6xwx4zpr4dexirultwlllxw6mssoua7vhim7kax7gxa",
+      "bafyreih2pprmkwvzjg72wza43eidogbq4twvj7attalkmuzsdmfhritqdi"
+    ]
+  },
+  "manifestCid": "bafyreide4uvt3mudxkpoqu2glvcs5vec27z3227lotjkavqs3rn5uqwgsm",
+  "version": 1
+}

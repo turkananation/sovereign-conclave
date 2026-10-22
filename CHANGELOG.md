@@ -5,7 +5,7 @@ All notable changes to Sovereign Conclave are recorded here.
 This project follows semantic versioning once public releases begin. Dates use
 ISO format.
 
-## [Unreleased]
+## [0.2.0] - 2026-10-22
 
 ### Added
 
@@ -268,6 +268,67 @@ ISO format.
     bundle contract; and without a provider adapter configured the server
     answers with the deterministic standing voice so the full flow runs
     offline (the same adapter interface M7 will wire to providers).
+- **M7 — the v0.2.0 cut: verdict exports, the eSiasa release demo, and
+  external verification.** The release is verifiable by a party who did
+  not run (or trust) the operator: bundles verify offline from the
+  artifacts and the public keys inside them.
+  - `scripts/verdict_export.py` renders a verifier-clean materialized
+    bundle into a civic decision record: an ADR-style markdown record
+    (decision with confidence and ranked options, recorded vote with
+    micro-share weights, question, evidence ledger, per-round distilled
+    deliberation record, dissents, and a full transparency/verification
+    section with fingerprints, log head, and per-leaf RFC 6962 audit
+    paths), a JSON-LD record for the civic transparency portal (schema.org
+    plus a conclave v0.2 vocabulary; CIDs as `urn:conclave:cid:` URIs),
+    and a self-contained signed-record HTML transcript (inline CSS only,
+    embedded verification block with the monospace fingerprints/audit
+    paths, and — when the optional `qrcode` extra is installed — a
+    verification QR SVG resolving to the verify endpoint). A PDF via
+    WeasyPrint is a documented optional extra: without it the tool
+    refuses with install instructions rather than emitting a stub.
+  - The export tool refuses bundles with verifier findings ("refusing to
+    export a bundle that does not verify") and renders deterministically
+    from the stored artifact bytes only — artifact timestamps, no
+    wall-clock or host data — so the same bundle bytes render the same
+    record byte for byte. The default verify endpoint
+    (`https://sovereign-conclave.org/verify/v0.2/`) is a civic-portal
+    placeholder; the offline verifier remains the complete verification
+    contract for v0.2. Byte-level PAdES document signing for the PDF is
+    out of scope for v0.2 (documented deviation): the PDF/HTML carry the
+    verdict CID, the log head, and per-leaf proof paths, so a reader
+    checks them against the bundle chain, not the document's own bytes.
+  - `demos/esiasa/` — one real eSiasa policy question end to end: the
+    frozen feeder-road performance-contract ledger through the M6 server
+    orchestrator (esiasa-civic-stress profile, standing voice, fixed
+    seeds), a machine-VERIFIED 54-artifact bundle, and the ADR/JSON-LD/
+    HTML exports produced by the new tool. The demo keystore seeds are
+    committed under `demos/esiasa/keys/` (public by design, disclosed in
+    the demo README — they can mint a bundle that the demo chain accepts;
+    production installs generate theirs out of band).
+  - `docs/VERIFYING.md` — the external-party verification procedure:
+    what the offline verifier checks mechanically, what verification
+    proves and does not, how to recheck an export's inclusion proof, and
+    how to report a discrepancy.
+  - Signing-reproducibility note carried into the release: ML-DSA signing is
+    hedged per FIPS 204 §5.4 on `cryptography` 50.0.2 — the backend
+    exposes no deterministic-sign knob, so keys are deterministic while
+    signature bytes vary per run. Consequently regeneration is
+    record-stable rather than byte-stable: every artifact except
+    `Signature` reproduces CID- and byte-identically (question, ledger,
+    panel, protocol params, personae, turns, telemetry, round, summary,
+    verdict, manifests, certificates, key publications, tree heads), and
+    signature-bearing links (manifests, verdict CIDs, exports) legitimately
+    differ between runs; each run still verifies. The M6 CHANGELOG entry
+    above and the orchestrator docs were corrected to say this (M6's
+    original wording overstated "deterministic ML-DSA signatures").
+  - Tests: 10 export tests (format invariants, JSON-LD strictness,
+    self-contained HTML, cross-call determinism, tamper refusal, the
+    WeasyPrint-extra clean error, CLI surfaces) and 5 eSiasa release
+    pins (committed bundle verifies standalone; a fresh regeneration
+    verifies and preserves the non-signature record byte-for-byte; the
+    committed exports re-render byte-identically from the committed
+    bundle; the demo keystore seeds are committed). Full suite: 243
+    tests OK.
 
 ## [0.1.0] - 2026-06-01
 

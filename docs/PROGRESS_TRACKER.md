@@ -1,27 +1,31 @@
 # Progress Tracker
 
-Current version: 0.1.0
+Current version: 0.2.0
 
-Last updated: 2026-06-01
+Last updated: 2026-10-22
 
 ## Release State
 
 | Area | Status | Evidence |
 | --- | --- | --- |
-| Core protocol | Complete for 0.1.0 | `SKILL.md` defines evidence ledger, blind analysis, cross-examination, verification, and verdict synthesis. |
-| Directives | Complete for 0.1.0 | `directives.md` defines evidence, assumptions, forced dissent, advice-only, and no-secret defaults. |
-| Active seats | Complete after 0.1.0 | `agents/` contains 33 active Conclave seats, including the balanced expansion. |
-| Roster profiles | Complete after 0.1.0 | `roster.md` lists 15 profiles and 22 polarity pairs, generated from the config. |
-| Installer | Complete for 0.1.0 | `install.sh` supports Claude Code, Codex, Antigravity, and dry-run mode. |
-| Verdict output | Complete for 0.1.0 | `demos/verdict-template.md` and `verdicts/.gitkeep` exist. |
-| Cross-model example | Complete for 0.1.0 | `configs/provider-model-slots.example.yaml` documents slot routing and environment-key discipline. |
-| Public bootstrap docs | Complete for 0.1.0 | `LICENSE`, `CHANGELOG.md`, `docs/FEATURE_ROADMAP.md`, `SECURITY.md`, and contribution docs exist. |
-| Machine-readable roster | Complete after 0.1.0 | `configs/conclave-roster.json` contains seats, profiles, polarity pairs, and quorum rules. |
-| Validation and CI | Complete after 0.1.0 | `scripts/validate_repo.py` and `.github/workflows/ci.yml` exist. |
-| Local runner scaffold | Complete after 0.1.0 | `bin/conclave` creates verdict scaffolds from the machine-readable roster. |
-| Demo verdicts | Complete after 0.1.0 | `demos/verdicts/` includes eSiasa civic-stress and pandemic-preparedness examples. |
-| Evidence Ledger | Complete after 0.1.0 | `docs/EVIDENCE_LEDGER.md`, `schemas/evidence-ledger.schema.json`, `demos/evidence-ledger-template.md`, runner evidence flags, JSON validation/import/export, and demo ledger validation define and seed frozen ledgers. |
-| User docs | Complete after 0.1.0 | `docs/README.md`, `docs/QUICKSTART.md`, `docs/CONCEPTS.md`, `docs/EVIDENCE_LEDGER.md`, and `docs/RUNNER.md` exist. |
+| Core protocol | Complete for 0.2.0 | `SKILL.md` defines evidence ledger, blind analysis, cross-examination, verification, and verdict synthesis. |
+| Directives | Complete for 0.2.0 | `directives.md` defines evidence, assumptions, forced dissent, advice-only, and no-secret defaults. |
+| Active seats | Complete for 0.2.0 | `agents/` contains 33 active Conclave seats, including the balanced expansion. |
+| Roster profiles | Complete for 0.2.0 | `roster.md` lists 24 profiles and 22 polarity pairs, generated from the config. |
+| Installer | Complete for 0.2.0 | `install.sh` supports Claude Code, Codex, Antigravity, OpenCode, and dry-run mode. |
+| Verdict output | Complete for 0.2.0 | `demos/verdict-template.md`, `verdicts/`, and machine exports under `demos/esiasa/exports/`. |
+| Cross-model example | Complete for 0.2.0 | `configs/provider-model-slots.example.yaml` documents slot routing and environment-key discipline. |
+| Public bootstrap docs | Complete for 0.2.0 | `LICENSE`, `CHANGELOG.md`, `docs/FEATURE_ROADMAP.md`, `SECURITY.md`, and contribution docs exist. |
+| Machine-readable roster | Complete for 0.2.0 | `configs/conclave-roster.json` contains seats, profiles, polarity pairs, and quorum rules. |
+| Validation and CI | Complete for 0.2.0 | `scripts/validate_repo.py`, unit suite, and `.github/workflows/ci.yml`. |
+| Canonical core + bundles | Complete for 0.2.0 | `conclave_core/` canonical DAG-CBOR codecs (CIDs, JCS, merkle) and `scripts/artifact_emitter.py` emit verifier-clean v0.2 case bundles. |
+| Signing and transparency | Complete for 0.2.0 | `conclave_core/mldsa.py` (ML-DSA-65, FIPS 204, deterministic keys), certificate chain, identity-signed `SignedTreeHead`s, RFC 6962 inclusion/consistency proofs, and the offline verifier `python3 -m conclave_core.verifier`. |
+| Skill retrofit | Complete for 0.2.0 | `SKILL.md` phase wiring to the machine ledger, runner flags for bundle emission, and schema-enforced ledgers. |
+| Token architecture | Complete for 0.2.0 | Cached prompts, cascade routing, distillation, committees, telemetry artifacts, and the cost model in `conclave_core` + `scripts/provider_runner.py`. |
+| Appeals | Complete for 0.2.0 | `conclave_core/appeals.py`: T1–T3 triggers, finality windows, Tier A/B/C ladder, signed dissent artifacts, supplement ledgers. |
+| Conclave server | Complete for 0.2.0 | `conclave_server/`: durable FSM over the artifact store, SSE `/watch`, `/convene`/`/verdict`/`/petition`/`/screening`, civic-public `/artifact`/`/prove`/`/latestSTH`, kill/resume, soft-cap budget ladder. |
+| Release verification | Complete for 0.2.0 | `docs/VERIFYING.md` external-party procedure; `demos/esiasa/` release demo machine-verified (`python3 -m conclave_core.verifier demos/esiasa/bundle`). |
+| Verdict exports | Complete for 0.2.0 | `scripts/verdict_export.py`: ADR markdown, JSON-LD for the civic portal, self-contained signed HTML with a verification QR; PDF via the documented optional WeasyPrint extra. |
 
 ## 0.1.0 Completed
 
@@ -46,26 +50,29 @@ Last updated: 2026-06-01
 - Hardened the local runner: collision-safe verdict filenames, contiguous multi-ledger merge, type-aware scaffold rows, and a configurable `default_profile`.
 - Added an opt-in provider-backed runner mode (`--provider-run`) with env-only keys, default-off, graceful fallback, slot routing, and transcript capture.
 
-## Next Milestones
-
-Milestone labels track planned work, not releases. Completed milestones are
-unreleased and accumulate under CHANGELOG `[Unreleased]`; the published version
-stays **0.1.0** until a release is cut.
+## v0.2.0 Roadmap Milestones (docs/plans/v0.2.0-roadmap.md)
 
 | Milestone | Target | Status | Notes |
 | --- | --- | --- | --- |
-| 0.1.1 | Validation scripts | Done | Validate agent files, roster alignment, provider slots, docs, and installer dry-run output. |
-| 0.1.2 | CI bootstrap | Done | Run shell syntax, validation scripts, installer dry-run, and local runner smoke tests. |
-| 0.1.3 | 33-seat balance pass | Done | Finalize original 33-seat target with documented eligibility, counterweights, and danger-lens boundaries. |
-| 0.1.4 | Evidence Ledger buildout | Done | Add guide, template, source-quality rules, redaction handling, and runner evidence flags. |
-| 0.1.5 | Model-native ledgers | Done | Add JSON schema, public demo JSON ledger, private `ledgers/` storage, validation, and runner import/export. |
-| 0.2.0 | Demo verdict pack | Done | eSiasa civic-stress, pandemic-preparedness, architecture, and war-game demos plus a good-vs-bad guide are in. |
-| 0.3.0 | Portable runner | Done | Deterministic scaffold plus an opt-in provider-backed mode (env-only keys, default off, transcript capture). |
+| M0 — OpenCode first-class support | ~1 week | Done | `install.sh` gains the `opencode` target (install/uninstall/`--target all`, CI dry-runs), `OPENCODE.md` operating manual aligned with the other harness docs, platform lists updated repo-wide, skill frontmatter confirmed. |
+| M1 — Canonical core | ~2 weeks | Done | Canonical DAG-CBOR artifact codecs, CID addressing, canonical hashing, merkle trees, the v0.2 schema, and the emit/verify skeleton. |
+| M2 — Signing & transparency log | ~2 weeks | Done | ML-DSA-65 adapter over `cryptography>=45`, certificate chain, signed tree heads, RFC 6962 proofs, offline verifier CLI. |
+| M3 — Skill retrofit | ~2 weeks | Done | `bin/conclave`/`scripts/conclave_runner.py` emit the v0.2 artifact set for a real local run that the M2 verifier validates from artifacts + pubkeys alone; markdown personae unchanged; the deterministic scaffold still works fully offline. |
+| M4 — Token architecture | ~3–4 weeks | Done | Cached prompts, cascade, distillation, committees, telemetry artifacts, cost estimator. |
+| M5 — Appeals | ~3 weeks | Done | Appeal triggers/windows/ladder, signed dissents, supplement ledgers, bundle verification gates. |
+| M6 — conclave_server | ~4 weeks | Done | Durable orchestrator FSM, sessions/hub, HTTP endpoints, SSE streaming, budget ladder, appeal bridge, materialization. |
+| M7 — v0.2.0 cut | ~2 weeks | Done | Verdict export tool, eSiasa e2e release demo, `docs/VERIFYING.md`, tagged release `v0.2.0`. |
 
 ## Open Questions
 
 - Resolved: `configs/conclave-roster.json` is the source of truth, and
   `scripts/generate_roster.py` generates `roster.md` (CI fails on drift).
-- Should generated verdicts stay local-only by default, with examples stored
-  separately under `demos/verdicts/`?
-- Should provider routing remain an example-only config until a runner exists?
+- Resolved: generated verdicts stay local-only by default; curated examples
+  live under `demos/verdicts/`, and machine-verified release records live
+  under `demos/esiasa/`.
+- Resolved: provider routing moved from example-only config to the
+  operator-side provider adapters (M4), env-key-only, default-off.
+- For v0.3+: Flutter observer/verifier UI, T4 stakeholder petitions wired to
+  eSiasa identity, external witness co-signing on the transparency log,
+  persona marketplace, calibration-weighted voting, and the Swahili-language
+  civic portal surface (see the roadmap's deferred section).
